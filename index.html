@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Printox – 3D-Druck-Service</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --nav:#0d1b2e;
+  --blue:#2563eb;
+  --blue2:#3b82f6;
+  --navy:#0d1b2e;
+  --gray:#64748b;
+  --gray-l:#e2e8f0;
+  --bg:#f0f3f8;
+  --success:#10b981;
+  --error:#ef4444;
+  --white:#ffffff;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--navy);min-height:100vh;display:flex;flex-direction:column}
+
+/* ── NAV ── */
+nav{background:var(--nav);height:68px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:500;border-bottom:1px solid rgba(255,255,255,0.05)}
+.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+.nav-logo svg{flex-shrink:0}
+.nav-logo-text{color:#fff;font-weight:800;font-size:1.25rem;letter-spacing:2px}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-btn{background:none;border:none;color:rgba(255,255,255,0.8);font-family:'Inter',sans-serif;font-size:0.9rem;font-weight:500;padding:0.5rem 1rem;border-radius:6px;cursor:pointer;transition:all .15s}
+.nav-btn:hover{color:#fff;background:rgba(255,255,255,0.08)}
+.nav-btn.active{color:#fff;background:rgba(255,255,255,0.1)}
+.nav-cart-wrap{position:relative}
+.cart-badge{position:absolute;top:2px;right:4px;background:var(--blue);color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.nav-right{display:flex;align-items:center;gap:8px}
+.user-av{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;font-size:0.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,0.2)}
+.nav-action{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:500;padding:0.5rem 1rem;border-radius:7px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-action:hover{background:rgba(255,255,255,0.14)}
+.disc-badge{background:#10b981;color:#fff;font-size:0.7rem;font-weight:700;padding:2px 7px;border-radius:5px}
+
+/* ── PAGES ── */
+.page{display:none;flex:1;flex-direction:column}
+.page.active{display:flex}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(150deg,#0d1b2e 0%,#0f2035 50%,#112040 100%);padding:6rem 2rem 5rem;text-align:center;position:relative;overflow:hidden;flex:1}
+.hero::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;border:1px solid rgba(37,99,235,0.1);top:50%;left:50%;transform:translate(-50%,-50%)}
+.hero::after{content:'';position:absolute;width:900px;height:900px;border-radius:50%;border:1px solid rgba(37,99,235,0.06);top:50%;left:50%;transform:translate(-50%,-50%)}
+.hero-content{position:relative;z-index:1;max-width:680px;margin:0 auto}
+.hero h1{font-size:clamp(2.5rem,5vw,3.5rem);font-weight:800;color:#fff;line-height:1.15;margin-bottom:1rem}
+.hero h1 span{color:var(--blue2)}
+.hero p{color:rgba(255,255,255,0.7);font-size:1.05rem;line-height:1.7;margin-bottom:2.5rem;max-width:520px;margin-left:auto;margin-right:auto}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-fill{background:var(--blue);color:#fff;border:none;padding:0.85rem 2rem;border-radius:8px;font-family:'Inter',sans-serif;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all .2s}
+.btn-fill:hover{background:var(--blue2);transform:translateY(-2px);box-shadow:0 8px 20px rgba(37,99,235,0.35)}
+.btn-ghost{background:rgba(255,255,255,0.07);color:#fff;border:1.5px solid rgba(255,255,255,0.25);padding:0.85rem 2rem;border-radius:8px;font-family:'Inter',sans-serif;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all .2s}
+.btn-ghost:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.45)}
+
+/* ── FEATURES ── */
+.features-wrap{padding:4rem 2rem;max-width:1100px;margin:0 auto;width:100%}
+.sec-label{color:var(--gray);font-size:0.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:0.5rem}
+.sec-title{font-size:1.75rem;font-weight:800;color:var(--navy);margin-bottom:0.4rem}
+.sec-sub{color:var(--gray);font-size:0.9rem;margin-bottom:2.5rem}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.25rem}
+.feat-card{background:#fff;border:1px solid var(--gray-l);border-radius:14px;padding:1.75rem;box-shadow:0 1px 4px rgba(13,27,46,0.06);transition:transform .2s}
+.feat-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(13,27,46,0.1)}
+.feat-icon{font-size:2rem;margin-bottom:0.75rem}
+.feat-card h3{font-size:0.95rem;font-weight:700;color:var(--navy);margin-bottom:0.35rem}
+.feat-card p{color:var(--gray);font-size:0.85rem;line-height:1.6}
+
+/* ── CTA BAND ── */
+.cta-band{background:#fff;border-top:1px solid var(--gray-l);border-bottom:1px solid var(--gray-l);padding:4rem 2rem;text-align:center}
+.cta-band h2{font-size:1.6rem;font-weight:800;color:var(--navy);margin-bottom:0.5rem}
+.cta-band p{color:var(--gray);margin-bottom:1.5rem;font-size:0.95rem}
+
+/* ── COMMON PAGE ── */
+.pg-wrap{padding:3rem 2rem;max-width:1200px;margin:0 auto;width:100%}
+.pg-title{font-size:1.75rem;font-weight:800;color:var(--navy);margin-bottom:0.25rem}
+.pg-sub{color:var(--gray);font-size:0.9rem;margin-bottom:2.5rem}
+.pg-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2.5rem}
+
+/* ── SHOP ── */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.5rem}
+.product-card{background:#fff;border:1px solid var(--gray-l);border-radius:14px;overflow:hidden;transition:all .2s;box-shadow:0 1px 4px rgba(13,27,46,0.06)}
+.product-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(13,27,46,0.1)}
+.product-img{background:linear-gradient(135deg,#0a1628,#1a2d45);height:180px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;overflow:hidden;position:relative}
+.product-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.product-img .ef{position:relative;z-index:1}
+.product-body{padding:1.25rem}
+.product-name{font-weight:700;font-size:1rem;color:var(--navy);margin-bottom:0.4rem}
+.product-desc{color:var(--gray);font-size:0.85rem;line-height:1.5;margin-bottom:0.85rem}
+.product-price{font-weight:800;font-size:1.2rem;color:var(--navy);margin-bottom:0.85rem}
+.product-actions{display:flex;gap:0.5rem}
+.btn-cart{flex:1;background:var(--navy);color:#fff;border:none;padding:0.6rem;border-radius:7px;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;cursor:pointer;transition:background .15s}
+.btn-cart:hover{background:var(--blue)}
+.btn-edit-sm{background:none;border:1px solid var(--gray-l);color:var(--gray);padding:0.6rem 0.7rem;border-radius:7px;font-size:0.875rem;cursor:pointer;transition:all .15s}
+.btn-edit-sm:hover{border-color:var(--blue);color:var(--blue)}
+.btn-del-sm{background:none;border:1px solid var(--gray-l);color:var(--error);padding:0.6rem 0.7rem;border-radius:7px;font-size:0.875rem;cursor:pointer}
+.btn-del-sm:hover{background:#fef2f2}
+.btn-add-prod{background:var(--navy);color:#fff;border:none;padding:0.7rem 1.4rem;border-radius:8px;font-family:'Inter',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px}
+.btn-add-prod:hover{background:var(--blue)}
+.empty-st{text-align:center;padding:4rem 2rem;color:var(--gray)}
+.empty-st .ei{font-size:3.5rem;margin-bottom:1rem;opacity:.4}
+
+/* ── CART ── */
+.cart-item{display:flex;align-items:center;gap:1rem;background:#fff;border:1px solid var(--gray-l);border-radius:12px;padding:1rem;margin-bottom:.75rem}
+.ci-icon{width:64px;height:64px;background:#0a1628;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.75rem;flex-shrink:0;overflow:hidden}
+.ci-icon img{width:100%;height:100%;object-fit:cover}
+.ci-name{font-weight:700;color:var(--navy);margin-bottom:.2rem;font-size:.95rem}
+.ci-price{color:var(--gray);font-size:.85rem}
+.qty-ctrl{display:flex;align-items:center;gap:.6rem}
+.qty-btn{background:var(--gray-l);border:none;width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:1rem;font-weight:700;color:var(--navy);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.qty-btn:hover{background:#b8c4d8}
+.ci-rem{background:none;border:none;color:var(--error);cursor:pointer;font-size:1.1rem;padding:.4rem}
+.cart-box{background:#fff;border:1px solid var(--gray-l);border-radius:14px;padding:1.75rem;margin-top:1.5rem}
+.cart-row{display:flex;justify-content:space-between;margin-bottom:.6rem;font-size:.95rem;color:#475569}
+.cart-disc-row{display:flex;justify-content:space-between;margin-bottom:.6rem;font-size:.95rem;color:#10b981;font-weight:600}
+.cart-addr-box{background:#fff;border:1px solid var(--gray-l);border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.cart-addr-box .addr-in{width:100%;background:#fff;border:1.5px solid var(--gray-l);border-radius:8px;padding:.7rem .9rem;font-family:Inter,sans-serif;font-size:.875rem;color:var(--navy);outline:none;transition:border .15s}
+.cart-addr-box .addr-in:focus{border-color:var(--blue)}
+.cart-addr-box label{display:block;font-size:.78rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem}
+.cart-total{font-size:1.2rem;font-weight:800;color:var(--navy);border-top:2px solid var(--gray-l);padding-top:.9rem;margin-top:.9rem;display:flex;justify-content:space-between}
+.pay-title{font-size:1rem;font-weight:700;color:var(--navy);margin:1.5rem 0 .75rem}
+.pay-opt{display:flex;align-items:center;gap:.9rem;padding:.9rem 1.1rem;background:#fff;border:1.5px solid var(--gray-l);border-radius:10px;cursor:pointer;margin-bottom:.6rem;transition:all .15s}
+.pay-opt.sel{border-color:var(--blue);background:#eff6ff}
+.pay-opt input[type=radio]{accent-color:var(--blue)}
+.pay-opt label{cursor:pointer;font-size:.9rem;color:var(--navy);flex:1;font-weight:500}
+.twint-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:1rem;margin-top:.75rem;font-size:.875rem;color:#1e40af}
+.twint-steps{padding-left:1.2rem;line-height:2;margin:.5rem 0}
+.btn-checkout{width:100%;background:var(--blue);color:#fff;border:none;padding:.95rem;border-radius:10px;font-family:'Inter',sans-serif;font-weight:700;font-size:1.05rem;cursor:pointer;margin-top:1.25rem;transition:all .2s}
+.btn-checkout:hover{background:var(--blue2);transform:translateY(-1px)}
+.stripe-wrap{background:#fff;border:1.5px solid var(--gray-l);border-radius:10px;padding:1rem;margin-top:.75rem}
+.stripe-wrap label{display:block;font-size:.8rem;font-weight:600;color:var(--gray);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.04em}
+#card-errors{color:var(--error);font-size:.82rem;margin-top:.5rem;min-height:1rem}
+.paypal-wrap{margin-top:.75rem}
+
+/* ── UPLOAD ── */
+.upload-drop{border:2px dashed var(--gray-l);border-radius:14px;padding:3rem;text-align:center;cursor:pointer;background:#fff;margin-bottom:1.75rem;transition:all .2s}
+.upload-drop:hover,.upload-drop.drag{border-color:var(--blue);background:#eff6ff}
+.upload-drop h3{font-weight:700;font-size:1.1rem;color:var(--navy);margin-bottom:.35rem}
+.upload-drop p{color:var(--gray);font-size:.875rem}
+.file-pill{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:.75rem 1.25rem;display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;font-size:.9rem;color:#1e40af}
+.fg{margin-bottom:1.25rem}
+.fg label{display:block;font-size:.85rem;font-weight:600;color:var(--gray);margin-bottom:.45rem;text-transform:uppercase;letter-spacing:.04em}
+.fg input,.fg textarea,.fg select{width:100%;padding:.8rem 1rem;background:#fff;border:1.5px solid var(--gray-l);border-radius:9px;font-family:'Inter',sans-serif;font-size:.9rem;color:var(--navy);outline:none;transition:border .15s}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--blue)}
+.fg textarea{min-height:110px;resize:vertical}
+.fg select option{background:#fff;color:var(--navy)}
+.fg input::placeholder,.fg textarea::placeholder{color:#94a3b8}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.qty-step{display:flex;align-items:center;border:1.5px solid var(--gray-l);border-radius:9px;overflow:hidden;width:fit-content;background:#fff}
+.qty-step button{background:#f8fafc;border:none;width:44px;height:44px;font-size:1.2rem;font-weight:700;cursor:pointer;color:var(--navy);transition:background .15s}
+.qty-step button:hover{background:var(--gray-l)}
+.qty-step input{border:none;border-left:1.5px solid var(--gray-l);border-right:1.5px solid var(--gray-l);width:70px;height:44px;text-align:center;font-family:'Inter',sans-serif;font-weight:700;font-size:1rem;color:var(--navy);outline:none;background:#fff;-moz-appearance:textfield}
+.qty-step input::-webkit-outer-spin-button,.qty-step input::-webkit-inner-spin-button{-webkit-appearance:none}
+.btn-sub{background:var(--navy);color:#fff;border:none;padding:.9rem 2.25rem;border-radius:9px;font-family:'Inter',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;transition:all .2s}
+.btn-sub:hover{background:var(--blue);transform:translateY(-1px)}
+
+/* ── AUTH ── */
+.auth-wrap{display:flex;align-items:center;justify-content:center;flex:1;padding:3rem 2rem}
+.auth-box{background:#fff;border:1px solid var(--gray-l);border-radius:18px;padding:2.75rem;width:100%;max-width:420px;box-shadow:0 4px 24px rgba(13,27,46,0.08)}
+.auth-box h2{font-size:1.6rem;font-weight:800;color:var(--navy);margin-bottom:.3rem}
+.auth-box .sub{color:var(--gray);font-size:.9rem;margin-bottom:2rem}
+.btn-auth{width:100%;background:var(--navy);color:#fff;border:none;padding:.9rem;border-radius:9px;font-family:'Inter',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;transition:all .2s}
+.btn-auth:hover{background:var(--blue)}
+.auth-toggle{text-align:center;margin-top:1.25rem;font-size:.875rem;color:var(--gray)}
+.auth-toggle span{color:var(--blue);cursor:pointer;font-weight:600}
+.auth-toggle span:hover{text-decoration:underline}
+.forgot-link{text-align:right;margin-top:.4rem}
+.forgot-link span{font-size:.85rem;color:var(--blue);cursor:pointer;font-weight:500}
+.forgot-link span:hover{text-decoration:underline}
+
+/* ── CONTACT ── */
+.con-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;margin-bottom:2.5rem}
+.con-card{background:#fff;border:1px solid var(--gray-l);border-radius:12px;padding:1.5rem}
+.con-card h4{font-size:.9rem;font-weight:700;color:var(--navy);margin-bottom:.35rem}
+.con-card p{font-size:.875rem;color:var(--gray);line-height:1.6}
+
+/* ── ADMIN ── */
+#page-admin{background:var(--nav)}
+.admin-wrap{padding:3rem 2rem;max-width:1200px;margin:0 auto;width:100%}
+.admin-head{display:flex;align-items:center;gap:1rem;margin-bottom:2rem}
+.admin-title{font-size:1.75rem;font-weight:800;color:#fff}
+.abadge{background:var(--error);color:#fff;font-size:.7rem;padding:3px 9px;border-radius:5px;font-weight:700;letter-spacing:.5px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.25rem;margin-bottom:2.5rem}
+.stat-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.75rem;text-align:center}
+.stat-val{font-size:2.25rem;font-weight:800;color:#fff;margin-bottom:.3rem}
+.stat-lbl{font-size:.85rem;color:rgba(255,255,255,.6)}
+.a-tabs{display:flex;gap:.5rem;margin-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.75rem;flex-wrap:wrap}
+.a-tab{background:none;border:none;padding:.65rem 1.25rem;font-family:'Inter',sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;color:rgba(255,255,255,.5);border-radius:8px;transition:all .15s}
+.a-tab.active,.a-tab:hover{background:rgba(255,255,255,.1);color:#fff}
+.a-sec{display:none}
+.a-sec.active{display:block}
+.o-list{display:flex;flex-direction:column;gap:1rem}
+.o-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.4rem}
+.o-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.75rem;margin-bottom:.6rem}
+.o-id{font-weight:700;font-size:.95rem;color:#fff}
+.o-meta{font-size:.82rem;color:rgba(255,255,255,.5);margin-top:.2rem}
+.o-detail{font-size:.875rem;color:rgba(255,255,255,.72);margin-top:.6rem;line-height:1.75}
+.o-status{padding:5px 11px;border-radius:7px;font-size:.78rem;font-weight:600}
+.st-new{background:rgba(37,99,235,.2);color:#93c5fd}
+.st-proc{background:rgba(234,179,8,.15);color:#fcd34d}
+.st-done{background:rgba(16,185,129,.15);color:#6ee7b7}
+.o-card select{background:#fff;color:var(--navy);border:none;padding:5px 9px;border-radius:7px;font-size:.82rem;font-weight:600;cursor:pointer}
+.dl-btn{display:inline-flex;align-items:center;gap:.4rem;background:rgba(37,99,235,.15);border:1px solid rgba(37,99,235,.35);color:#93c5fd;padding:5px 12px;border-radius:7px;font-size:.8rem;font-weight:600;cursor:pointer;text-decoration:none;font-family:'Inter',sans-serif;margin-top:.4rem;transition:all .15s}
+.dl-btn:hover{background:rgba(37,99,235,.28);color:#fff}
+.no-file{display:inline-flex;align-items:center;gap:.3rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);padding:4px 11px;border-radius:7px;font-size:.8rem;margin-top:.4rem}
+
+/* ── ROLE BADGES ── */
+.rbadge{display:inline-block;padding:2px 8px;border-radius:5px;font-size:.7rem;font-weight:700;letter-spacing:.3px;margin-left:4px}
+.rb-admin{background:#e74c3c;color:#fff}
+.rb-mitarbeiter{background:#2563eb;color:#fff}
+.rb-freunde{background:#10b981;color:#fff}
+.rb-user{background:rgba(255,255,255,.12);color:rgba(255,255,255,.65)}
+.role-btn{padding:.3rem .85rem;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;border:none;transition:all .15s;font-family:'Inter',sans-serif}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:2000;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.modal-box{background:#fff;border-radius:18px;padding:2.25rem;max-width:540px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-box h3{font-size:1.3rem;font-weight:800;color:var(--navy);margin-bottom:1.4rem}
+.modal-btns{display:flex;gap:.75rem;justify-content:flex-end;margin-top:1.75rem}
+.btn-cancel{background:none;border:1px solid var(--gray-l);color:var(--gray);padding:.65rem 1.25rem;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600}
+.btn-cancel:hover{background:#f8fafc}
+.btn-save{background:var(--navy);color:#fff;border:none;padding:.65rem 1.75rem;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600}
+.btn-save:hover{background:var(--blue)}
+.img-drop-zone{border:2px dashed var(--gray-l);border-radius:12px;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;background:#f8fafc;padding:1.5rem;text-align:center}
+.img-drop-zone:hover{border-color:var(--blue);background:#eff6ff}
+.img-drop-zone input[type=file]{display:none}
+.img-drop-zone img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:10px}
+.img-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;border-radius:10px;color:#fff;font-weight:600}
+.img-drop-zone:hover .img-overlay{opacity:1}
+.img-lbl{font-size:.875rem;color:var(--gray);font-weight:500}
+.img-hint{font-size:.78rem;color:#b0bec5}
+
+/* ── FORGOT MODAL ── */
+.fp-err{color:var(--error);font-size:.85rem;margin-bottom:.75rem;display:none}
+.fp-success{text-align:center;padding:.5rem 0}
+.fp-success .big-icon{font-size:3rem;margin-bottom:.75rem}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:1.75rem;right:1.75rem;background:var(--navy);color:#fff;padding:.9rem 1.35rem;border-radius:11px;font-size:.9rem;z-index:9000;animation:ti .3s ease;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.toast.s{border-left:4px solid var(--success)}
+.toast.e{border-left:4px solid var(--error)}
+@keyframes ti{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* ── FOOTER ── */
+footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px solid rgba(255,255,255,.05)}
+.ft-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:2rem}
+.ft-col h4{font-size:.875rem;font-weight:700;color:#fff;margin-bottom:.9rem}
+.ft-col p,.ft-col a{display:block;font-size:.85rem;color:rgba(255,255,255,.5);margin-bottom:.4rem;text-decoration:none;cursor:pointer;line-height:1.6}
+.ft-col a:hover{color:#fff}
+.ft-bot{max-width:1200px;margin:1.75rem auto 0;border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)}
+.ft-logo{display:flex;align-items:center;gap:8px;margin-bottom:.75rem}
+.ft-logo-text{color:#fff;font-weight:800;font-size:1rem;letter-spacing:2px}
+
+/* ── FAB DESIGN EDITOR ── */
+#design-fab{position:fixed;bottom:24px;right:24px;z-index:8000;display:none}
+#design-fab button{display:flex;align-items:center;gap:7px;background:var(--blue);color:#fff;border:none;padding:.65rem 1.2rem;border-radius:50px;font-family:'Inter',sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,.45);transition:all .2s}
+#design-fab button:hover{background:var(--blue2);transform:translateY(-2px)}
+#dp{position:fixed;top:0;right:-410px;width:390px;height:100vh;background:#0d1b2e;border-left:1px solid rgba(255,255,255,.1);z-index:9000;transition:right .3s ease;display:flex;flex-direction:column;box-shadow:-8px 0 32px rgba(0,0,0,.4)}
+#dp.open{right:0}
+#dp-header{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.4rem;border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0}
+#dp-title{font-size:.95rem;font-weight:700;color:#fff}
+#dp-close{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+#dp-tabs{display:flex;flex-wrap:wrap;gap:3px;padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.2);flex-shrink:0}
+.dp-tab{background:none;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);padding:.3rem .7rem;border-radius:6px;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:500;cursor:pointer;transition:all .15s}
+.dp-tab:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+.dp-tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+#dp-content{flex:1;overflow-y:auto;padding:1.25rem}
+#dp-content::-webkit-scrollbar{width:4px}
+#dp-content::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:4px}
+.dp-sec{display:none;flex-direction:column;gap:.9rem}
+.dp-sec.active{display:flex}
+.dp-field label{display:block;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem}
+.dp-field input[type=text],.dp-field input[type=email],.dp-field textarea{width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);border-radius:8px;padding:.6rem .85rem;color:#fff;font-family:'Inter',sans-serif;font-size:.875rem;outline:none;transition:border .15s}
+.dp-field input:focus,.dp-field textarea:focus{border-color:var(--blue)}
+.dp-field textarea{resize:vertical;min-height:65px}
+.dp-field input::placeholder,.dp-field textarea::placeholder{color:rgba(255,255,255,.25)}
+.dp-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.dp-color-row{display:flex;align-items:center;gap:.75rem}
+.dp-color-row input[type=color]{width:46px;height:38px;border:none;border-radius:8px;cursor:pointer;padding:2px;background:none;flex-shrink:0}
+.dp-color-row input[type=text]{flex:1}
+.dp-save-btn{background:var(--blue);color:#fff;border:none;padding:.65rem;border-radius:8px;font-family:'Inter',sans-serif;font-weight:600;font-size:.875rem;cursor:pointer;width:100%;margin-top:.25rem;transition:background .15s}
+.dp-save-btn:hover{background:var(--blue2)}
+.dp-feat-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.85rem;display:flex;flex-direction:column;gap:.6rem}
+.dp-feat-lbl{font-size:.7rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.05em}
+.dp-upload-zone{border:2px dashed rgba(255,255,255,.2);border-radius:10px;padding:1.5rem;text-align:center;cursor:pointer;color:rgba(255,255,255,.45);font-size:.875rem;transition:all .2s}
+.dp-upload-zone:hover{border-color:var(--blue);color:#fff;background:rgba(37,99,235,.08)}
+
+/* ── SPINNER ── */
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.35);border-top:2px solid #fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:7px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:700px){
+  nav{padding:0 1rem}
+  .nav-btn{padding:.45rem .6rem;font-size:.8rem}
+  .form-row{grid-template-columns:1fr}
+  .hero h1{font-size:2rem}
+  .dp-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- PRINTOX LOGO SVG (Hexagon icon) -->
+<svg style="display:none" id="hex-def">
+  <symbol id="hex-icon" viewBox="0 0 40 40">
+    <polygon points="20,2 36,11 36,29 20,38 4,29 4,11" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.8"/>
+    <polygon points="20,9 31,15.5 31,24.5 20,31 9,24.5 9,15.5" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.75)" stroke-width="1.6"/>
+    <polygon points="20,15 26,18.5 26,21.5 20,25 14,21.5 14,18.5" fill="white"/>
+  </symbol>
+</svg>
+
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">
+    <svg width="38" height="38"><use href="#hex-icon"/></svg>
+    <span class="nav-logo-text">PRINTOX</span>
+  </div>
+  <div class="nav-links">
+    <button class="nav-btn active" id="nav-home" onclick="showPage('home')">Home</button>
+    <button class="nav-btn" id="nav-shop" onclick="showPage('shop')">Shop</button>
+    <button class="nav-btn" id="nav-upload" onclick="showPage('upload')">Upload</button>
+    <button class="nav-btn" id="nav-contact" onclick="showPage('contact')">Kontakt</button>
+    <button class="nav-btn nav-cart-wrap" id="nav-cart" onclick="showPage('cart')">
+      🛒<span class="cart-badge" id="cart-badge">0</span>
+    </button>
+  </div>
+  <div class="nav-right" id="nav-user">
+    <button class="nav-action" onclick="showPage('login')">Anmelden</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-content">
+      <h1>Professioneller<br><span>3D-Druck-Service</span></h1>
+      <p>Hochwertige 3D-Drucke nach Ihren Wünschen. Laden Sie Ihr Modell hoch und wir drucken es für Sie.</p>
+      <div class="hero-btns">
+        <button class="btn-fill" onclick="showPage('shop')">Shop ansehen</button>
+        <button class="btn-ghost" onclick="showPage('upload')">Modell hochladen</button>
+      </div>
+    </div>
+  </div>
+  <div class="features-wrap">
+    <div class="sec-label">Warum Printox?</div>
+    <div class="sec-title">Qualität aus der Schweiz</div>
+    <div class="sec-sub" id="home-feat-sub">Professioneller 3D-Druck für Privat und Gewerbe</div>
+    <div class="feat-grid" id="feat-grid">
+      <div class="feat-card"><div class="feat-icon">⚡</div><h3>Schnelle Lieferung</h3><p>Innerhalb von 7–9 Werktagen geliefert.</p></div>
+      <div class="feat-card"><div class="feat-icon">🎯</div><h3>Hochpräzision</h3><p>Druckauflösung bis zu 0.1 mm für exakte Ergebnisse.</p></div>
+      <div class="feat-card"><div class="feat-icon">🔧</div><h3>Alle Materialien</h3><p>PLA, PETG, ABS, TPU und weitere auf Anfrage.</p></div>
+      <div class="feat-card"><div class="feat-icon">💬</div><h3>Persönlicher Support</h3><p>Beratung direkt per Telefon oder E-Mail.</p></div>
+    </div>
+  </div>
+  <div class="cta-band">
+    <h2 id="cta-h">Bereit für Ihr Projekt?</h2>
+    <p id="cta-p">Laden Sie Ihr 3D-Modell hoch und erhalten Sie ein Angebot.</p>
+    <button class="btn-fill" id="cta-btn" onclick="showPage('upload')">Jetzt Bestellung starten</button>
+  </div>
+  <footer>
+    <div class="ft-inner">
+      <div>
+        <div class="ft-logo"><svg width="30" height="30"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div>
+        <p id="ft-desc">Professioneller 3D-Druck-Service aus der Schweiz.</p>
+      </div>
+      <div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('contact')">Kontakt</a></div>
+      <div class="ft-col"><h4>Kontakt</h4><p id="ft-email">printox26@outlook.com</p><p id="ft-phone">077 496 28 38</p></div>
+    </div>
+    <div class="ft-bot"><span id="ft-copy">© 2025 Printox</span><span>Made in 🇨🇭</span></div>
+  </footer>
+</div>
+
+<!-- SHOP -->
+<div class="page" id="page-shop">
+  <div class="pg-wrap">
+    <div class="pg-header">
+      <div><div class="pg-title">Shop</div><div class="pg-sub">Entdecken Sie unsere Produkte</div></div>
+      <button class="btn-add-prod" id="admin-add-btn" onclick="openProdModal()" style="display:none">+ Produkt hinzufügen</button>
+    </div>
+    <div class="products-grid" id="products-grid"></div>
+  </div>
+  <footer><div class="ft-inner" style="max-width:1200px"><div><div class="ft-logo"><svg width="28" height="28"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div></div><div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('contact')">Kontakt</a></div><div class="ft-col"><h4>Kontakt</h4><p>printox26@outlook.com</p><p>077 496 28 38</p></div></div><div class="ft-bot" style="max-width:1200px;margin:1.5rem auto 0;border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2025 Printox</span><span>Made in 🇨🇭</span></div></footer>
+</div>
+
+<!-- CART -->
+<div class="page" id="page-cart">
+  <div class="pg-wrap" style="max-width:860px">
+    <div class="pg-title">Warenkorb</div>
+    <div class="pg-sub">Ihre ausgewählten Artikel</div>
+    <div id="cart-items"></div>
+    <div id="cart-summary"></div>
+  </div>
+  <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2025 Printox</span><span>Made in 🇨🇭</span></div></footer>
+</div>
+
+<!-- UPLOAD -->
+<div class="page" id="page-upload">
+  <div class="pg-wrap" style="max-width:780px">
+    <div class="pg-title">3D-Modell hochladen</div>
+    <div class="pg-sub">Beschreiben Sie Ihren Wunsch und laden Sie Ihre Datei hoch</div>
+    <form id="upload-form" onsubmit="submitOrder(event)">
+      <div class="upload-drop" id="upload-drop" onclick="document.getElementById('file-in').click()" ondragover="doDragOver(event)" ondrop="doDrop(event)" ondragleave="doDragLeave()">
+        <div style="font-size:2.75rem;margin-bottom:.75rem">📁</div>
+        <h3>Datei hier ablegen oder klicken</h3>
+        <p>.STL · .OBJ · .3MF · .STEP · .IGES</p>
+        <input type="file" id="file-in" accept=".stl,.obj,.3mf,.step,.stp,.iges" onchange="pickFile(event)">
+      </div>
+      <div id="file-pill" style="display:none" class="file-pill">
+        📎 <span id="file-lbl" style="flex:1;font-weight:500"></span>
+        <button type="button" onclick="clearFile()" style="background:none;border:none;color:var(--error);cursor:pointer;font-size:1rem">✕</button>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label>Name *</label><input type="text" id="o-name" required placeholder="Ihr vollständiger Name"></div>
+        <div class="fg"><label>E-Mail *</label><input type="email" id="o-email" required placeholder="ihre@email.ch"></div>
+      </div>
+      <div class="fg"><label>Telefon *</label><input type="tel" id="o-phone" required placeholder="z.B. 077 496 28 38"></div>
+      <div class="fg"><label>Strasse & Hausnummer *</label><input type="text" id="o-street" required placeholder="Musterstrasse 12"></div>
+      <div class="form-row">
+        <div class="fg"><label>PLZ *</label><input type="text" id="o-plz" required placeholder="8000" maxlength="6"></div>
+        <div class="fg"><label>Ort *</label><input type="text" id="o-city" required placeholder="Zürich"></div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label>Material</label><select id="o-mat"><option>PLA (Standard)</option><option>PETG (Robust)</option><option>ABS (Hitzebeständig)</option><option>TPU (Flexibel)</option><option>Sonstige</option></select></div>
+        <div class="fg"><label>Farbe</label><input type="text" id="o-color" placeholder="z.B. Schwarz, Weiss, Rot"></div>
+      </div>
+      <div class="fg">
+        <label>Anzahl Exemplare</label>
+        <div class="qty-step">
+          <button type="button" onclick="qtyAdj(-1)">−</button>
+          <input type="number" id="o-qty" value="1" min="1" max="999" onchange="qtyClamp()">
+          <button type="button" onclick="qtyAdj(1)">+</button>
+        </div>
+      </div>
+      <div class="fg"><label>Beschreibung & Wünsche</label><textarea id="o-desc" placeholder="Projektbeschreibung, Anforderungen, Qualität..."></textarea></div>
+      <button type="submit" class="btn-sub">Bestellung absenden</button>
+    </form>
+  </div>
+  <footer><div class="ft-bot" style="max-width:780px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2025 Printox</span><span>Made in 🇨🇭</span></div></footer>
+</div>
+
+<!-- LOGIN -->
+<div class="page" id="page-login">
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <h2>Anmelden</h2>
+      <div class="sub">Willkommen zurück bei Printox</div>
+      <form onsubmit="doLogin(event)">
+        <div class="fg"><label>E-Mail</label><input type="email" id="l-email" required placeholder="ihre@email.ch"></div>
+        <div class="fg"><label>Passwort</label><input type="password" id="l-pass" required placeholder="••••••••"></div>
+        <div class="forgot-link"><span onclick="showForgot()">Passwort vergessen?</span></div>
+        <button type="submit" class="btn-auth" style="margin-top:1.25rem">Anmelden</button>
+      </form>
+      <div class="auth-toggle">Noch kein Konto? <span onclick="showPage('register')">Jetzt registrieren</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div class="page" id="page-register">
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <h2>Registrieren</h2>
+      <div class="sub">Erstellen Sie Ihr Printox-Konto</div>
+      <form onsubmit="doRegister(event)">
+        <div class="fg"><label>Name</label><input type="text" id="r-name" required placeholder="Ihr vollständiger Name"></div>
+        <div class="fg"><label>E-Mail</label><input type="email" id="r-email" required placeholder="ihre@email.ch"></div>
+        <div class="fg"><label>Passwort</label><input type="password" id="r-pass" required placeholder="Mindestens 6 Zeichen"></div>
+        <button type="submit" class="btn-auth" style="margin-top:.5rem">Konto erstellen</button>
+      </form>
+      <div class="auth-toggle">Bereits ein Konto? <span onclick="showPage('login')">Anmelden</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="page" id="page-contact">
+  <div class="pg-wrap" style="max-width:860px">
+    <div class="pg-title">Kontakt</div>
+    <div class="pg-sub">Wir freuen uns von Ihnen zu hören</div>
+    <div class="con-grid">
+      <div class="con-card"><h4>📧 E-Mail</h4><p>printox26@outlook.com</p></div>
+      <div class="con-card"><h4>📱 Telefon</h4><p>077 496 28 38</p></div>
+      <div class="con-card"><h4>🕐 Öffnungszeiten</h4><p>Mi: 17:00–19:00<br>Fr: 17:00–20:00<br>Sa–So: 16:00–20:00</p></div>
+      <div class="con-card"><h4>📦 Lieferung</h4><p>Schweizweit per Post</p></div>
+    </div>
+    <form onsubmit="doContact(event)">
+      <div class="fg"><label>Name</label><input type="text" required placeholder="Ihr Name"></div>
+      <div class="fg"><label>E-Mail</label><input type="email" required placeholder="ihre@email.ch"></div>
+      <div class="fg"><label>Nachricht</label><textarea required placeholder="Ihr Anliegen..."></textarea></div>
+      <button type="submit" class="btn-sub">Nachricht senden</button>
+    </form>
+  </div>
+  <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2025 Printox · 077 496 28 38</span><span>Made in 🇨🇭</span></div></footer>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+  <div class="admin-wrap">
+    <div class="admin-head">
+      <div class="admin-title">Admin-Dashboard</div>
+      <span class="abadge">ADMIN</span>
+    </div>
+    <div class="stats-grid" id="admin-stats"></div>
+    <div class="a-tabs">
+      <button class="a-tab active" onclick="aTab('orders')">Bestellungen</button>
+      <button class="a-tab" onclick="aTab('products')">Produkte</button>
+      <button class="a-tab" onclick="aTab('users')">Benutzer</button>
+      <button class="a-tab" onclick="aTab('layout')">🎨 Layout</button>
+    </div>
+    <div class="a-sec active" id="a-orders"><div class="o-list" id="orders-list"></div></div>
+    <div class="a-sec" id="a-products">
+      <div style="margin-bottom:1.25rem"><button class="btn-add-prod" onclick="openProdModal()">+ Produkt hinzufügen</button></div>
+      <div class="products-grid" id="admin-prod-grid"></div>
+    </div>
+    <div class="a-sec" id="a-users"><div id="users-list"></div></div>
+    <div class="a-sec" id="a-layout">
+      <div style="background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);border-radius:14px;padding:2rem;text-align:center;color:#fff">
+        <div style="font-size:2.5rem;margin-bottom:.75rem">🎨</div>
+        <h3 style="margin-bottom:.5rem;font-size:1.1rem">Design-Editor</h3>
+        <p style="color:rgba(255,255,255,.65);font-size:.9rem;margin-bottom:1.25rem">Zugänglich auf jeder Seite über den blauen ✏️-Button unten rechts.</p>
+        <button class="btn-save" onclick="toggleDP()" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer">✏️ Design-Editor öffnen</button>
+      </div>
+    </div>
+  </div>
+  <footer><div class="ft-bot" style="max-width:1200px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2025 Printox Admin · Remo Bögli</span><span>Made in 🇨🇭</span></div></footer>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-bg" id="prod-modal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <h3 id="prod-modal-title">Produkt hinzufügen</h3>
+    <div class="fg">
+      <label>Produktbild</label>
+      <div class="img-drop-zone" id="img-drop" onclick="document.getElementById('p-img').click()">
+        <input type="file" id="p-img" accept="image/*" onchange="pickProdImg(event)">
+        <img id="p-img-prev" src="" alt="" style="display:none">
+        <div class="img-overlay">🖼️ Bild ändern</div>
+        <div id="img-ph"><div style="font-size:2rem;margin-bottom:.4rem">🖼️</div><div class="img-lbl">Klicken zum Hochladen</div><div class="img-hint">JPG · PNG · WEBP</div></div>
+      </div>
+      <div id="img-rm" style="display:none;margin-top:.5rem"><button type="button" onclick="rmProdImg()" style="background:none;border:none;color:var(--error);font-size:.85rem;cursor:pointer;font-weight:600">✕ Bild entfernen</button></div>
+    </div>
+    <div class="fg"><label>Produktname *</label><input type="text" id="p-name" placeholder="z.B. Würfelhalter"></div>
+    <div class="fg"><label>Beschreibung</label><textarea id="p-desc" style="min-height:75px" placeholder="Kurze Beschreibung..."></textarea></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div class="fg"><label>Preis (CHF) *</label><input type="number" id="p-price" step="0.05" min="0" placeholder="14.90"></div>
+      <div class="fg"><label>Emoji (Fallback)</label><input type="text" id="p-icon" maxlength="4" placeholder="🖨️"></div>
+    </div>
+    <div style="margin-top:.25rem">
+      <div style="font-size:.78rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.5rem">Paketmasse (für Versandberechnung)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.6rem">
+        <div class="fg" style="margin-bottom:0"><label style="font-size:.7rem">Länge (cm)</label><input type="number" id="p-len" step="0.5" min="0" placeholder="30"></div>
+        <div class="fg" style="margin-bottom:0"><label style="font-size:.7rem">Breite (cm)</label><input type="number" id="p-wid" step="0.5" min="0" placeholder="20"></div>
+        <div class="fg" style="margin-bottom:0"><label style="font-size:.7rem">Höhe (cm)</label><input type="number" id="p-hei" step="0.5" min="0" placeholder="8"></div>
+        <div class="fg" style="margin-bottom:0"><label style="font-size:.7rem">Gewicht (kg)</label><input type="number" id="p-kg" step="0.1" min="0" placeholder="0.5"></div>
+      </div>
+      <div style="font-size:.75rem;color:var(--gray);margin-top:.4rem">Versandkosten werden automatisch berechnet (Post CH + Distanz)</div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="document.getElementById('prod-modal').style.display='none'">Abbrechen</button>
+      <button class="btn-save" onclick="saveProd()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div class="modal-bg" id="forgot-modal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:420px">
+    <h3>Passwort zurücksetzen</h3>
+    <div id="fp-form">
+      <p style="color:var(--gray);font-size:.9rem;margin-bottom:1.5rem">Geben Sie Ihre E-Mail und ein neues Passwort ein.</p>
+      <div class="fg"><label>E-Mail-Adresse</label><input type="email" id="fp-email" placeholder="ihre@email.ch"></div>
+      <div class="fg"><label>Neues Passwort</label><input type="password" id="fp-p1" placeholder="Mindestens 6 Zeichen"></div>
+      <div class="fg"><label>Passwort bestätigen</label><input type="password" id="fp-p2" placeholder="Passwort wiederholen"></div>
+      <div id="fp-err" class="fp-err"></div>
+      <div class="modal-btns" style="margin-top:0">
+        <button class="btn-cancel" onclick="document.getElementById('forgot-modal').style.display='none'">Abbrechen</button>
+        <button class="btn-save" onclick="fpReset()">Passwort ändern</button>
+      </div>
+    </div>
+    <div id="fp-ok" class="fp-success" style="display:none">
+      <div class="big-icon">✅</div>
+      <h4 style="color:var(--navy);margin-bottom:.5rem">Passwort geändert!</h4>
+      <p style="color:var(--gray);font-size:.9rem;margin-bottom:1.5rem">Sie können sich jetzt anmelden.</p>
+      <button class="btn-save" style="width:100%" onclick="document.getElementById('forgot-modal').style.display='none';showPage('login')">Zur Anmeldung</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAB + DESIGN PANEL -->
+<div id="design-fab">
+  <button onclick="toggleDP()">✏️ Design</button>
+</div>
+
+<div id="dp">
+  <div id="dp-header">
+    <span id="dp-title">🎨 Design bearbeiten</span>
+    <button id="dp-close" onclick="toggleDP()">✕</button>
+  </div>
+  <div id="dp-tabs">
+    <button class="dp-tab active" onclick="dpTab('hero')">Hero</button>
+    <button class="dp-tab" onclick="dpTab('features')">Features</button>
+    <button class="dp-tab" onclick="dpTab('cta')">CTA</button>
+    <button class="dp-tab" onclick="dpTab('contact')">Kontakt</button>
+    <button class="dp-tab" onclick="dpTab('footer')">Footer</button>
+    <button class="dp-tab" onclick="dpTab('colors')">Farben</button>
+  </div>
+  <div id="dp-content">
+    <div class="dp-sec active" id="dps-hero">
+      <div class="dp-field"><label>Titel Zeile 1</label><input type="text" id="dp-h1" oninput="liveHero()"></div>
+      <div class="dp-field"><label>Titel Zeile 2 (blau)</label><input type="text" id="dp-h2" oninput="liveHero()"></div>
+      <div class="dp-field"><label>Untertitel</label><textarea id="dp-hsub" oninput="liveHero()"></textarea></div>
+      <div class="dp-row">
+        <div class="dp-field"><label>Button 1</label><input type="text" id="dp-hb1" oninput="liveHero()"></div>
+        <div class="dp-field"><label>Button 2</label><input type="text" id="dp-hb2" oninput="liveHero()"></div>
+      </div>
+      <button class="dp-save-btn" onclick="saveHero()">✓ Speichern</button>
+    </div>
+    <div class="dp-sec" id="dps-features">
+      <div id="dp-feat-list"></div>
+      <button class="dp-save-btn" onclick="saveFeats()">✓ Speichern</button>
+    </div>
+    <div class="dp-sec" id="dps-cta">
+      <div class="dp-field"><label>Überschrift</label><input type="text" id="dp-ctah" oninput="liveCTA()"></div>
+      <div class="dp-field"><label>Untertitel</label><input type="text" id="dp-ctap" oninput="liveCTA()"></div>
+      <div class="dp-field"><label>Button Text</label><input type="text" id="dp-ctab" oninput="liveCTA()"></div>
+      <button class="dp-save-btn" onclick="saveCTA()">✓ Speichern</button>
+    </div>
+    <div class="dp-sec" id="dps-contact">
+      <div class="dp-field"><label>E-Mail</label><input type="email" id="dp-cemail"></div>
+      <div class="dp-field"><label>Telefon / TWINT</label><input type="text" id="dp-cphone"></div>
+      <div class="dp-field"><label>Öffnungszeiten</label><textarea id="dp-chours" style="min-height:80px"></textarea></div>
+      <div class="dp-field"><label>Lieferung</label><input type="text" id="dp-cship"></div>
+      <button class="dp-save-btn" onclick="saveContact()">✓ Speichern</button>
+    </div>
+    <div class="dp-sec" id="dps-footer">
+      <div class="dp-field"><label>Beschreibung</label><input type="text" id="dp-fdesc"></div>
+      <div class="dp-field"><label>Copyright</label><input type="text" id="dp-fcopy"></div>
+      <button class="dp-save-btn" onclick="saveFooter()">✓ Speichern</button>
+    </div>
+    <div class="dp-sec" id="dps-colors">
+      <div class="dp-field"><label>Navigationsleiste</label><div class="dp-color-row"><input type="color" id="dp-cnav" value="#0d1b2e" oninput="syncHex('cnav');liveColors()"><input type="text" id="dp-cnav-h" value="#0d1b2e" oninput="syncPick('cnav');liveColors()"></div></div>
+      <div class="dp-field"><label>Akzentfarbe (Blau)</label><div class="dp-color-row"><input type="color" id="dp-cblue" value="#2563eb" oninput="syncHex('cblue');liveColors()"><input type="text" id="dp-cblue-h" value="#2563eb" oninput="syncPick('cblue');liveColors()"></div></div>
+      <div class="dp-field"><label>Hintergrund</label><div class="dp-color-row"><input type="color" id="dp-cbg" value="#0f2040" oninput="syncHex('cbg');liveColors()"><input type="text" id="dp-cbg-h" value="#0f2040" oninput="syncPick('cbg');liveColors()"></div></div>
+      <button class="dp-save-btn" onclick="saveColors()">✓ Farben anwenden</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ STATE ═══════════════════════════════════════════════════════════════════
+let users = [{id:1,name:'Remo Bögli',email:'printox26@outlook.com',password:'printox2024',isAdmin:true,role:'admin'}];
+let currentUser = null;
+let cart = [];
+let products = [
+  {id:1,name:'Würfelhalter',desc:'Kompakter Würfelhalter für bis zu 20 Spiele.',price:14.90,len:15,wid:15,hei:8,kg:0.2,shipping:6.90,icon:'🎲',image:null},
+  {id:2,name:'Handyständer',desc:'Verstellbarer Smartphone-Ständer aus PLA.',price:19.90,len:20,wid:12,hei:10,kg:0.3,shipping:8.90,icon:'📱',image:null},
+  {id:3,name:'Logo-Keychain',desc:'Ihr Logo als 3D-gedruckter Schlüsselanhänger.',price:8.50,len:8,wid:5,hei:1,kg:0.05,shipping:6.90,icon:'🔑',image:null},
+  {id:4,name:'Organizer-Box',desc:'Massgeschneiderte Aufbewahrungsbox.',price:24.90,len:35,wid:25,hei:15,kg:0.8,shipping:8.90,icon:'📦',image:null},
+];
+let orders = [
+  {id:'ORD-001',type:'upload',name:'Max Muster',email:'max@example.ch',material:'PLA',color:'Schwarz',qty:2,desc:'Roboterarm-Teil',status:'new',date:'2025-05-03',fileName:null,fileData:null},
+  {id:'ORD-002',type:'shop',name:'Lisa Meier',email:'lisa@example.ch',items:[{name:'Handyständer',qty:2,price:19.90}],total:39.80,payment:'TWINT',status:'processing',date:'2025-05-04'},
+];
+let selPay = 'twint';
+let editProdId = null;
+let pendingImg = null;
+let selFile = null;
+let selFileData = null;
+let nProdId = 10;
+let nOrdId = 100;
+let dpOpen = false;
+
+// ═══ HELPERS ════════════════════════════════════════════════════════════════
+function getRoleLabel(role) {
+  return {admin:'Admin',mitarbeiter:'Mitarbeiter',freunde:'Freunde',user:'Benutzer'}[role||'user'];
+}
+function getRoleBadge(role) {
+  const cls = {admin:'rb-admin',mitarbeiter:'rb-mitarbeiter',freunde:'rb-freunde',user:'rb-user'};
+  return '<span class="rbadge ' + (cls[role||'user']) + '">' + getRoleLabel(role) + '</span>';
+}
+function getUserDiscount() {
+  if (!currentUser) return 0;
+  if (currentUser.role === 'mitarbeiter' || currentUser.role === 'freunde') return 0.10;
+  return 0;
+}
+function toast(msg, t) {
+  const old = document.querySelector('.toast'); if (old) old.remove();
+  const el = document.createElement('div');
+  el.className = 'toast ' + (t||'s'); el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ═══ NAVIGATION ═════════════════════════════════════════════════════════════
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  const nb = document.getElementById('nav-' + p); if (nb) nb.classList.add('active');
+  window.scrollTo(0,0);
+  if (p === 'shop') renderShop();
+  if (p === 'cart') renderCart();
+  if (p === 'admin') renderAdmin();
+}
+
+// ═══ AUTH ════════════════════════════════════════════════════════════════════
+function renderNav() {
+  const nu = document.getElementById('nav-user');
+  const ab = document.getElementById('admin-add-btn');
+  const fab = document.getElementById('design-fab');
+  if (currentUser) {
+    const ini = currentUser.name.split(' ').map(x => x[0]).join('').toUpperCase().slice(0,2);
+    const disc = getUserDiscount();
+    let html = '<div class="user-av">' + ini + '</div>';
+    if (disc > 0) html += '<span class="disc-badge">10% Rabatt</span>';
+    if (currentUser.isAdmin) html += '<button class="nav-action" onclick="showPage(\'admin\')">Dashboard</button>';
+    html += '<button class="nav-action" onclick="doLogout()">Abmelden</button>';
+    nu.innerHTML = html;
+    if (ab) ab.style.display = currentUser.isAdmin ? 'flex' : 'none';
+    if (fab) fab.style.display = currentUser.isAdmin ? 'block' : 'none';
+  } else {
+    nu.innerHTML = '<button class="nav-action" onclick="showPage(\'login\')">Anmelden</button>';
+    if (ab) ab.style.display = 'none';
+    if (fab) fab.style.display = 'none';
+  }
+}
+
+function doLogin(e) {
+  e.preventDefault();
+  const em = document.getElementById('l-email').value.trim().toLowerCase();
+  const pw = document.getElementById('l-pass').value;
+  const u = users.find(u => u.email.toLowerCase() === em && u.password === pw);
+  if (!u) { toast('E-Mail oder Passwort falsch.','e'); return; }
+  currentUser = u; renderNav();
+  toast('Willkommen, ' + u.name + '! 👋');
+  showPage(u.isAdmin ? 'admin' : 'home');
+}
+
+function doRegister(e) {
+  e.preventDefault();
+  const name = document.getElementById('r-name').value.trim();
+  const em = document.getElementById('r-email').value.trim().toLowerCase();
+  const pw = document.getElementById('r-pass').value;
+  if (pw.length < 6) { toast('Passwort mind. 6 Zeichen.','e'); return; }
+  if (users.find(u => u.email.toLowerCase() === em)) { toast('E-Mail bereits registriert.','e'); return; }
+  const nu = {id: Date.now(), name, email:em, password:pw, isAdmin:false, role:'user'};
+  users.push(nu); currentUser = nu; renderNav();
+  toast('Konto erstellt! Willkommen, ' + name + '!');
+  showPage('home');
+}
+
+function doLogout() {
+  currentUser = null; renderNav();
+  toast('Abgemeldet.');
+  showPage('home');
+}
+
+// ═══ FORGOT PASSWORD ═════════════════════════════════════════════════════════
+function showForgot() {
+  document.getElementById('fp-form').style.display = 'block';
+  document.getElementById('fp-ok').style.display = 'none';
+  document.getElementById('fp-email').value = document.getElementById('l-email')?.value || '';
+  document.getElementById('fp-p1').value = '';
+  document.getElementById('fp-p2').value = '';
+  document.getElementById('fp-err').style.display = 'none';
+  document.getElementById('forgot-modal').style.display = 'flex';
+}
+
+function fpReset() {
+  const email = document.getElementById('fp-email').value.trim().toLowerCase();
+  const p1 = document.getElementById('fp-p1').value;
+  const p2 = document.getElementById('fp-p2').value;
+  const err = document.getElementById('fp-err');
+  err.style.display = 'none';
+  if (!email) { err.textContent = 'Bitte E-Mail eingeben.'; err.style.display = 'block'; return; }
+  if (!p1 || p1.length < 6) { err.textContent = 'Passwort mind. 6 Zeichen.'; err.style.display = 'block'; return; }
+  if (p1 !== p2) { err.textContent = 'Passwörter stimmen nicht überein.'; err.style.display = 'block'; return; }
+  const u = users.find(x => x.email.toLowerCase() === email);
+  if (!u) { err.textContent = 'Kein Konto mit dieser E-Mail gefunden.'; err.style.display = 'block'; return; }
+  u.password = p1;
+  document.getElementById('fp-form').style.display = 'none';
+  document.getElementById('fp-ok').style.display = 'block';
+}
+
+// ═══ SHOP ════════════════════════════════════════════════════════════════════
+function pImgHTML(p) {
+  return p.image
+    ? '<div class="product-img"><img src="' + p.image + '" alt="' + p.name + '"></div>'
+    : '<div class="product-img"><span class="ef">' + (p.icon||'🖨️') + '</span></div>';
+}
+
+function renderShop() {
+  const isA = currentUser && currentUser.isAdmin;
+  const html = products.length ? products.map(p =>
+    '<div class="product-card">'
+    + pImgHTML(p)
+    + '<div class="product-body">'
+    + '<div class="product-name">' + p.name + '</div>'
+    + '<div class="product-desc">' + p.desc + '</div>'
+    + '<div class="product-price">CHF ' + p.price.toFixed(2) + '</div>'
+    + '<div class="product-actions">'
+    + '<button class="btn-cart" onclick="addToCart(' + p.id + ')">In Warenkorb</button>'
+    + (isA ? '<button class="btn-edit-sm" onclick="openProdModal(' + p.id + ')">✏️</button><button class="btn-del-sm" onclick="delProd(' + p.id + ')">🗑️</button>' : '')
+    + '</div></div></div>'
+  ).join('') : '<div class="empty-st"><div class="ei">🖨️</div><p>Noch keine Produkte.</p></div>';
+  const g = document.getElementById('products-grid');
+  const ag = document.getElementById('admin-prod-grid');
+  if (g) g.innerHTML = html;
+  if (ag) ag.innerHTML = html;
+}
+
+
+
+// ═══ CART ════════════════════════════════════════════════════════════════════
+function addToCart(id) {
+  const p = products.find(x => x.id === id); if (!p) return;
+  const ex = cart.find(x => x.id === id);
+  if (ex) ex.qty++; else cart.push({...p, qty:1});
+  updBadge(); toast(p.name + ' hinzugefügt ✓');
+}
+
+function updBadge() {
+  document.getElementById('cart-badge').textContent = cart.reduce((s,x) => s+x.qty, 0);
+}
+
+function renderCart() {
+  const ci = document.getElementById('cart-items');
+  const cs = document.getElementById('cart-summary');
+  if (!cart.length) {
+    ci.innerHTML = '<div class="empty-st"><div class="ei">🛒</div><p>Warenkorb ist leer.</p><br><br><button class="btn-fill" onclick="showPage(\'shop\')">Zum Shop</button></div>';
+    cs.innerHTML = ''; return;
+  }
+  ci.innerHTML = cart.map(it => {
+    const iH = it.image
+      ? '<div class="ci-icon"><img src="' + it.image + '" alt="' + it.name + '"></div>'
+      : '<div class="ci-icon">' + (it.icon||'🖨️') + '</div>';
+    return '<div class="cart-item">' + iH
+      + '<div style="flex:1"><div class="ci-name">' + it.name + '</div><div class="ci-price">CHF ' + it.price.toFixed(2) + ' / Stück</div></div>'
+      + '<div class="qty-ctrl"><button class="qty-btn" onclick="adjQ(' + it.id + ',-1)">−</button><span style="min-width:20px;text-align:center;font-weight:700">' + it.qty + '</span><button class="qty-btn" onclick="adjQ(' + it.id + ',1)">+</button></div>'
+      + '<div style="font-weight:800;min-width:76px;text-align:right;font-size:1rem">CHF ' + (it.price*it.qty).toFixed(2) + '</div>'
+      + '<button class="ci-rem" onclick="remCart(' + it.id + ')">✕</button></div>';
+  }).join('');
+
+  const sub = cart.reduce((s,x) => s+x.price*x.qty, 0);
+  const shipping = cart.reduce((s,x) => s + (x.shipping||7.90)*x.qty, 0);
+  const disc = getUserDiscount();
+  const discAmt = disc > 0 ? sub * disc : 0;
+  const tot = sub - discAmt + shipping;
+
+  const discRow = disc > 0
+    ? '<div class="cart-disc-row"><span>🎁 Rabatt (' + (disc*100) + '%)</span><span>− CHF ' + discAmt.toFixed(2) + '</span></div>'
+    : '';
+
+  const twintContent = selPay === 'twint'
+    ? '<div class="twint-box" style="margin-top:.75rem">'
+      + '<div style="font-weight:700;margin-bottom:.5rem">📱 TWINT</div>'
+      + '<p style="font-size:.875rem;margin-bottom:.75rem">TWINT wird in Kürze freigeschaltet (Genehmigung bei Stripe ausstehend).</p>'
+      + '<p style="font-size:.82rem;color:#1e40af">In der Zwischenzeit können Sie per <strong>Debitkarte</strong> bezahlen oder uns direkt kontaktieren.</p>'
+      + '</div>'
+    : '';
+  const cardContent = selPay === 'card' ? '<div class="stripe-wrap"><label>Kartendaten</label><div id="card-element"></div><div id="card-errors"></div></div><button class="btn-checkout" onclick="stripeCheckout(' + tot + ')">💳 Jetzt bezahlen – CHF ' + tot.toFixed(2) + '</button>' : '';
+  const ppContent = '';
+
+  cs.innerHTML = '<div class="cart-box">'
+    + '<div class="cart-row"><span>Zwischensumme</span><span>CHF ' + sub.toFixed(2) + '</span></div>'
+    + discRow
+    + '<div class="cart-row"><span>📦 Versand (Post CH)</span><span>CHF ' + shipping.toFixed(2) + '</span></div>'
+    + '<div class="cart-total"><span>Total</span><span>CHF ' + tot.toFixed(2) + '</span></div>'
+    + '</div>'
+    + '<div class="pay-title">Lieferadresse</div>'
+    + '<div class="cart-addr-box">'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem">'
+    + '<div class="fg" style="margin-bottom:0"><label>Vorname *</label><input class="addr-in" type="text" id="addr-fn" placeholder="Max"></div>'
+    + '<div class="fg" style="margin-bottom:0"><label>Nachname *</label><input class="addr-in" type="text" id="addr-ln" placeholder="Muster"></div>'
+    + '</div>'
+    + '<div class="fg" style="margin-bottom:.75rem"><label>Strasse & Hausnummer *</label><input class="addr-in" type="text" id="addr-street" placeholder="Musterstrasse 12"></div>'
+    + '<div style="display:grid;grid-template-columns:120px 1fr;gap:.75rem">'
+    + '<div class="fg" style="margin-bottom:0"><label>PLZ *</label><input class="addr-in" type="text" id="addr-plz" placeholder="8000" maxlength="6"></div>'
+    + '<div class="fg" style="margin-bottom:0"><label>Ort *</label><input class="addr-in" type="text" id="addr-city" placeholder="Zürich"></div>'
+    + '</div></div>'
+    + '<div class="pay-title">Zahlungsmethode</div>'
+    + '<div class="pay-opt ' + (selPay==='twint'?'sel':'') + '" onclick="setPay(\'twint\')"><input type="radio" name="pay" ' + (selPay==='twint'?'checked':'') + '><label>📱 TWINT</label></div>'
+    + '<div class="pay-opt ' + (selPay==='card'?'sel':'') + '" onclick="setPay(\'card\')"><input type="radio" name="pay" ' + (selPay==='card'?'checked':'') + '><label>💳 Debitkarte</label></div>'
+    + twintContent + cardContent;
+
+  if (selPay === 'card') setTimeout(initStripe, 100);
+  if (selPay === 'paypal') setTimeout(initPayPal, 100);
+}
+
+function setPay(m) {
+  selPay = m;
+  stripeElements = null;
+  renderCart();
+}
+function adjQ(id,d) { const it = cart.find(x=>x.id===id); if(!it) return; it.qty+=d; if(it.qty<=0) remCart(id); else {updBadge();renderCart();} }
+function remCart(id) { cart = cart.filter(x=>x.id!==id); updBadge(); renderCart(); }
+
+function placeOrder(method) {
+  if (!currentUser) { toast('Bitte zuerst anmelden.','e'); showPage('login'); return; }
+  // Validate address
+  const fn = document.getElementById('addr-fn')?.value.trim();
+  const ln = document.getElementById('addr-ln')?.value.trim();
+  const st = document.getElementById('addr-street')?.value.trim();
+  const pl = document.getElementById('addr-plz')?.value.trim();
+  const ci = document.getElementById('addr-city')?.value.trim();
+  if (!fn||!ln||!st||!pl||!ci) { toast('Bitte alle Adressfelder ausfüllen.','e'); return; }
+  const address = fn + ' ' + ln + ', ' + st + ', ' + pl + ' ' + ci;
+  // Calculate shipping (sum per product)
+  const sub = cart.reduce((s,x) => s+x.price*x.qty, 0);
+  const shipping = cart.reduce((s,x) => s + (x.shipping||7.90)*x.qty, 0);
+  const disc = getUserDiscount();
+  const total = sub*(1-disc) + shipping;
+  orders.unshift({id:'ORD-'+String(++nOrdId),type:'shop',name:currentUser.name,email:currentUser.email,
+    address, items:cart.map(x=>({name:x.name,qty:x.qty,price:x.price,shipping:x.shipping||7.90})),
+    total, payment:method, discount: disc>0 ? '10%' : null,
+    status:'new', date:new Date().toISOString().slice(0,10)});
+  cart = []; updBadge(); toast('Bestellung erfolgreich! ✓'); showPage('home');
+}
+
+// Stripe Inline Payment Element
+const STRIPE_KEY = 'pk_live_51TV7gYKu5mfw68IJZ3btyDhJWLHPujR476BHRZxJJBxdOtSKEulngqDIIWwb1pLvcVLSktFQlq7T6tXiVkT6El9400A1L9EOGH';
+const BACKEND_URL = 'https://printox-backend.onrender.com';
+let stripeInstance = null;
+let stripeElements = null;
+let currentTotal = 0;
+
+function setPay(m) {
+  selPay = m;
+  stripeElements = null;
+  renderCart();
+  if (m === 'card') {
+    const sub = cart.reduce((s,x) => s+x.price*x.qty, 0);
+    const ship = cart.reduce((s,x) => s+(x.shipping||7.90)*x.qty, 0);
+    const tot = sub*(1-getUserDiscount()) + ship;
+    setTimeout(() => initPaymentElement(tot), 200);
+  }
+}
+
+async function initPaymentElement(tot) {
+  const el = document.getElementById('payment-element');
+  if (!el) return;
+  currentTotal = tot;
+  el.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--gray)"><span class="spinner"></span> Wird geladen...</div>';
+
+  try {
+    const res = await fetch(BACKEND_URL + '/create-payment', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({amount: tot})
+    });
+    if (!res.ok) throw new Error('Backend-Fehler ' + res.status);
+    const data = await res.json();
+    if (!data.clientSecret) throw new Error('Kein Client Secret');
+
+    stripeInstance = Stripe(STRIPE_KEY);
+    stripeElements = stripeInstance.elements({
+      clientSecret: data.clientSecret,
+      appearance: {
+        theme: 'stripe',
+        variables: { colorPrimary: '#0d1b2e', fontFamily: 'Inter, sans-serif', borderRadius: '8px' }
+      }
+    });
+    const pe = stripeElements.create('payment', {layout: 'tabs'});
+    el.innerHTML = '';
+    pe.mount('#payment-element');
+
+    const btn = document.getElementById('btn-pay-now');
+    if (btn) {
+      btn.style.display = 'block';
+      btn.textContent = '✓ Jetzt bezahlen – CHF ' + tot.toFixed(2);
+    }
+  } catch(err) {
+    console.error('Stripe error:', err);
+    if (el) el.innerHTML = '<div style="color:var(--error);font-size:.85rem;padding:.5rem;text-align:center">Fehler: ' + err.message + '<br><small>Bitte Seite neu laden.</small></div>';
+  }
+}
+
+async function confirmPayment() {
+  if (!stripeInstance || !stripeElements) { toast('Bitte zuerst Debitkarte auswählen.','e'); return; }
+
+  // Validate address
+  const fn = document.getElementById('addr-fn')?.value.trim();
+  const ln = document.getElementById('addr-ln')?.value.trim();
+  const st = document.getElementById('addr-street')?.value.trim();
+  const pl = document.getElementById('addr-plz')?.value.trim();
+  const ci = document.getElementById('addr-city')?.value.trim();
+  if (!fn||!ln||!st||!pl||!ci) { toast('Bitte alle Adressfelder ausfüllen.','e'); return; }
+
+  const btn = document.getElementById('btn-pay-now');
+  if (btn) { btn.innerHTML = '<span class="spinner"></span>Wird verarbeitet...'; btn.disabled = true; }
+
+  const { error, paymentIntent } = await stripeInstance.confirmPayment({
+    elements: stripeElements,
+    confirmParams: { return_url: window.location.href },
+    redirect: 'if_required'
+  });
+
+  if (error) {
+    const errEl = document.getElementById('payment-errors');
+    if (errEl) errEl.textContent = error.message;
+    if (btn) { btn.innerHTML = '✓ Jetzt bezahlen – CHF ' + currentTotal.toFixed(2); btn.disabled = false; }
+    return;
+  }
+
+  if (paymentIntent && paymentIntent.status === 'succeeded') {
+    // Payment OK — NOW save the order
+    const address = fn+' '+ln+', '+st+', '+pl+' '+ci;
+    const disc = getUserDiscount();
+    orders.unshift({
+      id: 'ORD-'+String(++nOrdId), type:'shop',
+      name: currentUser.name, email: currentUser.email, address,
+      items: cart.map(x=>({name:x.name,qty:x.qty,price:x.price})),
+      total: currentTotal, payment:'Kreditkarte ✓',
+      discount: disc>0?'10%':null,
+      status:'new', date:new Date().toISOString().slice(0,10),
+      stripeId: paymentIntent.id
+    });
+    cart=[]; updBadge();
+    toast('✅ Zahlung erfolgreich! Bestellung bestätigt.','s');
+    showPage('home');
+  }
+}
+
+async function stripeCheckout(tot) {
+  if (!currentUser) { toast('Bitte zuerst anmelden.','e'); showPage('login'); return; }
+  // Just init the payment element - order saved only after payment success
+  await initPaymentElement(tot);
+}
+
+
+// ═══ UPLOAD ══════════════════════════════════════════════════════════════════
+function pickFile(e) { readF(e.target.files[0]); }
+function doDragOver(e) { e.preventDefault(); document.getElementById('upload-drop').classList.add('drag'); }
+function doDragLeave() { document.getElementById('upload-drop').classList.remove('drag'); }
+function doDrop(e) { e.preventDefault(); document.getElementById('upload-drop').classList.remove('drag'); if (e.dataTransfer.files[0]) readF(e.dataTransfer.files[0]); }
+function readF(f) {
+  selFile = f;
+  const r = new FileReader(); r.onload = ev => { selFileData = ev.target.result; }; r.readAsDataURL(f);
+  document.getElementById('file-pill').style.display = 'flex';
+  document.getElementById('file-lbl').textContent = f.name + ' (' + (f.size<1048576?Math.round(f.size/1024)+' KB':(f.size/1048576).toFixed(1)+' MB') + ')';
+}
+function clearFile() { selFile=null; selFileData=null; document.getElementById('file-in').value=''; document.getElementById('file-pill').style.display='none'; }
+function qtyAdj(d) { const el=document.getElementById('o-qty'); el.value=Math.max(1,parseInt(el.value||1)+d); }
+function qtyClamp() { const el=document.getElementById('o-qty'); if(!el.value||parseInt(el.value)<1) el.value=1; }
+function submitOrder(e) {
+  e.preventDefault();
+  const oStreet = document.getElementById('o-street').value.trim();
+  const oPlz    = document.getElementById('o-plz').value.trim();
+  const oCity   = document.getElementById('o-city').value.trim();
+  orders.unshift({id:'ORD-'+String(++nOrdId),type:'upload',
+    name:document.getElementById('o-name').value,
+    email:document.getElementById('o-email').value,
+    phone:document.getElementById('o-phone').value,
+    address: oStreet + ', ' + oPlz + ' ' + oCity,
+    material:document.getElementById('o-mat').value,
+    color:document.getElementById('o-color').value,
+    qty:parseInt(document.getElementById('o-qty').value)||1,
+    desc:document.getElementById('o-desc').value,
+    fileName:selFile?selFile.name:null, fileData:selFileData||null,
+    status:'new', date:new Date().toISOString().slice(0,10)});
+  toast('Bestellung gesendet! Wir melden uns bald. ✓');
+  document.getElementById('upload-form').reset();
+  document.getElementById('o-qty').value=1; clearFile();
+}
+
+// ═══ ADMIN ═══════════════════════════════════════════════════════════════════
+function renderAdmin() {
+  document.getElementById('admin-stats').innerHTML =
+    '<div class="stat-card"><div class="stat-val">'+orders.length+'</div><div class="stat-lbl">Bestellungen</div></div>'
+    +'<div class="stat-card"><div class="stat-val">'+orders.filter(o=>o.status==='new').length+'</div><div class="stat-lbl">Neu</div></div>'
+    +'<div class="stat-card"><div class="stat-val">'+products.length+'</div><div class="stat-lbl">Produkte</div></div>'
+    +'<div class="stat-card"><div class="stat-val">'+users.length+'</div><div class="stat-lbl">Benutzer</div></div>';
+
+  document.getElementById('orders-list').innerHTML = orders.length ? orders.map(o => {
+    const fs = o.type==='upload'
+      ? (o.fileData&&o.fileName
+          ? '<a class="dl-btn" href="'+o.fileData+'" download="'+o.fileName+'">⬇ '+o.fileName+'</a>'
+          : '<span class="no-file">📎 Keine Datei</span>')
+      : '';
+    const stCls = o.status==='new'?'st-new':o.status==='processing'?'st-proc':'st-done';
+    const stLbl = o.status==='new'?'Neu':o.status==='processing'?'In Bearbeitung':'Fertig';
+    return '<div class="o-card"><div class="o-head">'
+      +'<div><div class="o-id">'+o.id+' – '+o.name+'</div><div class="o-meta">'+o.email+' · '+o.date+' · '+(o.type==='upload'?'📁 Upload':'🛒 Shop')+'</div></div>'
+      +'<div style="display:flex;align-items:center;gap:.6rem"><span class="o-status '+stCls+'">'+stLbl+'</span>'
+      +'<select onchange="updStatus(\''+o.id+'\',this.value)"><option value="new"'+(o.status==='new'?' selected':'')+'>Neu</option><option value="processing"'+(o.status==='processing'?' selected':'')+'>Bearbeitung</option><option value="done"'+(o.status==='done'?' selected':'')+'>Fertig</option></select></div>'
+      +'</div>'
+      +(o.type==='upload'?'<div class="o-detail">Material: <strong>'+o.material+'</strong> · Farbe: <strong>'+(o.color||'—')+'</strong> · Anzahl: <strong>'+(o.qty||1)+' Stk.</strong>'+(o.phone?'<br>📱 '+o.phone:'')+(o.address?'<br>📍 '+o.address:'')+(o.desc?'<br>💬 '+o.desc:'')+'<br>'+fs+'</div>':'')
+      +(o.type==='shop'&&o.items?'<div class="o-detail">'+o.items.map(i=>i.name+' ×'+i.qty).join(', ')+' · CHF '+(o.total||0).toFixed(2)+' · '+(o.payment||'—')+(o.discount?' · 🎁 '+o.discount+' Rabatt':'')+(o.address?'<br>📍 '+o.address:'')+'</div>':'')
+      +'</div>';
+  }).join('') : '<p style="color:rgba(255,255,255,.5);text-align:center;padding:3rem">Noch keine Bestellungen.</p>';
+
+  renderShop();
+  renderUsersList();
+}
+
+function updStatus(id, s) {
+  const o = orders.find(x=>x.id===id); if(o){o.status=s;renderAdmin();toast('Status aktualisiert');}
+}
+
+function renderUsersList() {
+  document.getElementById('users-list').innerHTML = '<div style="display:flex;flex-direction:column;gap:1rem">'
+    + users.map(u => {
+        const roleBtns = ['admin','mitarbeiter','freunde','user'].map(r => {
+          const active = (u.role||'user') === r;
+          const bg = active ? (r==='admin'?'#e74c3c':r==='mitarbeiter'?'#2563eb':r==='freunde'?'#10b981':'rgba(255,255,255,.22)') : 'rgba(255,255,255,.07)';
+          const col = active ? '#fff' : 'rgba(255,255,255,.5)';
+          return '<button class="role-btn" onclick="changeRole(' + u.id + ',\'' + r + '\')" style="background:' + bg + ';color:' + col + '">' + getRoleLabel(r) + '</button>';
+        }).join('');
+        return '<div class="o-card" id="user-card-' + u.id + '" style="display:flex;flex-direction:column;gap:.75rem">'
+          + '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">'
+          + '<div><strong style="color:#fff">' + u.name + '</strong>' + getRoleBadge(u.role||'user')
+          + '<br><span style="font-size:.85rem;color:rgba(255,255,255,.55)">' + u.email + '</span></div>'
+          + '<button onclick="adminResetPw(' + u.id + ')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:.4rem .9rem;border-radius:7px;font-size:.8rem;cursor:pointer;font-family:Inter,sans-serif">🔑 Passwort ändern</button>'
+          + '</div>'
+          + '<div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">'
+          + '<span style="color:rgba(255,255,255,.45);font-size:.78rem;font-weight:700">ROLLE:</span>' + roleBtns + '</div></div>';
+      }).join('')
+    + '</div>';
+}
+
+function changeRole(uid, role) {
+  const u = users.find(x=>x.id===uid); if(!u) return;
+  u.role=role; u.isAdmin=(role==='admin');
+  renderUsersList(); toast('✓ Rolle für '+u.name+' geändert.');
+}
+
+function adminResetPw(uid) {
+  const u = users.find(x=>x.id===uid); if(!u) return;
+  const ex = document.getElementById('reset-form-'+uid);
+  if (ex) { ex.remove(); return; }
+  const card = document.getElementById('user-card-'+uid); if(!card) return;
+  const div = document.createElement('div');
+  div.id = 'reset-form-'+uid;
+  div.style.cssText='display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-top:.5rem';
+  div.innerHTML='<input id="ri-'+uid+'" type="password" placeholder="Neues Passwort..." style="flex:1;min-width:180px;padding:.5rem .8rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:7px;color:#fff;font-family:Inter,sans-serif;font-size:.875rem;outline:none">'
+    +'<button onclick="saveNewPw('+uid+')" style="background:#10b981;color:#fff;border:none;padding:.5rem 1rem;border-radius:7px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;font-size:.875rem">✓</button>'
+    +'<button onclick="document.getElementById(\'reset-form-'+uid+'\').remove()" style="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);padding:.5rem .8rem;border-radius:7px;cursor:pointer;font-family:Inter,sans-serif;font-size:.875rem">✕</button>';
+  card.appendChild(div);
+  document.getElementById('ri-'+uid).focus();
+}
+
+function saveNewPw(uid) {
+  const u = users.find(x=>x.id===uid); if(!u) return;
+  const inp = document.getElementById('ri-'+uid);
+  if (!inp||inp.value.length<6) { if(inp){inp.style.borderColor='#ef4444';inp.placeholder='Mind. 6 Zeichen!'} return; }
+  u.password=inp.value;
+  document.getElementById('reset-form-'+uid)?.remove();
+  toast('✓ Passwort für '+u.name+' geändert.');
+}
+
+function aTab(t) {
+  document.querySelectorAll('.a-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.a-sec').forEach(s=>s.classList.remove('active'));
+  document.querySelector('.a-tab[onclick="aTab(\''+t+'\')"]').classList.add('active');
+  document.getElementById('a-'+t).classList.add('active');
+}
+
+// ═══ PRODUCT MODAL ════════════════════════════════════════════════════════════
+function openProdModal(id) {
+  editProdId = id||null; pendingImg=null;
+  document.getElementById('prod-modal-title').textContent = id?'Produkt bearbeiten':'Produkt hinzufügen';
+  clrProdImg();
+  if (id) {
+    const p=products.find(x=>x.id===id);
+    document.getElementById('p-name').value=p.name;
+    document.getElementById('p-desc').value=p.desc;
+    document.getElementById('p-price').value=p.price;
+    document.getElementById('p-icon').value=p.icon||'🖨️';
+    document.getElementById('p-len').value=p.len||'';
+    document.getElementById('p-wid').value=p.wid||'';
+    document.getElementById('p-hei').value=p.hei||'';
+    document.getElementById('p-kg').value=p.kg||'';
+    if(p.image){pendingImg=p.image;showProdImg(p.image);}
+  } else {
+    document.getElementById('p-name').value='';
+    document.getElementById('p-desc').value='';
+    document.getElementById('p-price').value='';
+    document.getElementById('p-icon').value='🖨️';
+    document.getElementById('p-len').value='';
+    document.getElementById('p-wid').value='';
+    document.getElementById('p-hei').value='';
+    document.getElementById('p-kg').value='';
+  }
+  document.getElementById('prod-modal').style.display='flex';
+}
+function pickProdImg(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{pendingImg=ev.target.result;showProdImg(pendingImg);};r.readAsDataURL(f);}
+function showProdImg(s){document.getElementById('p-img-prev').src=s;document.getElementById('p-img-prev').style.display='block';document.getElementById('img-ph').style.display='none';document.getElementById('img-rm').style.display='block';}
+function clrProdImg(){const pr=document.getElementById('p-img-prev');pr.src='';pr.style.display='none';document.getElementById('img-ph').style.display='flex';document.getElementById('img-rm').style.display='none';document.getElementById('p-img').value='';pendingImg=null;}
+function rmProdImg(){clrProdImg();}
+function saveProd(){
+  const name=document.getElementById('p-name').value.trim();
+  const price=parseFloat(document.getElementById('p-price').value);
+  if(!name||!price){toast('Name und Preis erforderlich.','e');return;}
+  const pLen = parseFloat(document.getElementById('p-len').value) || 30;
+  const pWid = parseFloat(document.getElementById('p-wid').value) || 20;
+  const pHei = parseFloat(document.getElementById('p-hei').value) || 8;
+  const pKg  = parseFloat(document.getElementById('p-kg').value)  || 0.5;
+  // Auto-calculate shipping based on Swiss Post rates
+  const pVol = pLen * pWid * pHei;
+  const pMax = Math.max(pLen, pWid, pHei);
+  let autoShip = 7.90;
+  if (pMax <= 35 && pVol <= 4000 && pKg <= 1) autoShip = 6.90;
+  else if (pMax <= 60 && pVol <= 48000 && pKg <= 5) autoShip = 8.90;
+  else if (pMax <= 100 && pVol <= 240000 && pKg <= 15) autoShip = 12.90;
+  else if (pKg <= 30) autoShip = 18.90;
+  else autoShip = 25.90;
+  const data={
+    name, desc:document.getElementById('p-desc').value.trim(), price,
+    len:pLen, wid:pWid, hei:pHei, kg:pKg, shipping:autoShip,
+    icon: document.getElementById('p-icon').value.trim()||'🖨️',
+    image: pendingImg
+  };
+  if(editProdId){const p=products.find(x=>x.id===editProdId);Object.assign(p,data);toast('Produkt aktualisiert ✓');}
+  else{products.push({id:nProdId++,...data});toast('Produkt hinzugefügt ✓');}
+  document.getElementById('prod-modal').style.display='none';renderShop();
+}
+function delProd(id){if(!confirm('Produkt löschen?'))return;products=products.filter(x=>x.id!==id);toast('Gelöscht.');renderShop();}
+
+// ═══ CONTACT ═════════════════════════════════════════════════════════════════
+function doContact(e){e.preventDefault();toast('Nachricht gesendet! ✓');e.target.reset();}
+
+// ═══ DESIGN PANEL ════════════════════════════════════════════════════════════
+let sc = {
+  hero:{h1:'Professioneller',h2:'3D-Druck-Service',sub:'Hochwertige 3D-Drucke nach Ihren Wünschen. Laden Sie Ihr Modell hoch und wir drucken es für Sie.',b1:'Shop ansehen',b2:'Modell hochladen'},
+  feats:[
+    {icon:'⚡',title:'Schnelle Lieferung',text:'Innerhalb von 7–9 Werktagen geliefert.'},
+    {icon:'🎯',title:'Hochpräzision',text:'Druckauflösung bis zu 0.1 mm für exakte Ergebnisse.'},
+    {icon:'🔧',title:'Alle Materialien',text:'PLA, PETG, ABS, TPU und weitere auf Anfrage.'},
+    {icon:'💬',title:'Persönlicher Support',text:'Beratung direkt per Telefon oder E-Mail.'},
+  ],
+  cta:{h:'Bereit für Ihr Projekt?',p:'Laden Sie Ihr 3D-Modell hoch und erhalten Sie ein Angebot.',b:'Jetzt Bestellung starten'},
+  contact:{email:'printox26@outlook.com',phone:'077 496 28 38',hours:'Mi: 17:00–19:00\nFr: 17:00–20:00\nSa–So: 16:00–20:00',ship:'Schweizweit per Post'},
+  footer:{desc:'Professioneller 3D-Druck-Service aus der Schweiz.',copy:'© 2025 Printox'},
+  colors:{nav:'#0d1b2e',blue:'#2563eb',bg:'#0f2040'}
+};
+
+function toggleDP(){dpOpen=!dpOpen;document.getElementById('dp').classList.toggle('open',dpOpen);if(dpOpen)dpFillAll();}
+function dpTab(t){document.querySelectorAll('.dp-tab').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.dp-sec').forEach(s=>s.classList.remove('active'));document.querySelector('.dp-tab[onclick="dpTab(\''+t+'\')"]').classList.add('active');document.getElementById('dps-'+t).classList.add('active');}
+function dpFillAll(){
+  const h=sc.hero;
+  document.getElementById('dp-h1').value=h.h1;
+  document.getElementById('dp-h2').value=h.h2;
+  document.getElementById('dp-hsub').value=h.sub;
+  document.getElementById('dp-hb1').value=h.b1;
+  document.getElementById('dp-hb2').value=h.b2;
+  const c=sc.cta;
+  document.getElementById('dp-ctah').value=c.h;
+  document.getElementById('dp-ctap').value=c.p;
+  document.getElementById('dp-ctab').value=c.b;
+  const ct=sc.contact;
+  document.getElementById('dp-cemail').value=ct.email;
+  document.getElementById('dp-cphone').value=ct.phone;
+  document.getElementById('dp-chours').value=ct.hours;
+  document.getElementById('dp-cship').value=ct.ship;
+  const f=sc.footer;
+  document.getElementById('dp-fdesc').value=f.desc;
+  document.getElementById('dp-fcopy').value=f.copy;
+  dpFillFeats();
+}
+function liveHero(){
+  const h1=document.getElementById('dp-h1').value;
+  const h2=document.getElementById('dp-h2').value;
+  const el=document.querySelector('#page-home .hero h1');
+  if(el) el.innerHTML=h1+'<br><span>'+h2+'</span>';
+  const p=document.querySelector('#page-home .hero p');
+  if(p) p.textContent=document.getElementById('dp-hsub').value;
+  const btns=document.querySelectorAll('#page-home .hero-btns button');
+  if(btns[0]) btns[0].textContent=document.getElementById('dp-hb1').value;
+  if(btns[1]) btns[1].textContent=document.getElementById('dp-hb2').value;
+}
+function saveHero(){sc.hero={h1:document.getElementById('dp-h1').value,h2:document.getElementById('dp-h2').value,sub:document.getElementById('dp-hsub').value,b1:document.getElementById('dp-hb1').value,b2:document.getElementById('dp-hb2').value};liveHero();toast('Hero gespeichert ✓');}
+function dpFillFeats(){
+  document.getElementById('dp-feat-list').innerHTML=sc.feats.map((f,i)=>
+    '<div class="dp-feat-card"><div class="dp-feat-lbl">Karte '+(i+1)+'</div>'
+    +'<div class="dp-row"><div class="dp-field"><label>Icon</label><input type="text" id="dpf-icon-'+i+'" value="'+f.icon+'" maxlength="4" oninput="liveFeat('+i+')"></div>'
+    +'<div class="dp-field"><label>Titel</label><input type="text" id="dpf-title-'+i+'" value="'+f.title+'" oninput="liveFeat('+i+')"></div></div>'
+    +'<div class="dp-field"><label>Text</label><input type="text" id="dpf-text-'+i+'" value="'+f.text+'" oninput="liveFeat('+i+')"></div></div>'
+  ).join('');
+}
+function liveFeat(i){
+  const cards=document.querySelectorAll('#page-home .feat-card');
+  if(!cards[i])return;
+  cards[i].querySelector('.feat-icon').textContent=document.getElementById('dpf-icon-'+i).value;
+  cards[i].querySelector('h3').textContent=document.getElementById('dpf-title-'+i).value;
+  cards[i].querySelector('p').textContent=document.getElementById('dpf-text-'+i).value;
+}
+function saveFeats(){sc.feats=sc.feats.map((f,i)=>({icon:document.getElementById('dpf-icon-'+i)?.value||f.icon,title:document.getElementById('dpf-title-'+i)?.value||f.title,text:document.getElementById('dpf-text-'+i)?.value||f.text}));toast('Features gespeichert ✓');}
+function liveCTA(){
+  const b=document.querySelector('#page-home .cta-band');if(!b)return;
+  b.querySelector('h2').textContent=document.getElementById('dp-ctah').value;
+  b.querySelector('p').textContent=document.getElementById('dp-ctap').value;
+  b.querySelector('button').textContent=document.getElementById('dp-ctab').value;
+}
+function saveCTA(){sc.cta={h:document.getElementById('dp-ctah').value,p:document.getElementById('dp-ctap').value,b:document.getElementById('dp-ctab').value};liveCTA();toast('CTA gespeichert ✓');}
+function saveContact(){
+  sc.contact={email:document.getElementById('dp-cemail').value,phone:document.getElementById('dp-cphone').value,hours:document.getElementById('dp-chours').value,ship:document.getElementById('dp-cship').value};
+  document.getElementById('ft-email').textContent=sc.contact.email;
+  document.getElementById('ft-phone').textContent=sc.contact.phone;
+  const cards=document.querySelectorAll('#page-contact .con-card p');
+  if(cards[0])cards[0].textContent=sc.contact.email;
+  if(cards[1])cards[1].textContent=sc.contact.phone;
+  if(cards[2])cards[2].innerHTML=sc.contact.hours.replace(/\n/g,'<br>');
+  if(cards[3])cards[3].textContent=sc.contact.ship;
+  toast('Kontakt gespeichert ✓');
+}
+function saveFooter(){
+  sc.footer={desc:document.getElementById('dp-fdesc').value,copy:document.getElementById('dp-fcopy').value};
+  const fd=document.getElementById('ft-desc');if(fd)fd.textContent=sc.footer.desc;
+  const fc=document.getElementById('ft-copy');if(fc)fc.textContent=sc.footer.copy;
+  toast('Footer gespeichert ✓');
+}
+function syncHex(id){const p=document.getElementById('dp-c'+id);const h=document.getElementById('dp-c'+id+'-h');if(p&&h)h.value=p.value;}
+function syncPick(id){const h=document.getElementById('dp-c'+id+'-h');const p=document.getElementById('dp-c'+id);if(h&&p&&/^#[0-9a-f]{6}$/i.test(h.value))p.value=h.value;}
+function liveColors(){
+  const nav=document.getElementById('dp-cnav-h').value;
+  const blue=document.getElementById('dp-cblue-h').value;
+  const bg=document.getElementById('dp-cbg-h').value;
+  const r=document.documentElement;
+  if(/^#[0-9a-f]{6}$/i.test(nav))r.style.setProperty('--nav',nav);
+  if(/^#[0-9a-f]{6}$/i.test(blue)){r.style.setProperty('--blue',blue);r.style.setProperty('--blue2',blue);}
+  if(/^#[0-9a-f]{6}$/i.test(bg)){
+    const hero=document.querySelector('#page-home .hero');
+    if(hero)hero.style.background='linear-gradient(150deg,'+bg+' 0%,'+bg+' 50%,'+bg+' 100%)';
+  }
+}
+function saveColors(){sc.colors={nav:document.getElementById('dp-cnav-h').value,blue:document.getElementById('dp-cblue-h').value,bg:document.getElementById('dp-cbg-h').value};liveColors();toast('Farben gespeichert ✓');}
+
+
+// Handle Stripe return
+function handleStripeReturn() {
+  const params = new URLSearchParams(window.location.search);
+  const payment = params.get('payment');
+  const orderId = params.get('order');
+  
+  if (payment === 'success') {
+    // Mark order as paid
+    const order = orders.find(o => o.id === orderId);
+    if (order) { order.status = 'new'; order.payment = 'Kreditkarte ✓'; }
+    window.history.replaceState({}, '', window.location.pathname);
+    toast('✅ Zahlung erfolgreich! Bestellung ' + (orderId||'') + ' bestätigt.', 's');
+    showPage('home');
+  } else if (payment === 'cancel') {
+    window.history.replaceState({}, '', window.location.pathname);
+    toast('Zahlung abgebrochen. Warenkorb bleibt erhalten.', 'e');
+    showPage('cart');
+  }
+}
+
+// ═══ INIT ════════════════════════════════════════════════════════════════════
+renderNav();
+renderShop();
+handleStripeReturn();
+</script>
+</body>
+</html>
