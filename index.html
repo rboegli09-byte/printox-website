@@ -889,8 +889,14 @@ function renderCart() {
 
 function setPay(m) {
   selPay = m;
-  stripeElements = null;
+  _elements = null;
   renderCart();
+  if (m === 'card') {
+    const sub  = cart.reduce((s,x) => s+x.price*x.qty, 0);
+    const ship = cart.reduce((s,x) => s+(x.shipping||7.90)*x.qty, 0);
+    _cardTotal = +(sub*(1-getUserDiscount())+ship).toFixed(2);
+    setTimeout(loadStripeElement, 300);
+  }
 }
 function adjQ(id,d) { const it = cart.find(x=>x.id===id); if(!it) return; it.qty+=d; if(it.qty<=0) remCart(id); else {updBadge();renderCart();} }
 function remCart(id) { cart = cart.filter(x=>x.id!==id); updBadge(); renderCart(); }
