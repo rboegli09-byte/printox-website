@@ -919,115 +919,101 @@ function placeOrder(method) {
   cart = []; updBadge(); toast('Bestellung erfolgreich! ✓'); showPage('home');
 }
 
-// Stripe Inline Payment Element
+// ═══ STRIPE ═══════════════════════════════════════════════════════════════
 const STRIPE_KEY = 'pk_live_51TV7gYKu5mfw68IJZ3btyDhJWLHPujR476BHRZxJJBxdOtSKEulngqDIIWwb1pLvcVLSktFQlq7T6tXiVkT6El9400A1L9EOGH';
-const BACKEND_URL = 'https://printox-backend.onrender.com';
-let stripeInstance = null;
-let stripeElements = null;
-let currentTotal = 0;
+const BACKEND = 'https://printox-backend.onrender.com';
+let _stripe = null, _elements = null, _cardTotal = 0;
 
 function setPay(m) {
-  selPay = m;
-  stripeElements = null;
-  renderCart();
+  selPay = m; _elements = null; renderCart();
   if (m === 'card') {
-    const sub = cart.reduce((s,x) => s+x.price*x.qty, 0);
+    const sub  = cart.reduce((s,x) => s+x.price*x.qty, 0);
     const ship = cart.reduce((s,x) => s+(x.shipping||7.90)*x.qty, 0);
-    const tot = sub*(1-getUserDiscount()) + ship;
-    setTimeout(() => initPaymentElement(tot), 200);
+    _cardTotal = +(sub*(1-getUserDiscount())+ship).toFixed(2);
+    setTimeout(loadStripeElement, 300);
   }
 }
 
-async function initPaymentElement(tot) {
+async function loadStripeElement() {
   const el = document.getElementById('payment-element');
   if (!el) return;
-  currentTotal = tot;
-  el.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--gray)"><span class="spinner"></span> Wird geladen...</div>';
+  el.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#64748b">'
+    + '<span class="spinner"></span> Server wird gestartet...<br>'
+    + '<small style="font-size:.75rem">(kann beim ersten Mal bis zu 30 Sekunden dauern)</small></div>';
 
   try {
-    const res = await fetch(BACKEND_URL + '/create-payment', {
+    const ctrl = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), 60000);
+    const res = await fetch(BACKEND + '/create-payment', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({amount: tot})
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({amount: _cardTotal}),
+      signal: ctrl.signal
     });
-    if (!res.ok) throw new Error('Backend-Fehler ' + res.status);
-    const data = await res.json();
-    if (!data.clientSecret) throw new Error('Kein Client Secret');
+    clearTimeout(timeout);
+    if (!res.ok) throw new Error('Server-Fehler ' + res.status);
+    const {clientSecret, error: sErr} = await res.json();
+    if (sErr) throw new Error(sErr);
 
-    stripeInstance = Stripe(STRIPE_KEY);
-    stripeElements = stripeInstance.elements({
-      clientSecret: data.clientSecret,
-      appearance: {
-        theme: 'stripe',
-        variables: { colorPrimary: '#0d1b2e', fontFamily: 'Inter, sans-serif', borderRadius: '8px' }
-      }
+    _stripe = Stripe(STRIPE_KEY);
+    _elements = _stripe.elements({
+      clientSecret,
+      appearance: {theme:'stripe', variables:{colorPrimary:'#0d1b2e', fontFamily:'Inter,sans-serif', borderRadius:'8px'}}
     });
-    const pe = stripeElements.create('payment', {layout: 'tabs'});
-    el.innerHTML = '';
-    pe.mount('#payment-element');
+    _elements.create('payment', {layout:'tabs'}).mount('#payment-element');
+    el.style.minHeight = '';
 
     const btn = document.getElementById('btn-pay-now');
-    if (btn) {
-      btn.style.display = 'block';
-      btn.textContent = '✓ Jetzt bezahlen – CHF ' + tot.toFixed(2);
-    }
-  } catch(err) {
-    console.error('Stripe error:', err);
-    if (el) el.innerHTML = '<div style="color:var(--error);font-size:.85rem;padding:.5rem;text-align:center">Fehler: ' + err.message + '<br><small>Bitte Seite neu laden.</small></div>';
+    if (btn) { btn.style.display='block'; btn.textContent='✓ Jetzt bezahlen – CHF '+_cardTotal.toFixed(2); }
+
+  } catch(e) {
+    if (el) el.innerHTML = '<div style="color:#ef4444;font-size:.875rem;padding:.75rem;background:#fef2f2;border-radius:8px;text-align:center">'
+      +'Verbindung fehlgeschlagen.<br><button onclick="loadStripeElement()" style="margin-top:.5rem;background:#0d1b2e;color:#fff;border:none;padding:.4rem 1rem;border-radius:6px;cursor:pointer;font-family:Inter,sans-serif">Erneut versuchen</button></div>';
   }
 }
 
 async function confirmPayment() {
-  if (!stripeInstance || !stripeElements) { toast('Bitte zuerst Debitkarte auswählen.','e'); return; }
-
-  // Validate address
-  const fn = document.getElementById('addr-fn')?.value.trim();
-  const ln = document.getElementById('addr-ln')?.value.trim();
-  const st = document.getElementById('addr-street')?.value.trim();
-  const pl = document.getElementById('addr-plz')?.value.trim();
-  const ci = document.getElementById('addr-city')?.value.trim();
+  if (!_stripe||!_elements) { toast('Bitte Kartendaten eingeben.','e'); return; }
+  const fn=document.getElementById('addr-fn')?.value.trim();
+  const ln=document.getElementById('addr-ln')?.value.trim();
+  const st=document.getElementById('addr-street')?.value.trim();
+  const pl=document.getElementById('addr-plz')?.value.trim();
+  const ci=document.getElementById('addr-city')?.value.trim();
   if (!fn||!ln||!st||!pl||!ci) { toast('Bitte alle Adressfelder ausfüllen.','e'); return; }
 
   const btn = document.getElementById('btn-pay-now');
-  if (btn) { btn.innerHTML = '<span class="spinner"></span>Wird verarbeitet...'; btn.disabled = true; }
+  if (btn) { btn.innerHTML='<span class="spinner"></span>Wird verarbeitet...'; btn.disabled=true; }
 
-  const { error, paymentIntent } = await stripeInstance.confirmPayment({
-    elements: stripeElements,
-    confirmParams: { return_url: window.location.href },
+  const {error, paymentIntent} = await _stripe.confirmPayment({
+    elements: _elements,
+    confirmParams: {return_url: window.location.href},
     redirect: 'if_required'
   });
 
   if (error) {
     const errEl = document.getElementById('payment-errors');
     if (errEl) errEl.textContent = error.message;
-    if (btn) { btn.innerHTML = '✓ Jetzt bezahlen – CHF ' + currentTotal.toFixed(2); btn.disabled = false; }
+    if (btn) { btn.innerHTML='✓ Jetzt bezahlen – CHF '+_cardTotal.toFixed(2); btn.disabled=false; }
     return;
   }
 
-  if (paymentIntent && paymentIntent.status === 'succeeded') {
-    // Payment OK — NOW save the order
-    const address = fn+' '+ln+', '+st+', '+pl+' '+ci;
+  if (paymentIntent?.status === 'succeeded') {
     const disc = getUserDiscount();
-    orders.unshift({
-      id: 'ORD-'+String(++nOrdId), type:'shop',
-      name: currentUser.name, email: currentUser.email, address,
-      items: cart.map(x=>({name:x.name,qty:x.qty,price:x.price})),
-      total: currentTotal, payment:'Kreditkarte ✓',
-      discount: disc>0?'10%':null,
-      status:'new', date:new Date().toISOString().slice(0,10),
-      stripeId: paymentIntent.id
-    });
+    orders.unshift({id:'ORD-'+String(++nOrdId),type:'shop',
+      name:currentUser.name,email:currentUser.email,
+      address:fn+' '+ln+', '+st+', '+pl+' '+ci,
+      items:cart.map(x=>({name:x.name,qty:x.qty,price:x.price})),
+      total:_cardTotal,payment:'Kreditkarte ✓',
+      discount:disc>0?'10%':null,status:'new',
+      date:new Date().toISOString().slice(0,10),
+      stripeId:paymentIntent.id});
     cart=[]; updBadge();
     toast('✅ Zahlung erfolgreich! Bestellung bestätigt.','s');
     showPage('home');
   }
 }
 
-async function stripeCheckout(tot) {
-  if (!currentUser) { toast('Bitte zuerst anmelden.','e'); showPage('login'); return; }
-  // Just init the payment element - order saved only after payment success
-  await initPaymentElement(tot);
-}
+function stripeCheckout(tot) { _cardTotal=tot; loadStripeElement(); }
 
 
 // ═══ UPLOAD ══════════════════════════════════════════════════════════════════
