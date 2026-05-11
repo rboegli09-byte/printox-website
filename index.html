@@ -885,8 +885,6 @@ function renderCart() {
     + '<div class="pay-opt ' + (selPay==='card'?'sel':'') + '" onclick="setPay(\'card\')"><input type="radio" name="pay" ' + (selPay==='card'?'checked':'') + '><label>💳 Debitkarte</label></div>'
     + twintContent + cardContent;
 
-  if (selPay === 'card') setTimeout(initStripe, 100);
-  if (selPay === 'paypal') setTimeout(initPayPal, 100);
 }
 
 function setPay(m) {
