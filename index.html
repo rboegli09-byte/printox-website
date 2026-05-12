@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Printox – 3D-Druck-Service</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -923,6 +924,81 @@ function placeOrder(method) {
   cart = []; updBadge(); toast('Bestellung erfolgreich! ✓'); showPage('home');
 }
 
+
+// ═══ SUPABASE ════════════════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://xknknlsppivsnkaszzjm.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_k19y9WoReu0Upxg5SahkQw_FRPK-h4t';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function saveOrderToSupabase(order) {
+  try {
+    const { error } = await db.from('orders').insert({
+      type: order.type,
+      customer_name: order.name,
+      customer_email: order.email,
+      customer_phone: order.phone || null,
+      customer_address: order.address || null,
+      items: order.items || null,
+      total: order.total || null,
+      payment: order.payment || null,
+      status: order.status || 'new',
+      discount: order.discount || null,
+      material: order.material || null,
+      color: order.color || null,
+      qty: order.qty || null,
+      description: order.desc || null,
+      file_name: order.fileName || null
+    });
+    if (error) console.error('Supabase Fehler:', error);
+    else console.log('Bestellung gespeichert ✓');
+  } catch(e) {
+    console.error('Supabase Fehler:', e);
+  }
+}
+
+async function loadOrdersFromSupabase() {
+  try {
+    const { data, error } = await db.from('orders').select('*').order('created_at', { ascending: false });
+    if (error) { console.error('Fehler:', error); return; }
+    if (data && data.length > 0) {
+      // Merge with local orders (avoid duplicates)
+      data.forEach(o => {
+        const exists = orders.find(x => x.supabaseId === o.id);
+        if (!exists) {
+          orders.push({
+            id: 'ORD-' + o.id.slice(0,8).toUpperCase(),
+            supabaseId: o.id,
+            type: o.type,
+            name: o.customer_name,
+            email: o.customer_email,
+            phone: o.customer_phone,
+            address: o.customer_address,
+            items: o.items,
+            total: o.total,
+            payment: o.payment,
+            status: o.status,
+            discount: o.discount,
+            material: o.material,
+            color: o.color,
+            qty: o.qty,
+            desc: o.description,
+            fileName: o.file_name,
+            date: o.created_at ? o.created_at.slice(0,10) : ''
+          });
+        }
+      });
+      renderAdmin();
+    }
+  } catch(e) {
+    console.error('Supabase Fehler:', e);
+  }
+}
+
+async function updateOrderStatusInSupabase(supabaseId, status) {
+  if (!supabaseId) return;
+  await db.from('orders').update({ status }).eq('id', supabaseId);
+}
+
 // ═══ ZAHLUNG ════════════════════════════════════════════════════════════════
 function setPay(m) {
   selPay = m;
@@ -957,7 +1033,7 @@ function submitOrder(e) {
   const oStreet = document.getElementById('o-street').value.trim();
   const oPlz    = document.getElementById('o-plz').value.trim();
   const oCity   = document.getElementById('o-city').value.trim();
-  orders.unshift({id:'ORD-'+String(++nOrdId),type:'upload',
+  const uploadOrder = {id:'ORD-'+String(++nOrdId),type:'upload',
     name:document.getElementById('o-name').value,
     email:document.getElementById('o-email').value,
     phone:document.getElementById('o-phone').value,
@@ -967,7 +1043,9 @@ function submitOrder(e) {
     qty:parseInt(document.getElementById('o-qty').value)||1,
     desc:document.getElementById('o-desc').value,
     fileName:selFile?selFile.name:null, fileData:selFileData||null,
-    status:'new', date:new Date().toISOString().slice(0,10)});
+    status:'new', date:new Date().toISOString().slice(0,10)};
+  orders.unshift(uploadOrder);
+  saveOrderToSupabase(uploadOrder);
   toast('Bestellung gesendet! Wir melden uns bald. ✓');
   document.getElementById('upload-form').reset();
   document.getElementById('o-qty').value=1; clearFile();
@@ -975,6 +1053,7 @@ function submitOrder(e) {
 
 // ═══ ADMIN ═══════════════════════════════════════════════════════════════════
 function renderAdmin() {
+  loadOrdersFromSupabase();
   document.getElementById('admin-stats').innerHTML =
     '<div class="stat-card"><div class="stat-val">'+orders.length+'</div><div class="stat-lbl">Bestellungen</div></div>'
     +'<div class="stat-card"><div class="stat-val">'+orders.filter(o=>o.status==='new').length+'</div><div class="stat-lbl">Neu</div></div>'
@@ -1004,7 +1083,10 @@ function renderAdmin() {
 }
 
 function updStatus(id, s) {
-  const o = orders.find(x=>x.id===id); if(o){o.status=s;renderAdmin();toast('Status aktualisiert');}
+  const o = orders.find(x=>x.id===id);
+  if(o){o.status=s;renderAdmin();toast('Status aktualisiert');
+    if(o.supabaseId) updateOrderStatusInSupabase(o.supabaseId, s);
+  }
 }
 
 function renderUsersList() {
