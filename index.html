@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Printox – 3D-Druck-Service</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://js.stripe.com/v3/"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -855,10 +854,11 @@ function renderCart() {
 
   const twintContent = selPay === 'twint'
     ? '<div class="twint-box" style="margin-top:.75rem">'
-      + '<div style="font-weight:700;margin-bottom:.5rem">📱 TWINT</div>'
-      + '<p style="font-size:.875rem;margin-bottom:.75rem">TWINT wird in Kürze freigeschaltet (Genehmigung bei Stripe ausstehend).</p>'
-      + '<p style="font-size:.82rem;color:#1e40af">In der Zwischenzeit können Sie per <strong>Debitkarte</strong> bezahlen oder uns direkt kontaktieren.</p>'
+      + '<div style="font-weight:700;color:#1e40af;margin-bottom:.5rem">📱 Mit TWINT bezahlen</div>'
+      + '<p style="font-size:.875rem;color:#1e40af;margin-bottom:.75rem">Betrag: <strong>CHF ' + tot.toFixed(2) + '</strong></p>'
+      + '<p style="font-size:.82rem;color:#1e40af">Überweisen Sie den Betrag via TWINT an <strong>077 496 28 38</strong> (Remo Bögli) und klicken Sie dann auf «Bestellung abschicken».</p>'
       + '</div>'
+      + '<button class="btn-checkout" onclick="placeOrder(\'TWINT\')">✓ TWINT bezahlt – Bestellung abschicken</button>'
     : '';
   const cardContent = selPay === 'card' ? '<div class="stripe-wrap"><label>Kartendaten</label><div id="card-element"></div><div id="card-errors"></div></div><button class="btn-checkout" onclick="stripeCheckout(' + tot + ')">💳 Jetzt bezahlen – CHF ' + tot.toFixed(2) + '</button>' : '';
   const ppContent = '';
@@ -923,101 +923,19 @@ function placeOrder(method) {
   cart = []; updBadge(); toast('Bestellung erfolgreich! ✓'); showPage('home');
 }
 
-// ═══ STRIPE ═══════════════════════════════════════════════════════════════
-const STRIPE_KEY = 'pk_live_51TV7gYKu5mfw68IJZ3btyDhJWLHPujR476BHRZxJJBxdOtSKEulngqDIIWwb1pLvcVLSktFQlq7T6tXiVkT6El9400A1L9EOGH';
-const BACKEND = 'https://printox-backend.onrender.com';
-let _stripe = null, _elements = null, _cardTotal = 0;
-
+// ═══ ZAHLUNG ════════════════════════════════════════════════════════════════
 function setPay(m) {
-  selPay = m; _elements = null; renderCart();
-  if (m === 'card') {
-    const sub  = cart.reduce((s,x) => s+x.price*x.qty, 0);
-    const ship = cart.reduce((s,x) => s+(x.shipping||7.90)*x.qty, 0);
-    _cardTotal = +(sub*(1-getUserDiscount())+ship).toFixed(2);
-    setTimeout(loadStripeElement, 300);
-  }
+  selPay = m;
+  renderCart();
 }
 
-async function loadStripeElement() {
-  const el = document.getElementById('payment-element');
-  if (!el) return;
-  el.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#64748b">'
-    + '<span class="spinner"></span> Server wird gestartet...<br>'
-    + '<small style="font-size:.75rem">(kann beim ersten Mal bis zu 30 Sekunden dauern)</small></div>';
-
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 60000);
-    const res = await fetch(BACKEND + '/create-payment', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({amount: _cardTotal}),
-      signal: ctrl.signal
-    });
-    clearTimeout(timeout);
-    if (!res.ok) throw new Error('Server-Fehler ' + res.status);
-    const {clientSecret, error: sErr} = await res.json();
-    if (sErr) throw new Error(sErr);
-
-    _stripe = Stripe(STRIPE_KEY);
-    _elements = _stripe.elements({
-      clientSecret,
-      appearance: {theme:'stripe', variables:{colorPrimary:'#0d1b2e', fontFamily:'Inter,sans-serif', borderRadius:'8px'}}
-    });
-    _elements.create('payment', {layout:'tabs'}).mount('#payment-element');
-    el.style.minHeight = '';
-
-    const btn = document.getElementById('btn-pay-now');
-    if (btn) { btn.style.display='block'; btn.textContent='✓ Jetzt bezahlen – CHF '+_cardTotal.toFixed(2); }
-
-  } catch(e) {
-    if (el) el.innerHTML = '<div style="color:#ef4444;font-size:.875rem;padding:.75rem;background:#fef2f2;border-radius:8px;text-align:center">'
-      +'Verbindung fehlgeschlagen.<br><button onclick="loadStripeElement()" style="margin-top:.5rem;background:#0d1b2e;color:#fff;border:none;padding:.4rem 1rem;border-radius:6px;cursor:pointer;font-family:Inter,sans-serif">Erneut versuchen</button></div>';
-  }
+function confirmPayment() {
+  placeOrder('Kreditkarte');
 }
 
-async function confirmPayment() {
-  if (!_stripe||!_elements) { toast('Bitte Kartendaten eingeben.','e'); return; }
-  const fn=document.getElementById('addr-fn')?.value.trim();
-  const ln=document.getElementById('addr-ln')?.value.trim();
-  const st=document.getElementById('addr-street')?.value.trim();
-  const pl=document.getElementById('addr-plz')?.value.trim();
-  const ci=document.getElementById('addr-city')?.value.trim();
-  if (!fn||!ln||!st||!pl||!ci) { toast('Bitte alle Adressfelder ausfüllen.','e'); return; }
-
-  const btn = document.getElementById('btn-pay-now');
-  if (btn) { btn.innerHTML='<span class="spinner"></span>Wird verarbeitet...'; btn.disabled=true; }
-
-  const {error, paymentIntent} = await _stripe.confirmPayment({
-    elements: _elements,
-    confirmParams: {return_url: window.location.href},
-    redirect: 'if_required'
-  });
-
-  if (error) {
-    const errEl = document.getElementById('payment-errors');
-    if (errEl) errEl.textContent = error.message;
-    if (btn) { btn.innerHTML='✓ Jetzt bezahlen – CHF '+_cardTotal.toFixed(2); btn.disabled=false; }
-    return;
-  }
-
-  if (paymentIntent?.status === 'succeeded') {
-    const disc = getUserDiscount();
-    orders.unshift({id:'ORD-'+String(++nOrdId),type:'shop',
-      name:currentUser.name,email:currentUser.email,
-      address:fn+' '+ln+', '+st+', '+pl+' '+ci,
-      items:cart.map(x=>({name:x.name,qty:x.qty,price:x.price})),
-      total:_cardTotal,payment:'Kreditkarte ✓',
-      discount:disc>0?'10%':null,status:'new',
-      date:new Date().toISOString().slice(0,10),
-      stripeId:paymentIntent.id});
-    cart=[]; updBadge();
-    toast('✅ Zahlung erfolgreich! Bestellung bestätigt.','s');
-    showPage('home');
-  }
+function stripeCheckout(tot) {
+  placeOrder('Kreditkarte');
 }
-
-function stripeCheckout(tot) { _cardTotal=tot; loadStripeElement(); }
 
 
 // ═══ UPLOAD ══════════════════════════════════════════════════════════════════
