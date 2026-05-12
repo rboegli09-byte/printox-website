@@ -1126,7 +1126,8 @@ function renderAdmin() {
   }).join('') : '<p style="color:rgba(255,255,255,.5);text-align:center;padding:3rem">Noch keine Bestellungen.</p>';
 
   renderShop();
-  renderUsersList();
+  // Load and render users from Supabase
+  loadUsersFromSupabase();
 }
 
 function updStatus(id, s) {
@@ -1137,42 +1138,59 @@ function updStatus(id, s) {
 }
 
 async function loadUsersFromSupabase() {
+  // First show local users immediately
+  renderUsersList();
+  // Then load from Supabase and refresh
   try {
-    const { data, error } = await db.from('users').select('*').order('created_at', {ascending: true});
-    if (data) {
-      data.forEach(u => {
-        const exists = users.find(x => x.email === u.email);
-        if (!exists) users.push({id: u.id, name: u.name, email: u.email, password: u.password, isAdmin: u.is_admin, role: u.role});
-        else { exists.role = u.role; exists.isAdmin = u.is_admin; exists.supabaseId = u.id; }
-      });
+    const { data } = await db.from('users').select('*').order('created_at', {ascending: true});
+    if (data && data.length > 0) {
+      users = data.map(u => ({
+        id: u.id, name: u.name, email: u.email,
+        password: u.password, isAdmin: u.is_admin, role: u.role||'user'
+      }));
       renderUsersList();
     }
-  } catch(e) { console.error('Users load error:', e); }
+  } catch(e) {
+    console.error('Users load error:', e);
+  }
 }
 
 function renderUsersList() {
-  document.getElementById('users-list').innerHTML = '<div style="display:flex;flex-direction:column;gap:1rem">'
-    + users.map(u => {
-        const roleBtns = ['admin','mitarbeiter','freunde','user'].map(r => {
-          const active = (u.role||'user') === r;
-          const bg = active ? (r==='admin'?'#e74c3c':r==='mitarbeiter'?'#2563eb':r==='freunde'?'#10b981':'rgba(255,255,255,.22)') : 'rgba(255,255,255,.07)';
-          const col = active ? '#fff' : 'rgba(255,255,255,.5)';
-          return '<button class="role-btn" onclick="changeRole(\'' + u.id + '\',\'' + r + '\')" style="background:' + bg + ';color:' + col + '">' + getRoleLabel(r) + '</button>';
-        }).join('');
-        return '<div class="o-card" id="user-card-' + u.id + '" style="display:flex;flex-direction:column;gap:.75rem">'
-          + '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">'
-          + '<div><strong style="color:#fff">' + u.name + '</strong>' + getRoleBadge(u.role||'user')
-          + '<br><span style="font-size:.85rem;color:rgba(255,255,255,.55)">' + u.email + '</span></div>'
-          + '<button onclick="adminResetPw(' + u.id + ')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:.4rem .9rem;border-radius:7px;font-size:.8rem;cursor:pointer;font-family:Inter,sans-serif">🔑 Passwort ändern</button>'
-          + '</div>'
-          + '<div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">'
-          + '<span style="color:rgba(255,255,255,.45);font-size:.78rem;font-weight:700">ROLLE:</span>' + roleBtns + '</div></div>';
-      }).join('')
-    + '</div>';
+  const el = document.getElementById('users-list');
+  if (!el) return;
+  if (!users.length) {
+    el.innerHTML = '<p style="color:rgba(255,255,255,.5);text-align:center;padding:2rem">Keine Benutzer.</p>';
+    return;
+  }
+  let html = '<div style="display:flex;flex-direction:column;gap:1rem">';
+  users.forEach(function(u, i) {
+    const roleLabels = {admin:'Admin', mitarbeiter:'Mitarbeiter', freunde:'Freunde', user:'Benutzer'};
+    const roleColors = {admin:'#e74c3c', mitarbeiter:'#2563eb', freunde:'#10b981', user:'rgba(255,255,255,.22)'};
+    let roleBtns = '';
+    ['admin','mitarbeiter','freunde','user'].forEach(function(r) {
+      const active = (u.role||'user') === r;
+      const bg = active ? (roleColors[r]||'rgba(255,255,255,.22)') : 'rgba(255,255,255,.07)';
+      const col = active ? '#fff' : 'rgba(255,255,255,.5)';
+      roleBtns += '<button class="role-btn" onclick="changeRole('+i+',\''+r+'\')" style="background:'+bg+';color:'+col+'">'+roleLabels[r]+'</button>';
+    });
+    html += '<div class="o-card" id="user-card-'+i+'" style="display:flex;flex-direction:column;gap:.75rem">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">'
+      + '<div><strong style="color:#fff">'+u.name+'</strong>'+getRoleBadge(u.role||'user')
+      + '<br><span style="font-size:.85rem;color:rgba(255,255,255,.55)">'+u.email+'</span></div>'
+      + '<button onclick="adminResetPw('+i+')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:.4rem .9rem;border-radius:7px;font-size:.8rem;cursor:pointer;font-family:Inter,sans-serif">🔑 Passwort ändern</button>'
+      + '</div>'
+      + '<div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">'
+      + '<span style="color:rgba(255,255,255,.45);font-size:.78rem;font-weight:700">ROLLE:</span>'
+      + roleBtns + '</div></div>';
+  });
+  html += '</div>';
+  el.innerHTML = html;
 }
 
-async function changeRole(uid, role) {
-  const u = users.find(x=>String(x.id)===String(uid)); if(!u) return;
+
+
+async function changeRole(idx, role) {
+  const u = users[idx]; if(!u) return;
   u.role=role; u.isAdmin=(role==='admin');
   renderUsersList(); toast('✓ Rolle für '+u.name+' geändert.');
   // Update in Supabase
@@ -1181,24 +1199,26 @@ async function changeRole(uid, role) {
   } catch(e) { console.error('Role update error:', e); }
 }
 
-function adminResetPw(uid) {
-  const u = users.find(x=>String(x.id)===String(uid)); if(!u) return;
-  const ex = document.getElementById('reset-form-'+uid);
+function adminResetPw(idx) {
+  const u = users[idx]; if(!u) return;
+  const ex = document.getElementById('reset-form-'+idx);
   if (ex) { ex.remove(); return; }
-  const card = document.getElementById('user-card-'+uid); if(!card) return;
+  const card = document.getElementById('user-card-'+idx); if(!card) return;
   const div = document.createElement('div');
-  div.id = 'reset-form-'+uid;
+  div.id = 'reset-form-'+idx;
   div.style.cssText='display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-top:.5rem';
-  div.innerHTML='<input id="ri-'+uid+'" type="password" placeholder="Neues Passwort..." style="flex:1;min-width:180px;padding:.5rem .8rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:7px;color:#fff;font-family:Inter,sans-serif;font-size:.875rem;outline:none">'
-    +'<button onclick="saveNewPw('+uid+')" style="background:#10b981;color:#fff;border:none;padding:.5rem 1rem;border-radius:7px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;font-size:.875rem">✓</button>'
-    +'<button onclick="document.getElementById(\'reset-form-'+uid+'\').remove()" style="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);padding:.5rem .8rem;border-radius:7px;cursor:pointer;font-family:Inter,sans-serif;font-size:.875rem">✕</button>';
+  const iid = 'ri-'+idx;
+  const fid = 'reset-form-'+idx;
+  div.innerHTML = '<input id="'+iid+'" type="password" placeholder="Neues Passwort..." style="flex:1;min-width:180px;padding:.5rem .8rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:7px;color:#fff;font-family:Inter,sans-serif;font-size:.875rem;outline:none">'
+    + '<button onclick="saveNewPw('+idx+')" style="background:#10b981;color:#fff;border:none;padding:.5rem 1rem;border-radius:7px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;font-size:.875rem">✓</button>'
+    + '<button onclick="document.getElementById(\'' + fid + '\').remove()" style="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);padding:.5rem .8rem;border-radius:7px;cursor:pointer;font-family:Inter,sans-serif;font-size:.875rem">✕</button>';
   card.appendChild(div);
-  document.getElementById('ri-'+uid).focus();
+  document.getElementById(iid).focus();
 }
 
 function saveNewPw(uid) {
   const u = users.find(x=>String(x.id)===String(uid)); if(!u) return;
-  const inp = document.getElementById('ri-'+uid);
+  const inp = document.getElementById('ri-'+idx);
   if (!inp||inp.value.length<6) { if(inp){inp.style.borderColor='#ef4444';inp.placeholder='Mind. 6 Zeichen!'} return; }
   u.password=inp.value;
   document.getElementById('reset-form-'+uid)?.remove();
