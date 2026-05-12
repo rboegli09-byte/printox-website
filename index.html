@@ -997,39 +997,48 @@ async function loadOrdersFromSupabase() {
   try {
     const { data, error } = await db.from('orders').select('*').order('created_at', { ascending: false });
     if (error) { console.error('Fehler:', error); return; }
-    if (data && data.length > 0) {
-      // Merge with local orders (avoid duplicates)
-      data.forEach(o => {
-        const exists = orders.find(x => x.supabaseId === o.id);
-        if (!exists) {
-          orders.push({
-            id: 'ORD-' + o.id.slice(0,8).toUpperCase(),
-            supabaseId: o.id,
-            type: o.type,
-            name: o.customer_name,
-            email: o.customer_email,
-            phone: o.customer_phone,
-            address: o.customer_address,
-            items: o.items,
-            total: o.total,
-            payment: o.payment,
-            status: o.status,
-            discount: o.discount,
-            material: o.material,
-            color: o.color,
-            qty: o.qty,
-            desc: o.description,
-            fileName: o.file_name,
-            date: o.created_at ? o.created_at.slice(0,10) : ''
-          });
-        }
-      });
-      renderAdmin();
+    if (data) {
+      // Replace all supabase orders completely (always fresh)
+      const localOnly = orders.filter(o => !o.supabaseId);
+      const fromDB = data.map(o => ({
+        id: 'ORD-' + o.id.slice(0,8).toUpperCase(),
+        supabaseId: o.id,
+        type: o.type,
+        name: o.customer_name,
+        email: o.customer_email,
+        phone: o.customer_phone,
+        address: o.customer_address,
+        items: o.items,
+        total: o.total,
+        payment: o.payment,
+        status: o.status,
+        discount: o.discount,
+        material: o.material,
+        color: o.color,
+        qty: o.qty,
+        desc: o.description,
+        fileName: o.file_name,
+        date: o.created_at ? o.created_at.slice(0,10) : ''
+      }));
+      orders = [...fromDB, ...localOnly];
+      // Re-render if admin page is active
+      const adminPage = document.getElementById('page-admin');
+      if (adminPage && adminPage.classList.contains('active')) {
+        renderAdmin();
+      }
     }
   } catch(e) {
     console.error('Supabase Fehler:', e);
   }
 }
+
+// Auto-refresh orders every 30 seconds when admin is open
+setInterval(() => {
+  const adminPage = document.getElementById('page-admin');
+  if (adminPage && adminPage.classList.contains('active')) {
+    loadOrdersFromSupabase();
+  }
+}, 30000);
 
 async function updateOrderStatusInSupabase(supabaseId, status) {
   if (!supabaseId) return;
@@ -1148,7 +1157,7 @@ function renderUsersList() {
           const active = (u.role||'user') === r;
           const bg = active ? (r==='admin'?'#e74c3c':r==='mitarbeiter'?'#2563eb':r==='freunde'?'#10b981':'rgba(255,255,255,.22)') : 'rgba(255,255,255,.07)';
           const col = active ? '#fff' : 'rgba(255,255,255,.5)';
-          return '<button class="role-btn" onclick="changeRole(' + u.id + ',\'' + r + '\')" style="background:' + bg + ';color:' + col + '">' + getRoleLabel(r) + '</button>';
+          return '<button class="role-btn" onclick="changeRole(\'' + u.id + '\',\'' + r + '\')" style="background:' + bg + ';color:' + col + '">' + getRoleLabel(r) + '</button>';
         }).join('');
         return '<div class="o-card" id="user-card-' + u.id + '" style="display:flex;flex-direction:column;gap:.75rem">'
           + '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">'
@@ -1163,7 +1172,7 @@ function renderUsersList() {
 }
 
 async function changeRole(uid, role) {
-  const u = users.find(x=>x.id===uid); if(!u) return;
+  const u = users.find(x=>String(x.id)===String(uid)); if(!u) return;
   u.role=role; u.isAdmin=(role==='admin');
   renderUsersList(); toast('✓ Rolle für '+u.name+' geändert.');
   // Update in Supabase
@@ -1173,7 +1182,7 @@ async function changeRole(uid, role) {
 }
 
 function adminResetPw(uid) {
-  const u = users.find(x=>x.id===uid); if(!u) return;
+  const u = users.find(x=>String(x.id)===String(uid)); if(!u) return;
   const ex = document.getElementById('reset-form-'+uid);
   if (ex) { ex.remove(); return; }
   const card = document.getElementById('user-card-'+uid); if(!card) return;
@@ -1188,7 +1197,7 @@ function adminResetPw(uid) {
 }
 
 function saveNewPw(uid) {
-  const u = users.find(x=>x.id===uid); if(!u) return;
+  const u = users.find(x=>String(x.id)===String(uid)); if(!u) return;
   const inp = document.getElementById('ri-'+uid);
   if (!inp||inp.value.length<6) { if(inp){inp.style.borderColor='#ef4444';inp.placeholder='Mind. 6 Zeichen!'} return; }
   u.password=inp.value;
