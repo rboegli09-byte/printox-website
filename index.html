@@ -727,10 +727,24 @@ function renderNav() {
   }
 }
 
-function doLogin(e) {
+async function doLogin(e) {
   e.preventDefault();
   const em = document.getElementById('l-email').value.trim().toLowerCase();
   const pw = document.getElementById('l-pass').value;
+  
+  // Try Supabase first
+  try {
+    const { data, error } = await db.from('users').select('*').eq('email', em).eq('password', pw).single();
+    if (data) {
+      currentUser = {id: data.id, name: data.name, email: data.email, password: data.password, isAdmin: data.is_admin, role: data.role};
+      // Also add to local users array if not there
+      if (!users.find(u => u.email === em)) users.push(currentUser);
+      renderNav(); toast('Willkommen, ' + data.name + '! 👋');
+      showPage(data.is_admin ? 'admin' : 'home'); return;
+    }
+  } catch(err) { console.log('Supabase login error:', err); }
+  
+  // Fallback to local users
   const u = users.find(u => u.email.toLowerCase() === em && u.password === pw);
   if (!u) { toast('E-Mail oder Passwort falsch.','e'); return; }
   currentUser = u; renderNav();
@@ -738,12 +752,33 @@ function doLogin(e) {
   showPage(u.isAdmin ? 'admin' : 'home');
 }
 
-function doRegister(e) {
+async function doRegister(e) {
   e.preventDefault();
   const name = document.getElementById('r-name').value.trim();
   const em = document.getElementById('r-email').value.trim().toLowerCase();
   const pw = document.getElementById('r-pass').value;
   if (pw.length < 6) { toast('Passwort mind. 6 Zeichen.','e'); return; }
+  
+  // Save to Supabase
+  try {
+    const { data: existing } = await db.from('users').select('id').eq('email', em).single();
+    if (existing) { toast('E-Mail bereits registriert.','e'); return; }
+    
+    const { data, error } = await db.from('users').insert({
+      name, email: em, password: pw, role: 'user', is_admin: false
+    }).select().single();
+    
+    if (error) throw error;
+    
+    const nu = {id: data.id, name, email:em, password:pw, isAdmin:false, role:'user'};
+    users.push(nu); currentUser = nu; renderNav();
+    toast('Konto erstellt! Willkommen, ' + name + '!');
+    showPage('home'); return;
+  } catch(err) {
+    console.error('Register error:', err);
+  }
+  
+  // Fallback local
   if (users.find(u => u.email.toLowerCase() === em)) { toast('E-Mail bereits registriert.','e'); return; }
   const nu = {id: Date.now(), name, email:em, password:pw, isAdmin:false, role:'user'};
   users.push(nu); currentUser = nu; renderNav();
@@ -780,6 +815,8 @@ function fpReset() {
   const u = users.find(x => x.email.toLowerCase() === email);
   if (!u) { err.textContent = 'Kein Konto mit dieser E-Mail gefunden.'; err.style.display = 'block'; return; }
   u.password = p1;
+  // Update in Supabase
+  db.from('users').update({password: p1}).eq('email', email).then(() => console.log('Password updated'));
   document.getElementById('fp-form').style.display = 'none';
   document.getElementById('fp-ok').style.display = 'block';
 }
@@ -1054,6 +1091,7 @@ function submitOrder(e) {
 // ═══ ADMIN ═══════════════════════════════════════════════════════════════════
 function renderAdmin() {
   loadOrdersFromSupabase();
+  loadUsersFromSupabase();
   document.getElementById('admin-stats').innerHTML =
     '<div class="stat-card"><div class="stat-val">'+orders.length+'</div><div class="stat-lbl">Bestellungen</div></div>'
     +'<div class="stat-card"><div class="stat-val">'+orders.filter(o=>o.status==='new').length+'</div><div class="stat-lbl">Neu</div></div>'
@@ -1089,6 +1127,20 @@ function updStatus(id, s) {
   }
 }
 
+async function loadUsersFromSupabase() {
+  try {
+    const { data, error } = await db.from('users').select('*').order('created_at', {ascending: true});
+    if (data) {
+      data.forEach(u => {
+        const exists = users.find(x => x.email === u.email);
+        if (!exists) users.push({id: u.id, name: u.name, email: u.email, password: u.password, isAdmin: u.is_admin, role: u.role});
+        else { exists.role = u.role; exists.isAdmin = u.is_admin; exists.supabaseId = u.id; }
+      });
+      renderUsersList();
+    }
+  } catch(e) { console.error('Users load error:', e); }
+}
+
 function renderUsersList() {
   document.getElementById('users-list').innerHTML = '<div style="display:flex;flex-direction:column;gap:1rem">'
     + users.map(u => {
@@ -1110,10 +1162,14 @@ function renderUsersList() {
     + '</div>';
 }
 
-function changeRole(uid, role) {
+async function changeRole(uid, role) {
   const u = users.find(x=>x.id===uid); if(!u) return;
   u.role=role; u.isAdmin=(role==='admin');
   renderUsersList(); toast('✓ Rolle für '+u.name+' geändert.');
+  // Update in Supabase
+  try {
+    await db.from('users').update({role, is_admin: role==='admin'}).eq('email', u.email);
+  } catch(e) { console.error('Role update error:', e); }
 }
 
 function adminResetPw(uid) {
