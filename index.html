@@ -496,7 +496,8 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
 </div>
 
 <!-- ADMIN -->
-<div class="page" id="page-admin">
+<div class="page" id="page-myorders"></div>
+  <div class="page" id="page-admin">
   <div class="admin-wrap">
     <div class="admin-head">
       <div class="admin-title">Admin-Dashboard</div>
@@ -880,7 +881,7 @@ function renderCart() {
       + '<button class="ci-rem" onclick="remCart(' + it.id + ')">✕</button></div>';
   }).join('');
 
-  const sub = cart.reduce((s,x) => s+x.price*x.qty, 0);
+  const sub = cart.reduce((s,x) => s+(x.discount>0?x.price*(1-x.discount/100):x.price)*x.qty, 0);
   const shipping = cart.reduce((s,x) => s + (x.shipping||7.90)*x.qty, 0);
   const disc = getUserDiscount();
   const discAmt = disc > 0 ? sub * disc : 0;
@@ -950,7 +951,7 @@ function placeOrder(method) {
   if (!fn||!ln||!st||!pl||!ci) { toast('Bitte alle Adressfelder ausfüllen.','e'); return; }
   const address = fn + ' ' + ln + ', ' + st + ', ' + pl + ' ' + ci;
   // Calculate shipping (sum per product)
-  const sub = cart.reduce((s,x) => s+x.price*x.qty, 0);
+  const sub = cart.reduce((s,x) => s+(x.discount>0?x.price*(1-x.discount/100):x.price)*x.qty, 0);
   const shipping = cart.reduce((s,x) => s + (x.shipping||7.90)*x.qty, 0);
   const disc = getUserDiscount();
   const total = sub*(1-disc) + shipping;
@@ -993,52 +994,91 @@ async function saveOrderToSupabase(order) {
   }
 }
 
+
+function renderOrdersList() {
+  const el = document.getElementById('orders-list');
+  if (!el) return;
+  const statsEl = document.getElementById('admin-stats');
+  if (statsEl) {
+    statsEl.innerHTML =
+      '<div class="stat-card"><div class="stat-val">'+orders.length+'</div><div class="stat-lbl">Bestellungen</div></div>'
+      +'<div class="stat-card"><div class="stat-val">'+orders.filter(function(o){return o.status==='new';}).length+'</div><div class="stat-lbl">Neu</div></div>'
+      +'<div class="stat-card"><div class="stat-val">'+products.length+'</div><div class="stat-lbl">Produkte</div></div>'
+      +'<div class="stat-card"><div class="stat-val">'+users.length+'</div><div class="stat-lbl">Benutzer</div></div>';
+  }
+  if (!orders.length) {
+    el.innerHTML = '<p style="color:rgba(255,255,255,.5);text-align:center;padding:3rem">Noch keine Bestellungen.</p>';
+    return;
+  }
+  let out = '';
+  orders.forEach(function(o) {
+    const stCls = o.status==='new'?'st-new':o.status==='processing'?'st-proc':'st-done';
+    const stLbl = o.status==='new'?'Neu':o.status==='processing'?'In Bearbeitung':'Fertig';
+    const fs = o.type==='upload'
+      ? (o.fileData&&o.fileName ? '<a class="dl-btn" href="'+o.fileData+'" download="'+o.fileName+'">⬇ '+o.fileName+'</a>' : '<span class="no-file">📎 Keine Datei</span>')
+      : '';
+    const sid = o.supabaseId || '';
+    out += '<div class="o-card"><div class="o-head">'
+      +'<div><div class="o-id">'+o.id+' – '+o.name+'</div>'
+      +'<div class="o-meta">'+o.email+' · '+o.date+' · '+(o.type==='upload'?'📁 Upload':'🛒 Shop')+'</div></div>'
+      +'<div style="display:flex;align-items:center;gap:.6rem">'
+      +'<span class="o-status '+stCls+'">'+stLbl+'</span>'
+      +'<select onchange="updStatus(\''+o.id+'\',this.value,\''+sid+'\')"><option value="new"'+(o.status==='new'?' selected':'')+'>Neu</option><option value="processing"'+(o.status==='processing'?' selected':'')+'>Bearbeitung</option><option value="done"'+(o.status==='done'?' selected':'')+'>Fertig</option></select>'
+      +'</div></div>';
+    if (o.type==='upload') {
+      out += '<div class="o-detail">Material: <strong>'+(o.material||'—')+'</strong> · Farbe: <strong>'+(o.color||'—')+'</strong> · Anzahl: <strong>'+(o.qty||1)+' Stk.</strong>'+(o.phone?'<br>📱 '+o.phone:'')+(o.address?'<br>📍 '+o.address:'')+(o.desc?'<br>💬 '+o.desc:'')+'<br>'+fs+'</div>';
+    }
+    if (o.type==='shop' && o.items) {
+      out += '<div class="o-detail">'+o.items.map(function(i){return i.name+' ×'+i.qty;}).join(', ')+' · CHF '+(o.total||0).toFixed(2)+' · '+(o.payment||'—')+(o.discount?' · 🎁 '+o.discount+' Rabatt':'')+(o.address?'<br>📍 '+o.address:'')+'</div>';
+    }
+    out += '</div>';
+  });
+  el.innerHTML = out;
+}
+
 async function loadOrdersFromSupabase() {
   try {
-    const { data, error } = await db.from('orders').select('*').order('created_at', { ascending: false });
-    if (error) { console.error('Fehler:', error); return; }
-    if (data) {
-      // Replace all supabase orders completely (always fresh)
-      const localOnly = orders.filter(o => !o.supabaseId);
-      const fromDB = data.map(o => ({
-        id: 'ORD-' + o.id.slice(0,8).toUpperCase(),
-        supabaseId: o.id,
-        type: o.type,
-        name: o.customer_name,
-        email: o.customer_email,
-        phone: o.customer_phone,
-        address: o.customer_address,
-        items: o.items,
-        total: o.total,
-        payment: o.payment,
-        status: o.status,
-        discount: o.discount,
-        material: o.material,
-        color: o.color,
-        qty: o.qty,
-        desc: o.description,
-        fileName: o.file_name,
-        date: o.created_at ? o.created_at.slice(0,10) : ''
-      }));
-      orders = [...fromDB, ...localOnly];
-      // Re-render if admin page is active
-      const adminPage = document.getElementById('page-admin');
-      if (adminPage && adminPage.classList.contains('active')) {
-        renderAdmin();
-      }
+    const res = await db.from('orders').select('*').order('created_at', {ascending: false});
+    if (res.error) { console.error('Supabase:', res.error); return; }
+    if (res.data) {
+      orders = res.data.map(function(o) {
+        return {
+          id: 'ORD-' + o.id.slice(0,8).toUpperCase(),
+          supabaseId: o.id,
+          type: o.type,
+          name: o.customer_name,
+          email: o.customer_email,
+          phone: o.customer_phone,
+          address: o.customer_address,
+          items: o.items,
+          total: o.total,
+          payment: o.payment,
+          status: o.status,
+          discount: o.discount,
+          material: o.material,
+          color: o.color,
+          qty: o.qty,
+          desc: o.description,
+          fileName: o.file_name,
+          date: o.created_at ? o.created_at.slice(0,10) : ''
+        };
+      });
+      renderOrdersList();
     }
   } catch(e) {
     console.error('Supabase Fehler:', e);
   }
 }
 
-// Auto-refresh orders every 30 seconds when admin is open
-setInterval(() => {
+
+
+// Auto-refresh orders every 15 seconds when admin is open
+setInterval(async () => {
   const adminPage = document.getElementById('page-admin');
   if (adminPage && adminPage.classList.contains('active')) {
-    loadOrdersFromSupabase();
+    await loadOrdersFromSupabase();
   }
-}, 30000);
+}, 15000);
 
 async function updateOrderStatusInSupabase(supabaseId, status) {
   if (!supabaseId) return;
@@ -1099,8 +1139,7 @@ function submitOrder(e) {
 
 // ═══ ADMIN ═══════════════════════════════════════════════════════════════════
 function renderAdmin() {
-  loadOrdersFromSupabase();
-  loadUsersFromSupabase();
+  // Render immediately with current data
   document.getElementById('admin-stats').innerHTML =
     '<div class="stat-card"><div class="stat-val">'+orders.length+'</div><div class="stat-lbl">Bestellungen</div></div>'
     +'<div class="stat-card"><div class="stat-val">'+orders.filter(o=>o.status==='new').length+'</div><div class="stat-lbl">Neu</div></div>'
@@ -1126,14 +1165,20 @@ function renderAdmin() {
   }).join('') : '<p style="color:rgba(255,255,255,.5);text-align:center;padding:3rem">Noch keine Bestellungen.</p>';
 
   renderShop();
-  // Load and render users from Supabase
+  renderOrdersList();
+  // Load fresh data from Supabase async
+  loadOrdersFromSupabase();
   loadUsersFromSupabase();
 }
 
-function updStatus(id, s) {
+function updStatus(id, s, supabaseId) {
   const o = orders.find(x=>x.id===id);
-  if(o){o.status=s;renderAdmin();toast('Status aktualisiert');
-    if(o.supabaseId) updateOrderStatusInSupabase(o.supabaseId, s);
+  if(o){
+    o.status=s;
+    renderOrdersList();
+    toast('Status aktualisiert');
+    const sid = supabaseId || o.supabaseId;
+    if(sid) updateOrderStatusInSupabase(sid, s);
   }
 }
 
@@ -1283,6 +1328,7 @@ function saveProd(){
   else autoShip = 25.90;
   const data={
     name, desc:document.getElementById('p-desc').value.trim(), price,
+    discount: parseFloat(document.getElementById('p-discount')?.value)||0,
     len:pLen, wid:pWid, hei:pHei, kg:pKg, shipping:autoShip,
     icon: document.getElementById('p-icon').value.trim()||'🖨️',
     image: pendingImg
@@ -1422,6 +1468,46 @@ function handleStripeReturn() {
     showPage('cart');
   }
 }
+
+// ═══ BENUTZER-DASHBOARD ══════════════════════════════════════════════════════
+function renderMyOrders() {
+  if (!currentUser) { showPage('login'); return; }
+  const myOrders = orders.filter(function(o) { return o.email === currentUser.email; });
+  const page = document.getElementById('page-myorders');
+  if (!page) return;
+
+  const statusLabel = {new:'Neu', processing:'In Bearbeitung', done:'Fertig ✅'};
+  const statusColor = {new:'#f59e0b', processing:'#3b82f6', done:'#10b981'};
+
+  page.innerHTML = '<div class="container" style="padding:2rem 0">'
+    + '<h2 style="font-size:1.5rem;font-weight:800;color:var(--dark);margin-bottom:1.5rem">Meine Bestellungen</h2>'
+    + (myOrders.length === 0
+      ? '<div style="text-align:center;padding:3rem;background:#fff;border-radius:12px;color:#64748b">Noch keine Bestellungen vorhanden.</div>'
+      : myOrders.map(function(o) {
+          const col = statusColor[o.status] || '#64748b';
+          const lbl = statusLabel[o.status] || o.status;
+          const items = o.type==='shop' && o.items
+            ? o.items.map(function(i){return i.name+' ×'+i.qty;}).join(', ')
+            : (o.fileName || 'Upload-Anfrage');
+          return '<div style="background:#fff;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(0,0,0,.06);border-left:4px solid '+col+'">'
+            + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem">'
+            + '<div><strong style="color:var(--dark)">' + o.id + '</strong>'
+            + '<span style="font-size:.8rem;color:#64748b;margin-left:.75rem">' + o.date + '</span></div>'
+            + '<span style="background:'+col+';color:#fff;padding:.25rem .75rem;border-radius:20px;font-size:.8rem;font-weight:600">'+lbl+'</span>'
+            + '</div>'
+            + '<div style="margin-top:.5rem;color:#475569;font-size:.9rem">' + items + '</div>'
+            + (o.total ? '<div style="margin-top:.25rem;font-weight:700;color:var(--dark)">CHF ' + o.total.toFixed(2) + '</div>' : '')
+            + (o.status==='processing'
+              ? '<div style="margin-top:.75rem;background:#eff6ff;border-radius:8px;padding:.5rem .75rem;font-size:.82rem;color:#1e40af">🔄 Ihre Bestellung wird gerade bearbeitet.</div>'
+              : '')
+            + (o.status==='done'
+              ? '<div style="margin-top:.75rem;background:#f0fdf4;border-radius:8px;padding:.5rem .75rem;font-size:.82rem;color:#15803d">✅ Ihre Bestellung ist fertig und wird bald geliefert!</div>'
+              : '')
+            + '</div>';
+        }).join(''))
+    + '</div>';
+}
+
 
 // ═══ INIT ════════════════════════════════════════════════════════════════════
 renderNav();
