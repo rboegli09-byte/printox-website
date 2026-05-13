@@ -545,9 +545,10 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
     </div>
     <div class="fg"><label>Produktname *</label><input type="text" id="p-name" placeholder="z.B. Würfelhalter"></div>
     <div class="fg"><label>Beschreibung</label><textarea id="p-desc" style="min-height:75px" placeholder="Kurze Beschreibung..."></textarea></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem">
       <div class="fg"><label>Preis (CHF) *</label><input type="number" id="p-price" step="0.05" min="0" placeholder="14.90"></div>
-      <div class="fg"><label>Emoji (Fallback)</label><input type="text" id="p-icon" maxlength="4" placeholder="🖨️"></div>
+      <div class="fg"><label>Rabatt %</label><input type="number" id="p-discount" min="0" max="90" placeholder="0"></div>
+      <div class="fg"><label>Emoji</label><input type="text" id="p-icon" maxlength="4" placeholder="🖨️"></div>
     </div>
     <div style="margin-top:.25rem">
       <div style="font-size:.78rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.5rem">Paketmasse (für Versandberechnung)</div>
@@ -717,6 +718,7 @@ function renderNav() {
     const disc = getUserDiscount();
     let html = '<div class="user-av">' + ini + '</div>';
     if (disc > 0) html += '<span class="disc-badge">10% Rabatt</span>';
+    html += '<button class="nav-action" onclick="showPage(\'myorders\');renderMyOrders()" style="background:rgba(255,255,255,.1);color:#fff">📦 Meine Bestellungen</button>';
     if (currentUser.isAdmin) html += '<button class="nav-action" onclick="showPage(\'admin\')">Dashboard</button>';
     html += '<button class="nav-action" onclick="doLogout()">Abmelden</button>';
     nu.innerHTML = html;
@@ -838,7 +840,9 @@ function renderShop() {
     + '<div class="product-body">'
     + '<div class="product-name">' + p.name + '</div>'
     + '<div class="product-desc">' + p.desc + '</div>'
-    + '<div class="product-price">CHF ' + p.price.toFixed(2) + '</div>'
+    + (p.discount>0
+        ? '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem"><span style="text-decoration:line-through;color:var(--gray);font-size:.9rem">CHF '+p.price.toFixed(2)+'</span><span style="color:#e74c3c;font-weight:800;font-size:1.2rem">CHF '+(p.price*(1-p.discount/100)).toFixed(2)+'</span><span style="background:#e74c3c;color:#fff;padding:.15rem .5rem;border-radius:5px;font-size:.72rem;font-weight:700">-'+p.discount+'%</span></div>'
+        : '<div class="product-price">CHF '+p.price.toFixed(2)+'</div>')
     + '<div class="product-actions">'
     + '<button class="btn-cart" onclick="addToCart(' + p.id + ')">In Warenkorb</button>'
     + (isA ? '<button class="btn-edit-sm" onclick="openProdModal(' + p.id + ')">✏️</button><button class="btn-del-sm" onclick="delProd(' + p.id + ')">🗑️</button>' : '')
@@ -856,7 +860,7 @@ function renderShop() {
 function addToCart(id) {
   const p = products.find(x => x.id === id); if (!p) return;
   const ex = cart.find(x => x.id === id);
-  if (ex) ex.qty++; else cart.push({...p, qty:1});
+  if (ex) ex.qty++; else cart.push({...p, qty:1, discount: p.discount||0});
   updBadge(); toast(p.name + ' hinzugefügt ✓');
 }
 
@@ -929,14 +933,15 @@ function renderCart() {
 
 function setPay(m) {
   selPay = m;
-  _elements = null;
   renderCart();
-  if (m === 'card') {
-    const sub  = cart.reduce((s,x) => s+x.price*x.qty, 0);
-    const ship = cart.reduce((s,x) => s+(x.shipping||7.90)*x.qty, 0);
-    _cardTotal = +(sub*(1-getUserDiscount())+ship).toFixed(2);
-    setTimeout(loadStripeElement, 300);
-  }
+}
+
+function confirmPayment() {
+  placeOrder('Kreditkarte');
+}
+
+function stripeCheckout(tot) {
+  placeOrder('Kreditkarte');
 }
 function adjQ(id,d) { const it = cart.find(x=>x.id===id); if(!it) return; it.qty+=d; if(it.qty<=0) remCart(id); else {updBadge();renderCart();} }
 function remCart(id) { cart = cart.filter(x=>x.id!==id); updBadge(); renderCart(); }
@@ -1084,20 +1089,6 @@ setInterval(async () => {
 async function updateOrderStatusInSupabase(supabaseId, status) {
   if (!supabaseId) return;
   await db.from('orders').update({ status }).eq('id', supabaseId);
-}
-
-// ═══ ZAHLUNG ════════════════════════════════════════════════════════════════
-function setPay(m) {
-  selPay = m;
-  renderCart();
-}
-
-function confirmPayment() {
-  placeOrder('Kreditkarte');
-}
-
-function stripeCheckout(tot) {
-  placeOrder('Kreditkarte');
 }
 
 
@@ -1262,12 +1253,13 @@ function adminResetPw(idx) {
   document.getElementById(iid).focus();
 }
 
-function saveNewPw(uid) {
-  const u = users.find(x=>String(x.id)===String(uid)); if(!u) return;
+function saveNewPw(idx) {
+  const u = users[idx]; if(!u) return;
   const inp = document.getElementById('ri-'+idx);
   if (!inp||inp.value.length<6) { if(inp){inp.style.borderColor='#ef4444';inp.placeholder='Mind. 6 Zeichen!'} return; }
   u.password=inp.value;
-  document.getElementById('reset-form-'+uid)?.remove();
+  db.from('users').update({password: inp.value}).eq('email', u.email).then(()=>console.log('pw updated'));
+  document.getElementById('reset-form-'+idx)?.remove();
   toast('✓ Passwort für '+u.name+' geändert.');
 }
 
@@ -1288,6 +1280,7 @@ function openProdModal(id) {
     document.getElementById('p-name').value=p.name;
     document.getElementById('p-desc').value=p.desc;
     document.getElementById('p-price').value=p.price;
+    document.getElementById('p-discount').value=p.discount||0;
     document.getElementById('p-icon').value=p.icon||'🖨️';
     document.getElementById('p-len').value=p.len||'';
     document.getElementById('p-wid').value=p.wid||'';
@@ -1298,6 +1291,7 @@ function openProdModal(id) {
     document.getElementById('p-name').value='';
     document.getElementById('p-desc').value='';
     document.getElementById('p-price').value='';
+    document.getElementById('p-discount').value='';
     document.getElementById('p-icon').value='🖨️';
     document.getElementById('p-len').value='';
     document.getElementById('p-wid').value='';
