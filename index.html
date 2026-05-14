@@ -597,6 +597,35 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
   <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2025 Printox</span><span>Made in 🇨🇭</span></div></footer>
 </div>
 
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-bg" id="prod-detail-modal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:560px;padding:0;overflow:hidden">
+    <div id="pdm-img" style="height:220px;background:linear-gradient(135deg,#0a1628,#1a2d45);display:flex;align-items:center;justify-content:center;font-size:5rem;position:relative">
+      <img id="pdm-img-tag" src="" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;inset:0">
+      <span id="pdm-icon" style="position:relative;z-index:1"></span>
+    </div>
+    <div style="padding:1.75rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem">
+        <div>
+          <h3 id="pdm-name" style="font-size:1.4rem;font-weight:800;color:var(--navy);margin-bottom:.25rem"></h3>
+          <div id="pdm-price" style="font-size:1.2rem;font-weight:800;color:var(--blue)"></div>
+        </div>
+        <button onclick="document.getElementById('prod-detail-modal').style.display='none'" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--gray);padding:.25rem">✕</button>
+      </div>
+      <div id="pdm-desc" style="color:var(--gray);font-size:.9rem;line-height:1.7;margin-bottom:1.25rem"></div>
+      <div id="pdm-specs" style="background:#f8fafc;border-radius:10px;padding:1rem;margin-bottom:1.25rem;display:none">
+        <div style="font-size:.78rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem">Produktdaten</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem" id="pdm-specs-grid"></div>
+      </div>
+      <div id="pdm-shipping-info" style="background:#eff6ff;border-radius:10px;padding:.75rem 1rem;margin-bottom:1.25rem;font-size:.875rem;color:#1e40af"></div>
+      <div style="display:flex;gap:.75rem">
+        <button id="pdm-cart-btn" class="btn-cart" style="flex:1;padding:.85rem" onclick="pdmAddToCart()">In den Warenkorb</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- PRODUCT MODAL -->
 <div class="modal-bg" id="prod-modal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
   <div class="modal-box" onclick="event.stopPropagation()">
@@ -961,9 +990,10 @@ function fpReset() {
 
 // ═══ SHOP ════════════════════════════════════════════════════════════════════
 function pImgHTML(p) {
+  const click = 'onclick="openProductDetail('+p.id+')" style="cursor:pointer"';
   return p.image
-    ? '<div class="product-img"><img src="' + p.image + '" alt="' + p.name + '"></div>'
-    : '<div class="product-img"><span class="ef">' + (p.icon||'🖨️') + '</span></div>';
+    ? '<div class="product-img" '+click+'><img src="' + p.image + '" alt="' + p.name + '"></div>'
+    : '<div class="product-img" '+click+'><span class="ef">' + (p.icon||'🖨️') + '</span></div>';
 }
 
 function renderShop() {
@@ -974,7 +1004,7 @@ function renderShop() {
     '<div class="product-card">'
     + pImgHTML(p)
     + '<div class="product-body">'
-    + '<div class="product-name">' + p.name + '</div>'
+    + '<div class="product-name" onclick="openProductDetail('+p.id+')" style="cursor:pointer;color:var(--blue)">' + p.name + '</div>'
     + '<div class="product-desc">' + p.desc + '</div>'
     + (p.discount>0
         ? '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem"><span style="text-decoration:line-through;color:var(--gray);font-size:.9rem">CHF '+p.price.toFixed(2)+'</span><span style="color:#e74c3c;font-weight:800;font-size:1.2rem">CHF '+(p.price*(1-p.discount/100)).toFixed(2)+'</span><span style="background:#e74c3c;color:#fff;padding:.15rem .5rem;border-radius:5px;font-size:.72rem;font-weight:700">-'+p.discount+'%</span></div>'
@@ -1489,6 +1519,73 @@ function aTab(t) {
 }
 
 // ═══ PRODUCT MODAL ════════════════════════════════════════════════════════════
+let pdmCurrentId = null;
+
+function openProductDetail(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  pdmCurrentId = id;
+
+  // Image
+  const imgTag = document.getElementById('pdm-img-tag');
+  const iconEl = document.getElementById('pdm-icon');
+  if (p.image) {
+    imgTag.src = p.image;
+    imgTag.style.display = 'block';
+    iconEl.style.display = 'none';
+  } else {
+    imgTag.style.display = 'none';
+    iconEl.textContent = p.icon || '🖨️';
+    iconEl.style.display = 'block';
+  }
+
+  // Name & desc
+  document.getElementById('pdm-name').textContent = p.name;
+  document.getElementById('pdm-desc').textContent = p.desc || '';
+
+  // Price with discount
+  const priceEl = document.getElementById('pdm-price');
+  if (p.discount > 0) {
+    const disc = p.price * (1 - p.discount/100);
+    priceEl.innerHTML = '<span style="text-decoration:line-through;color:var(--gray);font-size:.95rem;font-weight:400">CHF '+p.price.toFixed(2)+'</span> <span style="color:#e74c3c">CHF '+disc.toFixed(2)+'</span> <span style="background:#e74c3c;color:#fff;padding:.1rem .45rem;border-radius:4px;font-size:.72rem;font-weight:700">-'+p.discount+'%</span>';
+  } else {
+    priceEl.textContent = 'CHF ' + p.price.toFixed(2);
+  }
+
+  // Specs
+  const specs = document.getElementById('pdm-specs');
+  const grid = document.getElementById('pdm-specs-grid');
+  const hasSpecs = p.len || p.wid || p.hei || p.kg;
+  if (hasSpecs) {
+    specs.style.display = 'block';
+    grid.innerHTML = [
+      p.len ? '<div style="color:var(--gray);font-size:.82rem">Länge</div><div style="font-weight:600;font-size:.82rem">'+p.len+' cm</div>' : '',
+      p.wid ? '<div style="color:var(--gray);font-size:.82rem">Breite</div><div style="font-weight:600;font-size:.82rem">'+p.wid+' cm</div>' : '',
+      p.hei ? '<div style="color:var(--gray);font-size:.82rem">Höhe</div><div style="font-weight:600;font-size:.82rem">'+p.hei+' cm</div>' : '',
+      p.kg  ? '<div style="color:var(--gray);font-size:.82rem">Gewicht</div><div style="font-weight:600;font-size:.82rem">'+p.kg+' kg</div>' : '',
+    ].join('');
+  } else {
+    specs.style.display = 'none';
+  }
+
+  // Shipping info
+  const shipEl = document.getElementById('pdm-shipping-info');
+  if (p.shipping === 0) {
+    shipEl.innerHTML = '🎁 <strong>Kostenloser Versand</strong>';
+  } else {
+    shipEl.innerHTML = '📦 Versand: <strong>CHF '+(p.shipping||7.90).toFixed(2)+'</strong> · Ab CHF 100 Gratis';
+  }
+
+  document.getElementById('prod-detail-modal').style.display = 'flex';
+}
+
+function pdmAddToCart() {
+  if (pdmCurrentId) {
+    addToCart(pdmCurrentId);
+    document.getElementById('prod-detail-modal').style.display = 'none';
+  }
+}
+
 function openProdModal(id) {
   editProdId = id||null; pendingImg=null;
   document.getElementById('prod-modal-title').textContent = id?'Produkt bearbeiten':'Produkt hinzufügen';
