@@ -379,6 +379,9 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
       <div><div class="pg-title">Shop</div><div class="pg-sub">Entdecken Sie unsere Produkte</div></div>
       <button class="btn-add-prod" id="admin-add-btn" onclick="openProdModal()" style="display:none">+ Produkt hinzufügen</button>
     </div>
+    <div style="margin-bottom:1.5rem">
+      <input type="text" id="shop-search" placeholder="🔍 Produkte suchen..." oninput="renderShop()" style="width:100%;max-width:420px;padding:.75rem 1.1rem;border:1.5px solid var(--gray-l);border-radius:10px;font-family:Inter,sans-serif;font-size:.95rem;color:var(--navy);outline:none;background:#fff;transition:border .15s" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--gray-l)'">
+    </div>
     <div class="products-grid" id="products-grid"></div>
   </div>
   <footer><div class="ft-inner" style="max-width:1200px"><div><div class="ft-logo"><svg width="28" height="28"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div></div><div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('contact')">Kontakt</a></div><div class="ft-col"><h4>Kontakt</h4><p>printox26@outlook.com</p><p>077 496 28 38</p></div></div><div class="ft-bot" style="max-width:1200px;margin:1.5rem auto 0;border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2025 Printox</span><span>Made in 🇨🇭</span></div></footer>
@@ -684,6 +687,9 @@ function getRoleBadge(role) {
 }
 function getUserDiscount() {
   if (!currentUser) return 0;
+  // Per-user custom discount takes priority
+  if (currentUser.discount > 0) return currentUser.discount / 100;
+  // Role-based discount as fallback
   if (currentUser.role === 'mitarbeiter' || currentUser.role === 'freunde') return 0.10;
   return 0;
 }
@@ -739,7 +745,7 @@ async function doLogin(e) {
   try {
     const { data, error } = await db.from('users').select('*').eq('email', em).eq('password', pw).single();
     if (data) {
-      currentUser = {id: data.id, name: data.name, email: data.email, password: data.password, isAdmin: data.is_admin, role: data.role};
+      currentUser = {id: data.id, name: data.name, email: data.email, password: data.password, isAdmin: data.is_admin, role: data.role, discount: data.discount||0};
       // Also add to local users array if not there
       if (!users.find(u => u.email === em)) users.push(currentUser);
       renderNav(); toast('Willkommen, ' + data.name + '! 👋');
@@ -833,7 +839,9 @@ function pImgHTML(p) {
 
 function renderShop() {
   const isA = currentUser && currentUser.isAdmin;
-  const html = products.length ? products.map(p =>
+  const q = (document.getElementById('shop-search')?.value||'').toLowerCase().trim();
+  const filtered = q ? products.filter(p => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q)) : products;
+  const html = filtered.length ? filtered.map(p =>
     '<div class="product-card">'
     + pImgHTML(p)
     + '<div class="product-body">'
@@ -846,7 +854,7 @@ function renderShop() {
     + '<button class="btn-cart" onclick="addToCart(' + p.id + ')">In Warenkorb</button>'
     + (isA ? '<button class="btn-edit-sm" onclick="openProdModal(' + p.id + ')">✏️</button><button class="btn-del-sm" onclick="delProd(' + p.id + ')">🗑️</button>' : '')
     + '</div></div></div>'
-  ).join('') : '<div class="empty-st"><div class="ei">🖨️</div><p>Noch keine Produkte.</p></div>';
+  ).join('') : '<div class="empty-st"><div class="ei">🔍</div><p>'+(q?'Keine Produkte gefunden für «'+q+'».':'Noch keine Produkte.')+'</p></div>';
   const g = document.getElementById('products-grid');
   const ag = document.getElementById('admin-prod-grid');
   if (g) g.innerHTML = html;
@@ -1182,7 +1190,8 @@ async function loadUsersFromSupabase() {
     if (data && data.length > 0) {
       users = data.map(u => ({
         id: u.id, name: u.name, email: u.email,
-        password: u.password, isAdmin: u.is_admin, role: u.role||'user'
+        password: u.password, isAdmin: u.is_admin, role: u.role||'user',
+        discount: u.discount||0
       }));
       renderUsersList();
     }
@@ -1217,13 +1226,34 @@ function renderUsersList() {
       + '</div>'
       + '<div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">'
       + '<span style="color:rgba(255,255,255,.45);font-size:.78rem;font-weight:700">ROLLE:</span>'
-      + roleBtns + '</div></div>';
+      + roleBtns + '</div>'
+      + '<div style="display:flex;align-items:center;gap:.75rem;margin-top:.35rem;flex-wrap:wrap">'
+      + '<span style="color:rgba(255,255,255,.45);font-size:.78rem;font-weight:700">RABATT:</span>'
+      + '<div style="display:flex;align-items:center;gap:.4rem">'
+      + '<input type="number" min="0" max="90" value="'+(u.discount||0)+'" style="width:65px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:.3rem .5rem;color:#fff;font-family:Inter,sans-serif;font-size:.85rem;text-align:center" onchange="setUserDiscount('+i+',this.value)" id="disc-inp-'+i+'">'
+      + '<span style="color:rgba(255,255,255,.55);font-size:.85rem">%</span>'
+      + '</div>'
+      + (u.discount>0 ? '<span style="background:#10b981;color:#fff;padding:.15rem .5rem;border-radius:5px;font-size:.72rem;font-weight:700">'+u.discount+'% aktiv</span>' : '')
+      + '</div>'
+      + '</div>';
   });
   html += '</div>';
   el.innerHTML = html;
 }
 
 
+
+async function setUserDiscount(idx, val) {
+  const u = users[idx]; if(!u) return;
+  const disc = Math.min(90, Math.max(0, parseInt(val)||0));
+  u.discount = disc;
+  // Update in Supabase
+  try {
+    await db.from('users').update({discount: disc}).eq('email', u.email);
+  } catch(e) { console.error('Discount update error:', e); }
+  renderUsersList();
+  toast('✓ Rabatt für '+u.name+': '+disc+'%');
+}
 
 async function changeRole(idx, role) {
   const u = users[idx]; if(!u) return;
