@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Printox – 3D-Druck-Service</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -1604,18 +1605,26 @@ function liveColors(){
 function saveColors(){sc.colors={nav:document.getElementById('dp-cnav-h').value,blue:document.getElementById('dp-cblue-h').value,bg:document.getElementById('dp-cbg-h').value};liveColors();toast('Farben gespeichert ✓');}
 
 
-// Handle Stripe return
-function handleStripeReturn() {
+async function handleStripeReturn() {
   const params = new URLSearchParams(window.location.search);
   const payment = params.get('payment');
-  const orderId = params.get('order');
-  
+  const sessionId = params.get('session_id');
+
   if (payment === 'success') {
-    // Mark order as paid
-    const order = orders.find(o => o.id === orderId);
-    if (order) { order.status = 'new'; order.payment = 'Kreditkarte ✓'; }
     window.history.replaceState({}, '', window.location.pathname);
-    toast('✅ Zahlung erfolgreich! Bestellung ' + (orderId||'') + ' bestätigt.', 's');
+    if (sessionId) {
+      try {
+        const res = await fetch(BACKEND_URL + '/session-status?session_id=' + sessionId);
+        const data = await res.json();
+        if (data.status === 'paid') {
+          cart = []; updBadge();
+          toast('✅ Zahlung erfolgreich! Ihre Bestellung wird bearbeitet.', 's');
+          showPage('home'); return;
+        }
+      } catch(e) {}
+    }
+    cart = []; updBadge();
+    toast('✅ Zahlung erfolgreich! Ihre Bestellung wird bearbeitet.', 's');
     showPage('home');
   } else if (payment === 'cancel') {
     window.history.replaceState({}, '', window.location.pathname);
