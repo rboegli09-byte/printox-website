@@ -722,7 +722,7 @@ function renderNav() {
     const ini = currentUser.name.split(' ').map(x => x[0]).join('').toUpperCase().slice(0,2);
     const disc = getUserDiscount();
     let html = '<div class="user-av">' + ini + '</div>';
-    if (disc > 0) html += '<span class="disc-badge">10% Rabatt</span>';
+    if (disc > 0) html += '<span class="disc-badge">' + Math.round(disc*100) + '% Rabatt</span>';
     html += '<button class="nav-action" onclick="showPage(\'myorders\');renderMyOrders()" style="background:rgba(255,255,255,.1);color:#fff">📦 Meine Bestellungen</button>';
     if (currentUser.isAdmin) html += '<button class="nav-action" onclick="showPage(\'admin\')">Dashboard</button>';
     html += '<button class="nav-action" onclick="doLogout()">Abmelden</button>';
@@ -1498,17 +1498,46 @@ function handleStripeReturn() {
 }
 
 // ═══ BENUTZER-DASHBOARD ══════════════════════════════════════════════════════
-function renderMyOrders() {
+async function renderMyOrders() {
   if (!currentUser) { showPage('login'); return; }
-  const myOrders = orders.filter(function(o) { return o.email === currentUser.email; });
   const page = document.getElementById('page-myorders');
   if (!page) return;
+  
+  // Show loading
+  page.innerHTML = '<div style="padding:3rem;text-align:center;color:var(--gray)"><span class="spinner" style="border-color:rgba(0,0,0,.2);border-top-color:var(--blue)"></span> Laden...</div>';
+  
+  // Load from Supabase
+  try {
+    const isStaff = currentUser.isAdmin || currentUser.role === 'mitarbeiter';
+    let query = db.from('orders').select('*').order('created_at', {ascending: false});
+    if (!isStaff) query = query.eq('customer_email', currentUser.email);
+    const { data } = await query;
+    if (data) {
+      orders = data.map(function(o) {
+        return {
+          id: 'ORD-' + o.id.slice(0,8).toUpperCase(),
+          supabaseId: o.id, type: o.type,
+          name: o.customer_name, email: o.customer_email,
+          phone: o.customer_phone, address: o.customer_address,
+          items: o.items, total: o.total, payment: o.payment,
+          status: o.status, discount: o.discount,
+          material: o.material, color: o.color, qty: o.qty,
+          desc: o.description, fileName: o.file_name,
+          date: o.created_at ? o.created_at.slice(0,10) : ''
+        };
+      });
+    }
+  } catch(e) { console.error('Load orders error:', e); }
+  
+  const isStaff = currentUser.isAdmin || currentUser.role === 'mitarbeiter';
+  const myOrders = isStaff ? orders : orders.filter(function(o) { return o.email === currentUser.email; });
 
   const statusLabel = {new:'Neu', processing:'In Bearbeitung', done:'Fertig ✅'};
   const statusColor = {new:'#f59e0b', processing:'#3b82f6', done:'#10b981'};
 
-  page.innerHTML = '<div class="container" style="padding:2rem 0">'
-    + '<h2 style="font-size:1.5rem;font-weight:800;color:var(--dark);margin-bottom:1.5rem">Meine Bestellungen</h2>'
+  page.innerHTML = '<div class="pg-wrap">'
+    + '<h2 style="font-size:1.75rem;font-weight:800;color:var(--navy);margin-bottom:.25rem">'+(isStaff&&!currentUser.isAdmin?'Alle Bestellungen':'Meine Bestellungen')+'</h2>'
+    + '<div style="color:var(--gray);font-size:.9rem;margin-bottom:2rem">'+(isStaff&&!currentUser.isAdmin?'Alle Kundenbestellungen':'Ihre bisherigen Bestellungen')+'</div>'
     + (myOrders.length === 0
       ? '<div style="text-align:center;padding:3rem;background:#fff;border-radius:12px;color:#64748b">Noch keine Bestellungen vorhanden.</div>'
       : myOrders.map(function(o) {
@@ -1517,23 +1546,28 @@ function renderMyOrders() {
           const items = o.type==='shop' && o.items
             ? o.items.map(function(i){return i.name+' ×'+i.qty;}).join(', ')
             : (o.fileName || 'Upload-Anfrage');
+          const fileBtn = (isStaff && o.type==='upload' && o.fileName)
+            ? '<a style="display:inline-flex;align-items:center;gap:.4rem;background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;padding:.35rem .85rem;border-radius:7px;font-size:.8rem;font-weight:600;text-decoration:none;margin-top:.5rem" href="#">⬇ '+o.fileName+'</a>'
+            : '';
           return '<div style="background:#fff;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(0,0,0,.06);border-left:4px solid '+col+'">'
             + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem">'
-            + '<div><strong style="color:var(--dark)">' + o.id + '</strong>'
+            + '<div><strong style="color:var(--navy)">' + o.id + '</strong>'
+            + (isStaff&&!currentUser.isAdmin ? '<span style="font-size:.8rem;color:#64748b;margin-left:.5rem">'+o.name+'</span>' : '')
             + '<span style="font-size:.8rem;color:#64748b;margin-left:.75rem">' + o.date + '</span></div>'
             + '<span style="background:'+col+';color:#fff;padding:.25rem .75rem;border-radius:20px;font-size:.8rem;font-weight:600">'+lbl+'</span>'
             + '</div>'
             + '<div style="margin-top:.5rem;color:#475569;font-size:.9rem">' + items + '</div>'
-            + (o.total ? '<div style="margin-top:.25rem;font-weight:700;color:var(--dark)">CHF ' + o.total.toFixed(2) + '</div>' : '')
+            + (o.total ? '<div style="margin-top:.25rem;font-weight:700;color:var(--navy)">CHF ' + o.total.toFixed(2) + (o.payment?' · '+o.payment:'') + '</div>' : '')
+            + fileBtn
             + (o.status==='processing'
-              ? '<div style="margin-top:.75rem;background:#eff6ff;border-radius:8px;padding:.5rem .75rem;font-size:.82rem;color:#1e40af">🔄 Ihre Bestellung wird gerade bearbeitet.</div>'
+              ? '<div style="margin-top:.75rem;background:#eff6ff;border-radius:8px;padding:.5rem .75rem;font-size:.82rem;color:#1e40af">🔄 '+(isStaff?'Bestellung in Bearbeitung.':'Ihre Bestellung wird gerade bearbeitet.')+'</div>'
               : '')
             + (o.status==='done'
-              ? '<div style="margin-top:.75rem;background:#f0fdf4;border-radius:8px;padding:.5rem .75rem;font-size:.82rem;color:#15803d">✅ Ihre Bestellung ist fertig und wird bald geliefert!</div>'
+              ? '<div style="margin-top:.75rem;background:#f0fdf4;border-radius:8px;padding:.5rem .75rem;font-size:.82rem;color:#15803d">✅ '+(isStaff?'Bestellung abgeschlossen.':'Ihre Bestellung ist fertig und wird bald geliefert!')+'</div>'
               : '')
             + '</div>';
         }).join(''))
-    + '</div>';
+    + '</div></div>';
 }
 
 
