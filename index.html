@@ -970,10 +970,12 @@ function placeOrder(method) {
   const shipping = sub >= 100 ? 0 : cart.reduce((s,x) => s + (x.shipping||7.90)*x.qty, 0);
   const disc = getUserDiscount();
   const total = sub*(1-disc) + shipping;
-  orders.unshift({id:'ORD-'+String(++nOrdId),type:'shop',name:currentUser.name,email:currentUser.email,
+  const order = {id:'ORD-'+String(++nOrdId),type:'shop',name:currentUser.name,email:currentUser.email,
     address, items:cart.map(x=>({name:x.name,qty:x.qty,price:x.price,shipping:x.shipping||7.90})),
-    total, payment:method, discount: disc>0 ? '10%' : null,
-    status:'new', date:new Date().toISOString().slice(0,10)});
+    total, payment:method, discount: disc>0 ? (disc*100)+'%' : null,
+    status:'new', date:new Date().toISOString().slice(0,10)};
+  orders.unshift(order);
+  saveOrderToSupabase(order);
   cart = []; updBadge(); toast('Bestellung erfolgreich! ✓'); showPage('home');
 }
 
