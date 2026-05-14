@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Printox – 3D-Druck-Service</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -365,7 +366,7 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
         <div class="ft-logo"><svg width="30" height="30"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div>
         <p id="ft-desc">Professioneller 3D-Druck-Service aus der Schweiz.</p>
       </div>
-      <div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('contact')">Kontakt</a></div>
+      <div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('contact')">Kontakt</a><a onclick="showPage('privacy')">Datenschutz</a></div>
       <div class="ft-col"><h4>Kontakt</h4><p id="ft-email">printox26@outlook.com</p><p id="ft-phone">077 496 28 38</p></div>
     </div>
     <div class="ft-bot"><span id="ft-copy">© 2025 Printox</span><span>Made in 🇨🇭</span></div>
@@ -384,7 +385,7 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
     </div>
     <div class="products-grid" id="products-grid"></div>
   </div>
-  <footer><div class="ft-inner" style="max-width:1200px"><div><div class="ft-logo"><svg width="28" height="28"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div></div><div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('contact')">Kontakt</a></div><div class="ft-col"><h4>Kontakt</h4><p>printox26@outlook.com</p><p>077 496 28 38</p></div></div><div class="ft-bot" style="max-width:1200px;margin:1.5rem auto 0;border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2025 Printox</span><span>Made in 🇨🇭</span></div></footer>
+  <footer><div class="ft-inner" style="max-width:1200px"><div><div class="ft-logo"><svg width="28" height="28"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div></div><div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('contact')">Kontakt</a><a onclick="showPage('privacy')">Datenschutz</a></div><div class="ft-col"><h4>Kontakt</h4><p>printox26@outlook.com</p><p>077 496 28 38</p></div></div><div class="ft-bot" style="max-width:1200px;margin:1.5rem auto 0;border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2025 Printox</span><span>Made in 🇨🇭</span></div></footer>
 </div>
 
 <!-- CART -->
@@ -531,6 +532,70 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
   <footer><div class="ft-bot" style="max-width:1200px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2025 Printox Admin · Remo Bögli</span><span>Made in 🇨🇭</span></div></footer>
 </div>
 
+
+<!-- DATENSCHUTZ -->
+<div class="page" id="page-privacy">
+  <div class="pg-wrap" style="max-width:860px">
+    <div class="pg-title">Datenschutzerklärung</div>
+    <div class="pg-sub">Gültig ab 1. Januar 2025</div>
+    <div style="background:#fff;border:1px solid var(--gray-l);border-radius:14px;padding:2rem;line-height:1.8;color:#334155">
+      <h3 style="color:var(--navy);font-size:1.1rem;margin:1.5rem 0 .5rem;padding-top:.5rem;border-top:1px solid var(--gray-l)">1. Verantwortliche Stelle</h3>
+      <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist:<br>
+      <strong>Printox – Remo Bögli</strong><br>
+      E-Mail: printox26@outlook.com<br>
+      Telefon: 077 496 28 38</p>
+
+      <h3 style="color:var(--navy);font-size:1.1rem;margin:1.5rem 0 .5rem;padding-top:.5rem;border-top:1px solid var(--gray-l)">2. Erhobene Daten</h3>
+      <p>Wir erheben folgende personenbezogene Daten:</p>
+      <ul style="padding-left:1.5rem;margin:.5rem 0">
+        <li>Name und E-Mail-Adresse (bei Registrierung)</li>
+        <li>Lieferadresse (bei Bestellungen)</li>
+        <li>Telefonnummer (bei Upload-Anfragen)</li>
+        <li>Hochgeladene 3D-Modelldateien</li>
+        <li>Bestellhistorie</li>
+      </ul>
+
+      <h3 style="color:var(--navy);font-size:1.1rem;margin:1.5rem 0 .5rem;padding-top:.5rem;border-top:1px solid var(--gray-l)">3. Zweck der Datenverarbeitung</h3>
+      <p>Ihre Daten werden ausschliesslich für folgende Zwecke verwendet:</p>
+      <ul style="padding-left:1.5rem;margin:.5rem 0">
+        <li>Bearbeitung und Lieferung Ihrer Bestellungen</li>
+        <li>Kommunikation bezüglich Ihrer Bestellungen</li>
+        <li>Verwaltung Ihres Benutzerkontos</li>
+        <li>Versand von Bestätigungs-E-Mails</li>
+      </ul>
+
+      <h3 style="color:var(--navy);font-size:1.1rem;margin:1.5rem 0 .5rem;padding-top:.5rem;border-top:1px solid var(--gray-l)">4. Datenspeicherung</h3>
+      <p>Ihre Daten werden sicher in einer Datenbank bei <strong>Supabase</strong> (Frankfurt, Deutschland) gespeichert. Supabase erfüllt die Anforderungen der DSGVO. Die Daten werden nicht an Dritte weitergegeben.</p>
+
+      <h3 style="color:var(--navy);font-size:1.1rem;margin:1.5rem 0 .5rem;padding-top:.5rem;border-top:1px solid var(--gray-l)">5. Ihre Rechte</h3>
+      <p>Sie haben das Recht auf:</p>
+      <ul style="padding-left:1.5rem;margin:.5rem 0">
+        <li><strong>Auskunft</strong> über Ihre gespeicherten Daten</li>
+        <li><strong>Berichtigung</strong> unrichtiger Daten</li>
+        <li><strong>Löschung</strong> Ihrer Daten («Recht auf Vergessenwerden»)</li>
+        <li><strong>Einschränkung</strong> der Verarbeitung</li>
+        <li><strong>Datenübertragbarkeit</strong></li>
+      </ul>
+      <p style="margin-top:.75rem">Zur Ausübung Ihrer Rechte kontaktieren Sie uns unter: <a href="mailto:printox26@outlook.com" style="color:var(--blue)">printox26@outlook.com</a></p>
+
+      <h3 style="color:var(--navy);font-size:1.1rem;margin:1.5rem 0 .5rem;padding-top:.5rem;border-top:1px solid var(--gray-l)">6. Cookies</h3>
+      <p>Diese Website verwendet keine Cookies für Tracking oder Werbung. Es werden ausschliesslich technisch notwendige Daten im Browser-Speicher (localStorage) für die Sitzungsverwaltung verwendet.</p>
+
+      <h3 style="color:var(--navy);font-size:1.1rem;margin:1.5rem 0 .5rem;padding-top:.5rem;border-top:1px solid var(--gray-l)">7. Drittanbieter</h3>
+      <ul style="padding-left:1.5rem;margin:.5rem 0">
+        <li><strong>Supabase</strong> (Datenbank) – Frankfurt, Deutschland – DSGVO-konform</li>
+        <li><strong>EmailJS</strong> (E-Mail-Versand) – für Passwort-Reset-E-Mails</li>
+        <li><strong>Google Fonts</strong> (Schriftarten) – können IP-Adressen übertragen</li>
+      </ul>
+
+      <h3 style="color:var(--navy);font-size:1.1rem;margin:1.5rem 0 .5rem;padding-top:.5rem;border-top:1px solid var(--gray-l)">8. Kontakt</h3>
+      <p>Bei Fragen zum Datenschutz wenden Sie sich an:<br>
+      <a href="mailto:printox26@outlook.com" style="color:var(--blue)">printox26@outlook.com</a></p>
+    </div>
+  </div>
+  <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2025 Printox</span><span>Made in 🇨🇭</span></div></footer>
+</div>
+
 <!-- PRODUCT MODAL -->
 <div class="modal-bg" id="prod-modal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
   <div class="modal-box" onclick="event.stopPropagation()">
@@ -573,17 +638,32 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
 <div class="modal-bg" id="forgot-modal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
   <div class="modal-box" onclick="event.stopPropagation()" style="max-width:420px">
     <h3>Passwort zurücksetzen</h3>
-    <div id="fp-form">
-      <p style="color:var(--gray);font-size:.9rem;margin-bottom:1.5rem">Geben Sie Ihre E-Mail und ein neues Passwort ein.</p>
+
+    <!-- Step 1: Enter email -->
+    <div id="fp-step1">
+      <p style="color:var(--gray);font-size:.9rem;margin-bottom:1.5rem">Geben Sie Ihre E-Mail ein — wir senden Ihnen einen Bestätigungscode.</p>
       <div class="fg"><label>E-Mail-Adresse</label><input type="email" id="fp-email" placeholder="ihre@email.ch"></div>
-      <div class="fg"><label>Neues Passwort</label><input type="password" id="fp-p1" placeholder="Mindestens 6 Zeichen"></div>
-      <div class="fg"><label>Passwort bestätigen</label><input type="password" id="fp-p2" placeholder="Passwort wiederholen"></div>
       <div id="fp-err" class="fp-err"></div>
-      <div class="modal-btns" style="margin-top:0">
+      <div class="modal-btns" style="margin-top:.5rem">
         <button class="btn-cancel" onclick="document.getElementById('forgot-modal').style.display='none'">Abbrechen</button>
-        <button class="btn-save" onclick="fpReset()">Passwort ändern</button>
+        <button class="btn-save" id="fp-send-btn" onclick="fpSendCode()">📧 Code senden</button>
       </div>
     </div>
+
+    <!-- Step 2: Enter code + new password -->
+    <div id="fp-step2" style="display:none">
+      <p style="color:var(--gray);font-size:.9rem;margin-bottom:1.5rem">Wir haben einen 6-stelligen Code an <strong id="fp-email-shown"></strong> gesendet.</p>
+      <div class="fg"><label>Bestätigungscode</label><input type="text" id="fp-code" placeholder="123456" maxlength="6" style="letter-spacing:.2em;font-size:1.2rem;text-align:center"></div>
+      <div class="fg"><label>Neues Passwort</label><input type="password" id="fp-p1" placeholder="Mindestens 6 Zeichen"></div>
+      <div class="fg"><label>Passwort bestätigen</label><input type="password" id="fp-p2" placeholder="Passwort wiederholen"></div>
+      <div id="fp-err2" class="fp-err"></div>
+      <div class="modal-btns" style="margin-top:.5rem">
+        <button class="btn-cancel" onclick="document.getElementById('fp-step2').style.display='none';document.getElementById('fp-step1').style.display='block'">Zurück</button>
+        <button class="btn-save" onclick="fpReset()">✓ Passwort ändern</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Success -->
     <div id="fp-ok" class="fp-success" style="display:none">
       <div class="big-icon">✅</div>
       <h4 style="color:var(--navy);margin-bottom:.5rem">Passwort geändert!</h4>
@@ -676,6 +756,7 @@ let selFileData = null;
 let nProdId = 10;
 let nOrdId = 100;
 let dpOpen = false;
+let pendingReset = null; // {email, code, expiry}
 
 // ═══ HELPERS ════════════════════════════════════════════════════════════════
 function getRoleLabel(role) {
@@ -803,30 +884,76 @@ function doLogout() {
 
 // ═══ FORGOT PASSWORD ═════════════════════════════════════════════════════════
 function showForgot() {
-  document.getElementById('fp-form').style.display = 'block';
+  document.getElementById('fp-step1').style.display = 'block';
+  document.getElementById('fp-step2').style.display = 'none';
   document.getElementById('fp-ok').style.display = 'none';
   document.getElementById('fp-email').value = document.getElementById('l-email')?.value || '';
-  document.getElementById('fp-p1').value = '';
-  document.getElementById('fp-p2').value = '';
   document.getElementById('fp-err').style.display = 'none';
   document.getElementById('forgot-modal').style.display = 'flex';
+  pendingReset = null;
 }
 
-function fpReset() {
+async function fpSendCode() {
   const email = document.getElementById('fp-email').value.trim().toLowerCase();
-  const p1 = document.getElementById('fp-p1').value;
-  const p2 = document.getElementById('fp-p2').value;
   const err = document.getElementById('fp-err');
   err.style.display = 'none';
   if (!email) { err.textContent = 'Bitte E-Mail eingeben.'; err.style.display = 'block'; return; }
+
+  // Check if user exists in Supabase
+  const { data } = await db.from('users').select('name').eq('email', email).single();
+  if (!data) { err.textContent = 'Kein Konto mit dieser E-Mail gefunden.'; err.style.display = 'block'; return; }
+
+  // Generate 6-digit code
+  const code = String(Math.floor(100000 + Math.random() * 900000));
+  pendingReset = { email, code, expiry: Date.now() + 10 * 60 * 1000 };
+
+  const btn = document.getElementById('fp-send-btn');
+  btn.innerHTML = '<span class="spinner"></span>Wird gesendet...';
+  btn.disabled = true;
+
+  try {
+    await emailjs.send('service_u2ip6kn', 'template_g9y9oes', {
+      to_email: email,
+      to_name: data.name,
+      code: code,
+      from_name: 'Printox'
+    });
+    document.getElementById('fp-email-shown').textContent = email;
+    document.getElementById('fp-step1').style.display = 'none';
+    document.getElementById('fp-step2').style.display = 'block';
+    document.getElementById('fp-code').value = '';
+    document.getElementById('fp-p1').value = '';
+    document.getElementById('fp-p2').value = '';
+    toast('Code gesendet! Bitte E-Mail prüfen.', 's');
+  } catch(e) {
+    console.error('EmailJS error:', e);
+    err.textContent = 'Fehler beim Senden. Bitte versuchen Sie es erneut.';
+    err.style.display = 'block';
+  }
+  btn.innerHTML = '📧 Code senden';
+  btn.disabled = false;
+}
+
+function fpReset() {
+  const code = document.getElementById('fp-code').value.trim();
+  const p1 = document.getElementById('fp-p1').value;
+  const p2 = document.getElementById('fp-p2').value;
+  const err = document.getElementById('fp-err2');
+  err.style.display = 'none';
+
+  if (!pendingReset) { err.textContent = 'Sitzung abgelaufen. Bitte neu versuchen.'; err.style.display = 'block'; return; }
+  if (Date.now() > pendingReset.expiry) { err.textContent = 'Code abgelaufen (10 Min). Bitte neu anfordern.'; err.style.display = 'block'; return; }
+  if (code !== pendingReset.code) { err.textContent = 'Falscher Code. Bitte nochmals prüfen.'; err.style.display = 'block'; return; }
   if (!p1 || p1.length < 6) { err.textContent = 'Passwort mind. 6 Zeichen.'; err.style.display = 'block'; return; }
   if (p1 !== p2) { err.textContent = 'Passwörter stimmen nicht überein.'; err.style.display = 'block'; return; }
-  const u = users.find(x => x.email.toLowerCase() === email);
-  if (!u) { err.textContent = 'Kein Konto mit dieser E-Mail gefunden.'; err.style.display = 'block'; return; }
-  u.password = p1;
-  // Update in Supabase
-  db.from('users').update({password: p1}).eq('email', email).then(() => console.log('Password updated'));
-  document.getElementById('fp-form').style.display = 'none';
+
+  // Update password
+  const u = users.find(x => x.email.toLowerCase() === pendingReset.email);
+  if (u) u.password = p1;
+  db.from('users').update({password: p1}).eq('email', pendingReset.email).then(() => console.log('Password updated'));
+  pendingReset = null;
+
+  document.getElementById('fp-step2').style.display = 'none';
   document.getElementById('fp-ok').style.display = 'block';
 }
 
@@ -1572,6 +1699,7 @@ async function renderMyOrders() {
 
 
 // ═══ INIT ════════════════════════════════════════════════════════════════════
+emailjs.init("QLPGP9zFVb-4wzfiU");
 renderNav();
 renderShop();
 handleStripeReturn();
