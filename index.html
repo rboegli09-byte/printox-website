@@ -1121,6 +1121,7 @@ async function startStripeCheckout() {
         customerName: currentUser.name,
         customerEmail: currentUser.email,
         userDiscount: disc,
+        delivery: selDelivery || 'ship',
         successUrl: window.location.origin+window.location.pathname+'?payment=success',
         cancelUrl: window.location.origin+window.location.pathname+'?payment=cancel',
       })
