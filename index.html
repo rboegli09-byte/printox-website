@@ -1104,8 +1104,8 @@ async function startStripeCheckout() {
   const st = document.getElementById('addr-street')?.value.trim();
   const pl = document.getElementById('addr-plz')?.value.trim();
   const ci = document.getElementById('addr-city')?.value.trim();
-  if (!fn||!ln||!st||!pl||!ci) { toast('Bitte alle Adressfelder ausfüllen.','e'); return; }
-  const address = fn+' '+ln+', '+st+', '+pl+' '+ci;
+  if (selDelivery !== 'pickup' && (!fn||!ln||!st||!pl||!ci)) { toast('Bitte alle Adressfelder ausfüllen.','e'); return; }
+  const address = selDelivery==='pickup' ? '🏪 Selbstabholung' : (fn+' '+ln+', '+st+', '+pl+' '+ci);
 
   const btn = document.getElementById('btn-stripe-checkout');
   if (btn) { btn.innerHTML='<span class="spinner"></span>Wird geöffnet...'; btn.disabled=true; }
