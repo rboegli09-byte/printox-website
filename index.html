@@ -894,7 +894,7 @@ function renderCart() {
   }).join('');
 
   const sub = cart.reduce((s,x) => s+(x.discount>0?x.price*(1-x.discount/100):x.price)*x.qty, 0);
-  const shipping = cart.reduce((s,x) => s + (x.shipping||7.90)*x.qty, 0);
+  const shipping = sub >= 100 ? 0 : cart.reduce((s,x) => s + (x.shipping||7.90)*x.qty, 0);
   const disc = getUserDiscount();
   const discAmt = disc > 0 ? sub * disc : 0;
   const tot = sub - discAmt + shipping;
@@ -917,7 +917,9 @@ function renderCart() {
   cs.innerHTML = '<div class="cart-box">'
     + '<div class="cart-row"><span>Zwischensumme</span><span>CHF ' + sub.toFixed(2) + '</span></div>'
     + discRow
-    + '<div class="cart-row"><span>📦 Versand (Post CH)</span><span>CHF ' + shipping.toFixed(2) + '</span></div>'
+    + '<div class="cart-row"><span>📦 Versand (Post CH)</span><span style="color:'+(shipping===0?'#10b981':'inherit')+';font-weight:'+(shipping===0?'700':'400')+'">'+(shipping===0?'🎁 Gratis':'CHF '+shipping.toFixed(2))+'</span></div>'
+    + (shipping===0?'':'')
+    + (sub<100?'<div style="font-size:.78rem;color:var(--gray);text-align:right;margin-top:-.4rem;margin-bottom:.4rem">Ab CHF 100 kostenloser Versand (noch CHF '+(100-sub).toFixed(2)+' bis Gratis)</div>':'')
     + '<div class="cart-total"><span>Total</span><span>CHF ' + tot.toFixed(2) + '</span></div>'
     + '</div>'
     + '<div class="pay-title">Lieferadresse</div>'
@@ -965,7 +967,7 @@ function placeOrder(method) {
   const address = fn + ' ' + ln + ', ' + st + ', ' + pl + ' ' + ci;
   // Calculate shipping (sum per product)
   const sub = cart.reduce((s,x) => s+(x.discount>0?x.price*(1-x.discount/100):x.price)*x.qty, 0);
-  const shipping = cart.reduce((s,x) => s + (x.shipping||7.90)*x.qty, 0);
+  const shipping = sub >= 100 ? 0 : cart.reduce((s,x) => s + (x.shipping||7.90)*x.qty, 0);
   const disc = getUserDiscount();
   const total = sub*(1-disc) + shipping;
   orders.unshift({id:'ORD-'+String(++nOrdId),type:'shop',name:currentUser.name,email:currentUser.email,
