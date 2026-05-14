@@ -619,6 +619,14 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem" id="pdm-specs-grid"></div>
       </div>
       <div id="pdm-shipping-info" style="background:#eff6ff;border-radius:10px;padding:.75rem 1rem;margin-bottom:1.25rem;font-size:.875rem;color:#1e40af"></div>
+      <div id="pdm-color-wrap" style="display:none;margin-bottom:.75rem">
+        <div style="font-size:.78rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.5rem">Farbe wählen</div>
+        <div id="pdm-colors" style="display:flex;flex-wrap:wrap;gap:.4rem"></div>
+      </div>
+      <div id="pdm-filament-wrap" style="display:none;margin-bottom:1rem">
+        <div style="font-size:.78rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.5rem">Filament wählen</div>
+        <div id="pdm-filaments" style="display:flex;flex-wrap:wrap;gap:.4rem"></div>
+      </div>
       <div style="display:flex;gap:.75rem">
         <button id="pdm-cart-btn" class="btn-cart" style="flex:1;padding:.85rem" onclick="pdmAddToCart()">In den Warenkorb</button>
       </div>
@@ -655,7 +663,13 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
         <div class="fg" style="margin-bottom:0"><label style="font-size:.7rem">Höhe (cm)</label><input type="number" id="p-hei" step="0.5" min="0" placeholder="8"></div>
         <div class="fg" style="margin-bottom:0"><label style="font-size:.7rem">Gewicht (kg)</label><input type="number" id="p-kg" step="0.1" min="0" placeholder="0.5"></div>
       </div>
-      <div style="font-size:.75rem;color:var(--gray);margin-top:.4rem">Versandkosten werden automatisch berechnet (Post CH + Distanz)</div>
+      <div class="fg" style="margin-bottom:0;margin-top:.5rem"><label style="font-size:.7rem">Versandpreis (CHF, leer = auto)</label><input type="number" id="p-shipping-price" step="0.10" min="0" placeholder="z.B. 6.90"></div>
+      <div style="font-size:.75rem;color:var(--gray);margin-top:.4rem">Leer lassen = automatisch nach Grösse berechnet</div>
+    </div>
+    <div style="margin-top:.75rem">
+      <div style="font-size:.78rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.5rem">Verfügbare Optionen</div>
+      <div class="fg" style="margin-bottom:.75rem"><label style="font-size:.7rem">Farben (kommagetrennt)</label><input type="text" id="p-colors" placeholder="z.B. Schwarz, Weiss, Rot, Blau"></div>
+      <div class="fg" style="margin-bottom:0"><label style="font-size:.7rem">Filamente (kommagetrennt)</label><input type="text" id="p-filaments" placeholder="z.B. PLA, PETG, ABS, TPU"></div>
     </div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="document.getElementById('prod-modal').style.display='none'">Abbrechen</button>
@@ -1053,7 +1067,8 @@ function renderCart() {
   }).join('');
 
   const sub = cart.reduce((s,x) => s+(x.discount>0?x.price*(1-x.discount/100):x.price)*x.qty, 0);
-  const shipping = (selDelivery === 'pickup') ? 0 : (sub >= 100 ? 0 : cart.reduce((s,x) => s + (x.shipping||7.90)*x.qty, 0));
+  const maxShipping = cart.reduce((max,x) => Math.max(max, x.shipping||7.90), 0);
+  const shipping = (selDelivery === 'pickup') ? 0 : (sub >= 100 ? 0 : maxShipping);
   const disc = getUserDiscount();
   const discAmt = disc > 0 ? sub * disc : 0;
   const tot = sub - discAmt + shipping;
@@ -1180,7 +1195,8 @@ function placeOrder(method) {
   const address = selDelivery==='pickup' ? '🏪 Selbstabholung' : (fn + ' ' + ln + ', ' + st + ', ' + pl + ' ' + ci);
   // Calculate shipping (sum per product)
   const sub = cart.reduce((s,x) => s+(x.discount>0?x.price*(1-x.discount/100):x.price)*x.qty, 0);
-  const shipping = (selDelivery === 'pickup') ? 0 : (sub >= 100 ? 0 : cart.reduce((s,x) => s + (x.shipping||7.90)*x.qty, 0));
+  const maxShipping = cart.reduce((max,x) => Math.max(max, x.shipping||7.90), 0);
+  const shipping = (selDelivery === 'pickup') ? 0 : (sub >= 100 ? 0 : maxShipping);
   const disc = getUserDiscount();
   const total = sub*(1-disc) + shipping;
   const order = {id:'ORD-'+String(++nOrdId),type:'shop',name:currentUser.name,email:currentUser.email,
@@ -1576,14 +1592,84 @@ function openProductDetail(id) {
     shipEl.innerHTML = '📦 Versand: <strong>CHF '+(p.shipping||7.90).toFixed(2)+'</strong> · Ab CHF 100 Gratis';
   }
 
+  // Colors
+  const colorWrap = document.getElementById('pdm-color-wrap');
+  const colorsEl = document.getElementById('pdm-colors');
+  if (p.colors && p.colors.length > 0) {
+    colorWrap.style.display = 'block';
+    colorsEl.innerHTML = '';
+    p.colors.forEach(function(c,i) {
+      const btn = document.createElement('button');
+      btn.textContent = c;
+      btn.style.cssText = 'padding:.35rem .85rem;border-radius:20px;border:1.5px solid var(--gray-l);background:#fff;cursor:pointer;font-size:.82rem;font-weight:500;font-family:Inter,sans-serif;transition:all .15s';
+      btn.onclick = function() { pdmSelectColor(btn, c); };
+      colorsEl.appendChild(btn);
+    });
+    // Auto-select first
+    colorsEl.querySelector('button')?.click();
+  } else {
+    colorWrap.style.display = 'none';
+    window._pdmColor = null;
+  }
+
+  // Filaments
+  const filWrap = document.getElementById('pdm-filament-wrap');
+  const filEl = document.getElementById('pdm-filaments');
+  if (p.filaments && p.filaments.length > 0) {
+    filWrap.style.display = 'block';
+    filEl.innerHTML = '';
+    p.filaments.forEach(function(f,i) {
+      const btn = document.createElement('button');
+      btn.textContent = f;
+      btn.style.cssText = 'padding:.35rem .85rem;border-radius:20px;border:1.5px solid var(--gray-l);background:#fff;cursor:pointer;font-size:.82rem;font-weight:500;font-family:Inter,sans-serif;transition:all .15s';
+      btn.onclick = function() { pdmSelectFilament(btn, f); };
+      filEl.appendChild(btn);
+    });
+    filEl.querySelector('button')?.click();
+  } else {
+    filWrap.style.display = 'none';
+    window._pdmFilament = null;
+  }
+
   document.getElementById('prod-detail-modal').style.display = 'flex';
 }
 
+function pdmSelectColor(btn, color) {
+  document.querySelectorAll('#pdm-colors button').forEach(b => {
+    b.style.background = '#fff'; b.style.borderColor = 'var(--gray-l)'; b.style.color = 'var(--navy)';
+  });
+  btn.style.background = 'var(--navy)'; btn.style.borderColor = 'var(--navy)'; btn.style.color = '#fff';
+  window._pdmColor = color;
+}
+
+function pdmSelectFilament(btn, fil) {
+  document.querySelectorAll('#pdm-filaments button').forEach(b => {
+    b.style.background = '#fff'; b.style.borderColor = 'var(--gray-l)'; b.style.color = 'var(--navy)';
+  });
+  btn.style.background = 'var(--blue)'; btn.style.borderColor = 'var(--blue)'; btn.style.color = '#fff';
+  window._pdmFilament = fil;
+}
+
 function pdmAddToCart() {
-  if (pdmCurrentId) {
-    addToCart(pdmCurrentId);
-    document.getElementById('prod-detail-modal').style.display = 'none';
+  if (!pdmCurrentId) return;
+  const p = products.find(x => x.id === pdmCurrentId);
+  if (!p) return;
+  const color = window._pdmColor;
+  const filament = window._pdmFilament;
+  const cartKey = pdmCurrentId + (color||'') + (filament||'');
+  const ex = cart.find(x => x._key === cartKey);
+  if (ex) {
+    ex.qty++;
+  } else {
+    cart.push({...p, qty:1, _key:cartKey,
+      selectedColor: color || null,
+      selectedFilament: filament || null,
+      name: p.name + (color?' ('+color+')':'') + (filament?' ['+filament+']':'')
+    });
   }
+  updBadge();
+  toast(p.name + ' hinzugefügt ✓');
+  document.getElementById('prod-detail-modal').style.display = 'none';
 }
 
 function openProdModal(id) {
@@ -1597,6 +1683,9 @@ function openProdModal(id) {
     document.getElementById('p-price').value=p.price;
     document.getElementById('p-discount').value=p.discount||0;
     document.getElementById('p-icon').value=p.icon||'🖨️';
+    document.getElementById('p-colors').value=(p.colors||[]).join(', ');
+    document.getElementById('p-filaments').value=(p.filaments||[]).join(', ');
+    document.getElementById('p-shipping-price').value=p.shipping||'';
     document.getElementById('p-len').value=p.len||'';
     document.getElementById('p-wid').value=p.wid||'';
     document.getElementById('p-hei').value=p.hei||'';
@@ -1608,6 +1697,9 @@ function openProdModal(id) {
     document.getElementById('p-price').value='';
     document.getElementById('p-discount').value='';
     document.getElementById('p-icon').value='🖨️';
+    document.getElementById('p-colors').value='';
+    document.getElementById('p-filaments').value='';
+    document.getElementById('p-shipping-price').value='';
     document.getElementById('p-len').value='';
     document.getElementById('p-wid').value='';
     document.getElementById('p-hei').value='';
@@ -1636,10 +1728,21 @@ function saveProd(){
   else if (pMax <= 100 && pVol <= 240000 && pKg <= 15) autoShip = 12.90;
   else if (pKg <= 30) autoShip = 18.90;
   else autoShip = 25.90;
+  // Manual shipping override
+  const manualShip = parseFloat(document.getElementById('p-shipping-price')?.value);
+  const finalShip = !isNaN(manualShip) && manualShip >= 0 ? manualShip : autoShip;
+
+  // Colors and filaments
+  const colorsRaw = document.getElementById('p-colors')?.value.trim();
+  const filamentsRaw = document.getElementById('p-filaments')?.value.trim();
+  const colors = colorsRaw ? colorsRaw.split(',').map(s=>s.trim()).filter(Boolean) : [];
+  const filaments = filamentsRaw ? filamentsRaw.split(',').map(s=>s.trim()).filter(Boolean) : [];
+
   const data={
     name, desc:document.getElementById('p-desc').value.trim(), price,
     discount: parseFloat(document.getElementById('p-discount')?.value)||0,
-    len:pLen, wid:pWid, hei:pHei, kg:pKg, shipping:autoShip,
+    len:pLen, wid:pWid, hei:pHei, kg:pKg, shipping:finalShip,
+    colors, filaments,
     icon: document.getElementById('p-icon').value.trim()||'🖨️',
     image: pendingImg
   };
