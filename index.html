@@ -1863,11 +1863,12 @@ async function updStatus(id, s, supabaseId) {
   if(!o) return;
   const sid = supabaseId || o.supabaseId;
   if(!sid) { toast('Fehler: Keine Supabase-ID.','e'); return; }
-  // First save to Supabase
+  window._statusUpdating = true;
   o.status = s;
   await updateOrderStatusInSupabase(sid, s);
   renderOrdersList();
   toast('Status aktualisiert ✓');
+  setTimeout(function() { window._statusUpdating = false; }, 5000);
 }
 
 async function loadUsersFromSupabase() {
