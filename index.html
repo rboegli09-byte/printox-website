@@ -46,7 +46,7 @@ nav{background:var(--nav);height:68px;padding:0 2rem;display:flex;align-items:ce
 .page.active{display:flex}
 
 /* ── HERO ── */
-.hero{background:linear-gradient(150deg,#0d1b2e 0%,#0f2035 50%,#112040 100%);padding:6rem 2rem 5rem;text-align:center;position:relative;overflow:hidden;flex:1}
+.hero{background:linear-gradient(150deg,#0d1b2e 0%,#0f2035 50%,#112040 100%);padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;flex:1}
 .hero::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;border:1px solid rgba(37,99,235,0.1);top:50%;left:50%;transform:translate(-50%,-50%)}
 .hero::after{content:'';position:absolute;width:900px;height:900px;border-radius:50%;border:1px solid rgba(37,99,235,0.06);top:50%;left:50%;transform:translate(-50%,-50%)}
 .hero-content{position:relative;z-index:1;max-width:680px;margin:0 auto}
@@ -293,6 +293,7 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
 /* ── SPINNER ── */
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.35);border-top:2px solid #fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:7px;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 
 @media(max-width:700px){
   nav{padding:0 1rem}
@@ -336,12 +337,117 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
 <!-- HOME -->
 <div class="page active" id="page-home">
   <div class="hero">
-    <div class="hero-content">
-      <h1>Professioneller<br><span>3D-Druck-Service</span></h1>
-      <p>Hochwertige 3D-Drucke nach Ihren Wünschen. Laden Sie Ihr Modell hoch und wir drucken es für Sie.</p>
-      <div class="hero-btns">
-        <button class="btn-fill" onclick="showPage('shop')">Shop ansehen</button>
-        <button class="btn-ghost" onclick="showPage('upload')">Modell hochladen</button>
+    <div style="display:flex;align-items:center;justify-content:center;gap:4rem;flex-wrap:wrap;position:relative;z-index:1;max-width:1100px;margin:0 auto;width:100%">
+      <div class="hero-content" style="margin:0;text-align:left;max-width:520px">
+        <h1 style="text-align:left">Professioneller<br><span>3D-Druck-Service</span></h1>
+        <p style="text-align:left">Hochwertige 3D-Drucke nach Ihren Wünschen. Laden Sie Ihr Modell hoch und wir drucken es für Sie.</p>
+        <div class="hero-btns" style="justify-content:flex-start">
+          <button class="btn-fill" onclick="showPage('shop')">Shop ansehen</button>
+          <button class="btn-ghost" onclick="showPage('upload')">Modell hochladen</button>
+        </div>
+
+      </div>
+      <div style="flex-shrink:0;animation:float 4s ease-in-out infinite">
+        <svg viewBox="0 0 340 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:340px;filter:drop-shadow(0 20px 60px rgba(37,99,235,0.3))">
+  <defs>
+    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b"/>
+      <stop offset="100%" style="stop-color:#0f172a"/>
+    </linearGradient>
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.15"/>
+      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:0.05"/>
+    </linearGradient>
+    <linearGradient id="printGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2563eb"/>
+      <stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.6"/>
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0.6"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow2">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Main body -->
+  <rect x="30" y="60" width="280" height="320" rx="16" fill="url(#bodyGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+  <!-- Top panel -->
+  <rect x="30" y="60" width="280" height="55" rx="16" fill="#1e293b"/>
+  <rect x="30" y="95" width="280" height="20" fill="#1e293b"/>
+  <!-- Screen -->
+  <rect x="50" y="72" width="90" height="34" rx="6" fill="#0f172a" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+  <rect x="53" y="75" width="84" height="28" rx="4" fill="#0d1b2e"/>
+  <!-- Screen content -->
+  <text x="95" y="88" text-anchor="middle" font-family="monospace" font-size="7" fill="#3b82f6">PRINTOX</text>
+  <text x="95" y="97" text-anchor="middle" font-family="monospace" font-size="6" fill="#10b981">● DRUCKT...</text>
+  <!-- Top buttons -->
+  <circle cx="195" cy="87" r="8" fill="#1e293b" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <circle cx="195" cy="87" r="4" fill="#2563eb" filter="url(#glow)"/>
+  <circle cx="215" cy="87" r="8" fill="#1e293b" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <circle cx="215" cy="87" r="3" fill="#475569"/>
+  <circle cx="235" cy="87" r="8" fill="#1e293b" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <circle cx="235" cy="87" r="3" fill="#475569"/>
+  <!-- Filament spool -->
+  <circle cx="280" cy="82" r="18" fill="#1e293b" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+  <circle cx="280" cy="82" r="12" fill="#0f172a" stroke="rgba(37,99,235,0.3)" stroke-width="1"/>
+  <circle cx="280" cy="82" r="5" fill="#1e293b" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  <!-- Filament lines on spool -->
+  <circle cx="280" cy="82" r="9" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="3 4" opacity="0.6"/>
+  <!-- Glass door -->
+  <rect x="42" y="122" width="256" height="220" rx="6" fill="url(#glassGrad)" stroke="rgba(37,99,235,0.25)" stroke-width="1.5"/>
+  <!-- Glass reflection -->
+  <rect x="48" y="128" width="60" height="200" rx="3" fill="rgba(255,255,255,0.02)"/>
+  <!-- Print bed -->
+  <rect x="65" y="270" width="210" height="8" rx="2" fill="#1e293b" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+  <rect x="65" y="274" width="210" height="2" fill="rgba(255,255,255,0.05)"/>
+  <!-- Grid on bed -->
+  <line x1="95" y1="270" x2="95" y2="278" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+  <line x1="125" y1="270" x2="125" y2="278" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+  <line x1="155" y1="270" x2="155" y2="278" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+  <line x1="185" y1="270" x2="185" y2="278" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+  <line x1="215" y1="270" x2="215" y2="278" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+  <line x1="245" y1="270" x2="245" y2="278" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+  <!-- X-axis rail -->
+  <rect x="55" y="155" width="230" height="6" rx="3" fill="#334155" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <!-- Print head -->
+  <rect x="140" y="148" width="60" height="20" rx="4" fill="#1e40af" stroke="rgba(59,130,246,0.4)" stroke-width="1" filter="url(#glow)"/>
+  <rect x="162" y="168" width="16" height="12" rx="2" fill="#2563eb"/>
+  <!-- Nozzle -->
+  <polygon points="166,180 174,180 171,192 169,192" fill="#3b82f6" filter="url(#glow)"/>
+  <!-- Print progress - object being printed -->
+  <rect x="135" y="230" width="70" height="40" rx="4" fill="rgba(37,99,235,0.2)" stroke="rgba(37,99,235,0.4)" stroke-width="1"/>
+  <rect x="140" y="248" width="60" height="22" rx="3" fill="rgba(37,99,235,0.3)"/>
+  <rect x="145" y="260" width="50" height="10" rx="2" fill="rgba(59,130,246,0.5)"/>
+  <rect x="150" y="265" width="40" height="5" rx="1" fill="rgba(99,158,246,0.6)" filter="url(#glow)"/>
+  <!-- Filament line from spool to head -->
+  <path d="M 280 100 Q 280 130 250 150 Q 220 165 200 158" stroke="rgba(37,99,235,0.5)" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+  <!-- Blue printing light glow -->
+  <ellipse cx="170" cy="195" rx="25" ry="8" fill="rgba(37,99,235,0.15)" filter="url(#glow2)"/>
+  <!-- Bottom panel -->
+  <rect x="42" y="345" width="256" height="28" rx="6" fill="#1e293b" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <!-- Progress bar -->
+  <rect x="60" y="354" width="170" height="4" rx="2" fill="#0f172a"/>
+  <rect x="60" y="354" width="115" height="4" rx="2" fill="url(#printGrad)" filter="url(#glow)"/>
+  <text x="242" y="358" font-family="monospace" font-size="7" fill="#64748b">67%</text>
+  <!-- Feet -->
+  <rect x="55" y="375" width="35" height="10" rx="4" fill="#1e293b" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <rect x="250" y="375" width="35" height="10" rx="4" fill="#1e293b" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <!-- Ambient particles -->
+  <circle cx="320" cy="140" r="2" fill="#3b82f6" opacity="0.4" filter="url(#glow)"/>
+  <circle cx="315" cy="200" r="1.5" fill="#7c3aed" opacity="0.3"/>
+  <circle cx="325" cy="260" r="2.5" fill="#2563eb" opacity="0.3" filter="url(#glow)"/>
+  <circle cx="20" cy="180" r="2" fill="#3b82f6" opacity="0.3"/>
+  <circle cx="15" cy="240" r="1.5" fill="#7c3aed" opacity="0.25"/>
+  <!-- Corner accent lines -->
+  <line x1="30" y1="80" x2="30" y2="100" stroke="#2563eb" stroke-width="2" opacity="0.5"/>
+  <line x1="310" y1="80" x2="310" y2="100" stroke="#2563eb" stroke-width="2" opacity="0.5"/>
+</svg>
       </div>
     </div>
   </div>
@@ -356,6 +462,21 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
       <div class="feat-card"><div class="feat-icon">💬</div><h3>Persönlicher Support</h3><p>Beratung direkt per Telefon oder E-Mail.</p></div>
     </div>
   </div>
+  <!-- BEWERTUNGEN -->
+  <div style="padding:4rem 2rem;background:#f8fafc">
+    <div style="max-width:1100px;margin:0 auto">
+      <div class="sec-label">Was unsere Kunden sagen</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-bottom:2rem">
+        <div>
+          <div class="sec-title">Kundenbewertungen</div>
+          <div id="avg-rating-display" style="color:var(--gray);font-size:.9rem"></div>
+        </div>
+        <button onclick="openReviewModal()" class="btn-fill" style="padding:.7rem 1.5rem;font-size:.9rem">✍️ Bewertung schreiben</button>
+      </div>
+      <div id="reviews-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem"></div>
+    </div>
+  </div>
+
   <div class="cta-band">
     <h2 id="cta-h">Bereit für Ihr Projekt?</h2>
     <p id="cta-p">Laden Sie Ihr 3D-Modell hoch und erhalten Sie ein Angebot.</p>
@@ -515,7 +636,14 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
       <button class="a-tab" onclick="aTab('users')">Benutzer</button>
       <button class="a-tab" onclick="aTab('layout')">🎨 Layout</button>
     </div>
-    <div class="a-sec active" id="a-orders"><div class="o-list" id="orders-list"></div></div>
+    <div class="a-sec active" id="a-orders">
+      <div style="display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap">
+        <button id="ord-tab-new" onclick="switchOrdTab('new')" style="background:#3b82f6;color:#fff;border:none;padding:.6rem 1.2rem;border-radius:8px;font-family:Inter,sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.4rem">🆕 Neu <span id="ord-count-new" style="background:rgba(255,255,255,.3);border-radius:10px;padding:0 7px;font-size:.8rem">0</span></button>
+        <button id="ord-tab-processing" onclick="switchOrdTab('processing')" style="background:rgba(255,255,255,.15);color:#fff;border:none;padding:.6rem 1.2rem;border-radius:8px;font-family:Inter,sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.4rem">🔄 In Bearbeitung <span id="ord-count-processing" style="background:rgba(255,255,255,.3);border-radius:10px;padding:0 7px;font-size:.8rem">0</span></button>
+        <button id="ord-tab-done" onclick="switchOrdTab('done')" style="background:rgba(255,255,255,.15);color:#fff;border:none;padding:.6rem 1.2rem;border-radius:8px;font-family:Inter,sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.4rem">📦 Versandt <span id="ord-count-done" style="background:rgba(255,255,255,.3);border-radius:10px;padding:0 7px;font-size:.8rem">0</span></button>
+      </div>
+      <div class="o-list" id="orders-list"></div>
+    </div>
     <div class="a-sec" id="a-products">
       <div style="margin-bottom:1.25rem"><button class="btn-add-prod" onclick="openProdModal()">+ Produkt hinzufügen</button></div>
       <div class="products-grid" id="admin-prod-grid"></div>
@@ -630,6 +758,30 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
       <div style="display:flex;gap:.75rem">
         <button id="pdm-cart-btn" class="btn-cart" style="flex:1;padding:.85rem" onclick="pdmAddToCart()">In den Warenkorb</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEW MODAL -->
+<div class="modal-bg" id="review-modal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:480px">
+    <h3>Bewertung schreiben</h3>
+    <div class="fg"><label>Name</label><input type="text" id="rv-name" placeholder="Ihr Name (oder anonym)"></div>
+    <div class="fg">
+      <label>Bewertung</label>
+      <div id="rv-stars" style="display:flex;gap:.4rem;margin-top:.25rem">
+        <span onclick="setReviewStar(1)" style="font-size:2rem;cursor:pointer;transition:transform .15s" data-star="1">☆</span>
+        <span onclick="setReviewStar(2)" style="font-size:2rem;cursor:pointer;transition:transform .15s" data-star="2">☆</span>
+        <span onclick="setReviewStar(3)" style="font-size:2rem;cursor:pointer;transition:transform .15s" data-star="3">☆</span>
+        <span onclick="setReviewStar(4)" style="font-size:2rem;cursor:pointer;transition:transform .15s" data-star="4">☆</span>
+        <span onclick="setReviewStar(5)" style="font-size:2rem;cursor:pointer;transition:transform .15s" data-star="5">☆</span>
+      </div>
+    </div>
+    <div class="fg"><label>Kommentar</label><textarea id="rv-comment" placeholder="Wie war Ihre Erfahrung mit Printox?" style="min-height:100px"></textarea></div>
+    <div id="rv-err" style="color:var(--error);font-size:.85rem;margin-bottom:.5rem;display:none"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="document.getElementById('review-modal').style.display='none'">Abbrechen</button>
+      <button class="btn-save" onclick="submitReview()">⭐ Bewertung abschicken</button>
     </div>
   </div>
 </div>
@@ -783,9 +935,9 @@ let users = [{id:1,name:'Remo Bögli',email:'printox26@outlook.com',password:'pr
 let currentUser = null;
 let cart = [];
 let products = [
-  {id:1,name:'Würfelhalter',desc:'Kompakter Würfelhalter für bis zu 20 Spiele.',price:14.90,len:15,wid:15,hei:8,kg:0.2,shipping:6.90,icon:'🎲',image:null},
-  {id:2,name:'Handyständer',desc:'Verstellbarer Smartphone-Ständer aus PLA.',price:19.90,len:20,wid:12,hei:10,kg:0.3,shipping:8.90,icon:'📱',image:null},
-  {id:3,name:'Logo-Keychain',desc:'Ihr Logo als 3D-gedruckter Schlüsselanhänger.',price:8.50,len:8,wid:5,hei:1,kg:0.05,shipping:6.90,icon:'🔑',image:null},
+  {id:1,name:'Würfelhalter',desc:'Kompakter Würfelhalter für bis zu 20 Spiele.',price:14.90,len:15,wid:15,hei:8,kg:0.2,shipping:6.90,icon:'🎲',image:null,colors:['Schwarz','Weiss','Grau'],filaments:['PLA','PETG']},
+  {id:2,name:'Handyständer',desc:'Verstellbarer Smartphone-Ständer aus PLA.',price:19.90,len:20,wid:12,hei:10,kg:0.3,shipping:8.90,icon:'📱',image:null,colors:['Schwarz','Weiss','Blau','Rot'],filaments:['PLA','PETG','ABS']},
+  {id:3,name:'Logo-Keychain',desc:'Ihr Logo als 3D-gedruckter Schlüsselanhänger.',price:8.50,len:8,wid:5,hei:1,kg:0.05,shipping:6.90,icon:'🔑',image:null,colors:['Schwarz','Weiss','Gold','Silber'],filaments:['PLA']},
   {id:4,name:'Organizer-Box',desc:'Massgeschneiderte Aufbewahrungsbox.',price:24.90,len:35,wid:25,hei:15,kg:0.8,shipping:8.90,icon:'📦',image:null},
 ];
 let orders = [
@@ -801,6 +953,7 @@ let nProdId = 10;
 let nOrdId = 100;
 let dpOpen = false;
 let selDelivery = 'ship';
+let selectedOptions = {}; // {productId: {color, filament}}
 let pendingReset = null; // {email, code, expiry}
 
 // ═══ HELPERS ════════════════════════════════════════════════════════════════
@@ -1023,9 +1176,27 @@ function renderShop() {
     + (p.discount>0
         ? '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem"><span style="text-decoration:line-through;color:var(--gray);font-size:.9rem">CHF '+p.price.toFixed(2)+'</span><span style="color:#e74c3c;font-weight:800;font-size:1.2rem">CHF '+(p.price*(1-p.discount/100)).toFixed(2)+'</span><span style="background:#e74c3c;color:#fff;padding:.15rem .5rem;border-radius:5px;font-size:.72rem;font-weight:700">-'+p.discount+'%</span></div>'
         : '<div class="product-price">CHF '+p.price.toFixed(2)+'</div>')
+    + (p.colors&&p.colors.length ? '<div style="margin-bottom:.5rem"><div style="font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem">Farbe</div><div style="display:flex;flex-wrap:wrap;gap:.3rem">'
+        + p.colors.map(c => {
+            const sel = (selectedOptions[p.id]||{}).color === c;
+            const bg = sel ? '#0d1b2e' : '#fff';
+            const bc = sel ? '#0d1b2e' : '#e2e8f0';
+            const tc = sel ? '#fff' : '#475569';
+            return '<button type="button" data-pid="'+p.id+'" data-type="color" data-val="'+c+'" style="padding:.2rem .6rem;border-radius:12px;font-size:.75rem;font-weight:600;border:1.5px solid '+bc+';background:'+bg+';color:'+tc+';cursor:pointer;font-family:Inter,sans-serif" onclick="selectOpt('+p.id+',String.fromCharCode(99,111,108,111,114),this.dataset.val)">'+c+'</button>';
+          }).join('')
+        + '</div></div>' : '')
+    + (p.filaments&&p.filaments.length ? '<div style="margin-bottom:.75rem"><div style="font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem">Filament</div><div style="display:flex;flex-wrap:wrap;gap:.3rem">'
+        + p.filaments.map(f => {
+            const sel = (selectedOptions[p.id]||{}).filament === f;
+            const bg = sel ? '#2563eb' : '#fff';
+            const bc = sel ? '#2563eb' : '#e2e8f0';
+            const tc = sel ? '#fff' : '#475569';
+            return '<button type="button" data-pid="'+p.id+'" data-type="filament" data-val="'+f+'" style="padding:.2rem .6rem;border-radius:12px;font-size:.75rem;font-weight:600;border:1.5px solid '+bc+';background:'+bg+';color:'+tc+';cursor:pointer;font-family:Inter,sans-serif" onclick="selectOpt('+p.id+',String.fromCharCode(102,105,108,97,109,101,110,116),this.dataset.val)">'+f+'</button>';
+          }).join('')
+        + '</div></div>' : '')
     + '<div class="product-actions">'
-    + '<button class="btn-cart" onclick="addToCart(' + p.id + ')">In Warenkorb</button>'
-    + (isA ? '<button class="btn-edit-sm" onclick="openProdModal(' + p.id + ')">✏️</button><button class="btn-del-sm" onclick="delProd(' + p.id + ')">🗑️</button>' : '')
+    + '<button class="btn-cart" onclick="addToCartWithOptions('+p.id+')">In Warenkorb</button>'
+    + (isA ? '<button class="btn-edit-sm" onclick="openProdModal('+p.id+')">✏️</button><button class="btn-del-sm" onclick="delProd('+p.id+')">🗑️</button>' : '')
     + '</div></div></div>'
   ).join('') : '<div class="empty-st"><div class="ei">🔍</div><p>'+(q?'Keine Produkte gefunden für «'+q+'».':'Noch keine Produkte.')+'</p></div>';
   const g = document.getElementById('products-grid');
@@ -1037,8 +1208,38 @@ function renderShop() {
 
 
 // ═══ CART ════════════════════════════════════════════════════════════════════
+function selectOpt(id, type, val) {
+  if (!selectedOptions[id]) selectedOptions[id] = {};
+  selectedOptions[id][type] = val;
+  renderShop();
+}
+
+function addToCartWithOptions(id) {
+  const p = products.find(x => x.id === id); if (!p) return;
+  const opts = selectedOptions[id] || {};
+  // Check required selections
+  if (p.colors && p.colors.length > 0 && !opts.color) {
+    toast('Bitte eine Farbe wählen.','e'); return;
+  }
+  if (p.filaments && p.filaments.length > 0 && !opts.filament) {
+    toast('Bitte ein Filament wählen.','e'); return;
+  }
+  const color = opts.color || null;
+  const filament = opts.filament || null;
+  const cartKey = id + (color||'') + (filament||'');
+  const ex = cart.find(x => x._key === cartKey);
+  const displayName = p.name + (color?' · '+color:'') + (filament?' · '+filament:'');
+  if (ex) { ex.qty++; }
+  else { cart.push({...p, qty:1, discount:p.discount||0, _key:cartKey, selectedColor:color, selectedFilament:filament, name:displayName}); }
+  updBadge();
+  toast(displayName + ' hinzugefügt ✓');
+}
+
 function addToCart(id) {
   const p = products.find(x => x.id === id); if (!p) return;
+  if ((p.colors&&p.colors.length)||(p.filaments&&p.filaments.length)) {
+    addToCartWithOptions(id); return;
+  }
   const ex = cart.find(x => x.id === id);
   if (ex) ex.qty++; else cart.push({...p, qty:1, discount: p.discount||0});
   updBadge(); toast(p.name + ' hinzugefügt ✓');
@@ -1246,20 +1447,30 @@ async function saveOrderToSupabase(order) {
 function renderOrdersList() {
   const el = document.getElementById('orders-list');
   if (!el) return;
+  var nNew = orders.filter(function(o){return o.status==='new';}).length;
+  var nProc = orders.filter(function(o){return o.status==='processing';}).length;
+  var nDone = orders.filter(function(o){return o.status==='done';}).length;
+  var cNew = document.getElementById('ord-count-new');
+  var cProc = document.getElementById('ord-count-processing');
+  var cDone = document.getElementById('ord-count-done');
+  if(cNew) cNew.textContent = nNew;
+  if(cProc) cProc.textContent = nProc;
+  if(cDone) cDone.textContent = nDone;
   const statsEl = document.getElementById('admin-stats');
   if (statsEl) {
     statsEl.innerHTML =
-      '<div class="stat-card"><div class="stat-val">'+orders.length+'</div><div class="stat-lbl">Bestellungen</div></div>'
-      +'<div class="stat-card"><div class="stat-val">'+orders.filter(function(o){return o.status==='new';}).length+'</div><div class="stat-lbl">Neu</div></div>'
-      +'<div class="stat-card"><div class="stat-val">'+products.length+'</div><div class="stat-lbl">Produkte</div></div>'
-      +'<div class="stat-card"><div class="stat-val">'+users.length+'</div><div class="stat-lbl">Benutzer</div></div>';
+      '<div class="stat-card"><div class="stat-val">'+orders.length+'</div><div class="stat-lbl">Total</div></div>'
+      +'<div class="stat-card"><div class="stat-val">'+nNew+'</div><div class="stat-lbl">Neu</div></div>'
+      +'<div class="stat-card"><div class="stat-val">'+nProc+'</div><div class="stat-lbl">Bearbeitung</div></div>'
+      +'<div class="stat-card"><div class="stat-val">'+nDone+'</div><div class="stat-lbl">Versandt</div></div>';
   }
-  if (!orders.length) {
-    el.innerHTML = '<p style="color:rgba(255,255,255,.5);text-align:center;padding:3rem">Noch keine Bestellungen.</p>';
+  var filtered = orders.filter(function(o){ return o.status === currentOrdTab; });
+  if (!filtered.length) {
+    el.innerHTML = '<p style="color:rgba(255,255,255,.5);text-align:center;padding:3rem">Keine Bestellungen hier.</p>';
     return;
   }
   let out = '';
-  orders.forEach(function(o) {
+  filtered.forEach(function(o) {
     const stCls = o.status==='new'?'st-new':o.status==='processing'?'st-proc':'st-done';
     const stLbl = o.status==='new'?'Neu':o.status==='processing'?'In Bearbeitung':'Fertig';
     const fs = o.type==='upload'
@@ -1289,6 +1500,10 @@ async function loadOrdersFromSupabase() {
     const res = await db.from('orders').select('*').order('created_at', {ascending: false});
     if (res.error) { console.error('Supabase:', res.error); return; }
     if (res.data) {
+      // Preserve locally-updated statuses (in case Supabase hasn't synced yet)
+      const localStatuses = {};
+      orders.forEach(function(o) { if (o.supabaseId) localStatuses[o.supabaseId] = o.status; });
+
       orders = res.data.map(function(o) {
         return {
           id: 'ORD-' + o.id.slice(0,8).toUpperCase(),
@@ -1301,7 +1516,7 @@ async function loadOrdersFromSupabase() {
           items: o.items,
           total: o.total,
           payment: o.payment,
-          status: o.status,
+          status: localStatuses[o.id] || o.status, // prefer local status
           discount: o.discount,
           material: o.material,
           color: o.color,
@@ -1330,7 +1545,10 @@ setInterval(async () => {
 
 async function updateOrderStatusInSupabase(supabaseId, status) {
   if (!supabaseId) return;
-  await db.from('orders').update({ status }).eq('id', supabaseId);
+  try {
+    const { error } = await db.from('orders').update({ status }).eq('id', supabaseId);
+    if (error) console.error('Status update error:', error);
+  } catch(e) { console.error('Status update error:', e); }
 }
 
 
@@ -1380,7 +1598,7 @@ function renderAdmin() {
     +'<div class="stat-card"><div class="stat-val">'+products.length+'</div><div class="stat-lbl">Produkte</div></div>'
     +'<div class="stat-card"><div class="stat-val">'+users.length+'</div><div class="stat-lbl">Benutzer</div></div>';
 
-  document.getElementById('orders-list').innerHTML = orders.length ? orders.map(o => {
+  if (false) document.getElementById('orders-list').innerHTML = orders.length ? orders.map(o => {
     const fs = o.type==='upload'
       ? (o.fileData&&o.fileName
           ? '<a class="dl-btn" href="'+o.fileData+'" download="'+o.fileName+'">⬇ '+o.fileName+'</a>'
@@ -1405,15 +1623,14 @@ function renderAdmin() {
   loadUsersFromSupabase();
 }
 
-function updStatus(id, s, supabaseId) {
+async function updStatus(id, s, supabaseId) {
   const o = orders.find(x=>x.id===id);
-  if(o){
-    o.status=s;
-    renderOrdersList();
-    toast('Status aktualisiert');
-    const sid = supabaseId || o.supabaseId;
-    if(sid) updateOrderStatusInSupabase(sid, s);
-  }
+  if(!o) return;
+  o.status = s;
+  renderOrdersList();
+  toast('Status aktualisiert');
+  const sid = supabaseId || o.supabaseId;
+  if(sid) await updateOrderStatusInSupabase(sid, s);
 }
 
 async function loadUsersFromSupabase() {
@@ -1527,6 +1744,17 @@ function saveNewPw(idx) {
   toast('✓ Passwort für '+u.name+' geändert.');
 }
 
+let currentOrdTab = 'new';
+
+function switchOrdTab(tab) {
+  currentOrdTab = tab;
+  ['new','processing','done'].forEach(function(t) {
+    var btn = document.getElementById('ord-tab-'+t);
+    if (btn) btn.style.background = (t === tab) ? '#3b82f6' : 'rgba(255,255,255,.15)';
+  });
+  renderOrdersList();
+}
+
 function aTab(t) {
   document.querySelectorAll('.a-tab').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.a-sec').forEach(s=>s.classList.remove('active'));
@@ -1597,16 +1825,19 @@ function openProductDetail(id) {
   const colorsEl = document.getElementById('pdm-colors');
   if (p.colors && p.colors.length > 0) {
     colorWrap.style.display = 'block';
-    colorsEl.innerHTML = '';
-    p.colors.forEach(function(c,i) {
-      const btn = document.createElement('button');
-      btn.textContent = c;
-      btn.style.cssText = 'padding:.35rem .85rem;border-radius:20px;border:1.5px solid var(--gray-l);background:#fff;cursor:pointer;font-size:.82rem;font-weight:500;font-family:Inter,sans-serif;transition:all .15s';
-      btn.onclick = function() { pdmSelectColor(btn, c); };
-      colorsEl.appendChild(btn);
-    });
+    colorsEl.innerHTML = p.colors.map(c =>
+      '<button type="button" data-c="'+c+'" style="padding:.35rem .85rem;border-radius:20px;border:1.5px solid #e2e8f0;background:#fff;cursor:pointer;font-size:.82rem;font-weight:500;font-family:Inter,sans-serif;color:#0d1b2e;margin:0">'+c+'</button>'
+    ).join('');
+    colorsEl.onclick = function(e) {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      colorsEl.querySelectorAll('button').forEach(b => { b.style.background='#fff'; b.style.borderColor='#e2e8f0'; b.style.color='#0d1b2e'; b.style.fontWeight='500'; });
+      btn.style.background='#0d1b2e'; btn.style.borderColor='#0d1b2e'; btn.style.color='#fff'; btn.style.fontWeight='700';
+      window._pdmColor = btn.dataset.c;
+    };
     // Auto-select first
-    colorsEl.querySelector('button')?.click();
+    const firstColorBtn = colorsEl.querySelector('button');
+    if (firstColorBtn) { firstColorBtn.style.background='#0d1b2e'; firstColorBtn.style.borderColor='#0d1b2e'; firstColorBtn.style.color='#fff'; firstColorBtn.style.fontWeight='700'; window._pdmColor = firstColorBtn.dataset.c; }
   } else {
     colorWrap.style.display = 'none';
     window._pdmColor = null;
@@ -1621,7 +1852,7 @@ function openProductDetail(id) {
     p.filaments.forEach(function(f,i) {
       const btn = document.createElement('button');
       btn.textContent = f;
-      btn.style.cssText = 'padding:.35rem .85rem;border-radius:20px;border:1.5px solid var(--gray-l);background:#fff;cursor:pointer;font-size:.82rem;font-weight:500;font-family:Inter,sans-serif;transition:all .15s';
+      btn.style.cssText = 'padding:.35rem .85rem;border-radius:20px;border:1.5px solid #e2e8f0;background:#fff;cursor:pointer;font-size:.82rem;font-weight:500;font-family:Inter,sans-serif;transition:all .15s;color:#0d1b2e';
       btn.onclick = function() { pdmSelectFilament(btn, f); };
       filEl.appendChild(btn);
     });
@@ -1636,17 +1867,29 @@ function openProductDetail(id) {
 
 function pdmSelectColor(btn, color) {
   document.querySelectorAll('#pdm-colors button').forEach(b => {
-    b.style.background = '#fff'; b.style.borderColor = 'var(--gray-l)'; b.style.color = 'var(--navy)';
+    b.style.background = '#fff';
+    b.style.borderColor = '#e2e8f0';
+    b.style.color = '#0d1b2e';
+    b.style.fontWeight = '500';
   });
-  btn.style.background = 'var(--navy)'; btn.style.borderColor = 'var(--navy)'; btn.style.color = '#fff';
+  btn.style.background = '#0d1b2e';
+  btn.style.borderColor = '#0d1b2e';
+  btn.style.color = '#fff';
+  btn.style.fontWeight = '700';
   window._pdmColor = color;
 }
 
 function pdmSelectFilament(btn, fil) {
   document.querySelectorAll('#pdm-filaments button').forEach(b => {
-    b.style.background = '#fff'; b.style.borderColor = 'var(--gray-l)'; b.style.color = 'var(--navy)';
+    b.style.background = '#fff';
+    b.style.borderColor = '#e2e8f0';
+    b.style.color = '#0d1b2e';
+    b.style.fontWeight = '500';
   });
-  btn.style.background = 'var(--blue)'; btn.style.borderColor = 'var(--blue)'; btn.style.color = '#fff';
+  btn.style.background = '#2563eb';
+  btn.style.borderColor = '#2563eb';
+  btn.style.color = '#fff';
+  btn.style.fontWeight = '700';
   window._pdmFilament = fil;
 }
 
@@ -1925,7 +2168,7 @@ async function renderMyOrders() {
   const isStaff = currentUser.isAdmin || currentUser.role === 'mitarbeiter';
   const myOrders = isStaff ? orders : orders.filter(function(o) { return o.email === currentUser.email; });
 
-  const statusLabel = {new:'Neu', processing:'In Bearbeitung', done:'Fertig ✅'};
+  const statusLabel = {new:'Neu', processing:'In Bearbeitung', done:'Versandt 📦'};
   const statusColor = {new:'#f59e0b', processing:'#3b82f6', done:'#10b981'};
 
   page.innerHTML = '<div class="pg-wrap">'
@@ -1964,11 +2207,102 @@ async function renderMyOrders() {
 }
 
 
+
+// ═══ BEWERTUNGEN ════════════════════════════════════════════════════════════
+let reviews = [];
+let selectedStar = 0;
+
+function openReviewModal() {
+  selectedStar = 0;
+  document.getElementById('rv-name').value = currentUser ? currentUser.name : '';
+  document.getElementById('rv-comment').value = '';
+  document.getElementById('rv-err').style.display = 'none';
+  updateStarDisplay(0);
+  document.getElementById('review-modal').style.display = 'flex';
+}
+
+function setReviewStar(n) {
+  selectedStar = n;
+  updateStarDisplay(n);
+}
+
+function updateStarDisplay(n) {
+  document.querySelectorAll('#rv-stars span').forEach(function(s, i) {
+    s.textContent = i < n ? '★' : '☆';
+    s.style.color = i < n ? '#f59e0b' : '#cbd5e1';
+    s.style.transform = i < n ? 'scale(1.1)' : 'scale(1)';
+  });
+}
+
+async function submitReview() {
+  const name = document.getElementById('rv-name').value.trim() || 'Anonym';
+  const comment = document.getElementById('rv-comment').value.trim();
+  const err = document.getElementById('rv-err');
+  err.style.display = 'none';
+
+  if (!selectedStar) { err.textContent = 'Bitte eine Stern-Bewertung wählen.'; err.style.display = 'block'; return; }
+  if (!comment) { err.textContent = 'Bitte einen Kommentar eingeben.'; err.style.display = 'block'; return; }
+
+  const review = { name, stars: selectedStar, comment, date: new Date().toISOString().slice(0,10) };
+
+  try {
+    await db.from('reviews').insert({ name, stars: selectedStar, comment });
+  } catch(e) { console.error('Review save error:', e); }
+
+  reviews.unshift(review);
+  renderReviews();
+  document.getElementById('review-modal').style.display = 'none';
+  toast('Danke für Ihre Bewertung! ⭐');
+}
+
+async function loadReviews() {
+  try {
+    const { data } = await db.from('reviews').select('*').order('created_at', {ascending: false}).limit(20);
+    if (data && data.length > 0) {
+      reviews = data.map(function(r) {
+        return { name: r.name, stars: r.stars, comment: r.comment, date: r.created_at ? r.created_at.slice(0,10) : '' };
+      });
+      renderReviews();
+    }
+  } catch(e) { console.error('Reviews load error:', e); }
+}
+
+function renderReviews() {
+  const el = document.getElementById('reviews-grid');
+  if (!el) return;
+
+  // Update average
+  const avg = reviews.length ? (reviews.reduce(function(s,r){return s+r.stars;},0)/reviews.length).toFixed(1) : null;
+  const avgEl = document.getElementById('avg-rating-display');
+  if (avgEl && avg) {
+    const stars = '★'.repeat(Math.round(avg)) + '☆'.repeat(5-Math.round(avg));
+    avgEl.innerHTML = '<span style="color:#f59e0b;font-size:1.1rem">'+stars+'</span> <strong>'+avg+' / 5</strong> · '+reviews.length+' Bewertung'+(reviews.length!==1?'en':'');
+  }
+
+  if (!reviews.length) {
+    el.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--gray)">Noch keine Bewertungen. Seien Sie der Erste! ⭐</div>';
+    return;
+  }
+
+  el.innerHTML = reviews.map(function(r) {
+    const stars = '★'.repeat(r.stars) + '☆'.repeat(5-r.stars);
+    return '<div style="background:#fff;border:1px solid var(--gray-l);border-radius:14px;padding:1.5rem;box-shadow:0 2px 8px rgba(13,27,46,.06)">'
+      + '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem">'
+      + '<div><strong style="color:var(--navy);font-size:.95rem">'+r.name+'</strong>'
+      + '<div style="color:#f59e0b;font-size:1.1rem;margin-top:.1rem">'+stars+'</div></div>'
+      + '<span style="color:var(--gray);font-size:.78rem">'+r.date+'</span>'
+      + '</div>'
+      + '<p style="color:#475569;font-size:.875rem;line-height:1.6;margin:0">'+r.comment+'</p>'
+      + '</div>';
+  }).join('');
+}
+
 // ═══ INIT ════════════════════════════════════════════════════════════════════
 emailjs.init("QLPGP9zFVb-4wzfiU");
 renderNav();
 renderShop();
 handleStripeReturn();
+loadReviews();
 </script>
 </body>
 </html>
