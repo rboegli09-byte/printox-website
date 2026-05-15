@@ -1737,10 +1737,7 @@ async function loadOrdersFromSupabase() {
     const res = await db.from('orders').select('*').order('created_at', {ascending: false});
     if (res.error) { console.error('Supabase:', res.error); return; }
     if (res.data) {
-      // Preserve locally-updated statuses (in case Supabase hasn't synced yet)
-      const localStatuses = {};
-      orders.forEach(function(o) { if (o.supabaseId) localStatuses[o.supabaseId] = o.status; });
-
+        // Always use Supabase status as the truth
       orders = res.data.map(function(o) {
         return {
           id: 'ORD-' + o.id.slice(0,8).toUpperCase(),
@@ -1753,7 +1750,7 @@ async function loadOrdersFromSupabase() {
           items: o.items,
           total: o.total,
           payment: o.payment,
-          status: localStatuses[o.id] || o.status, // prefer local status
+          status: o.status, // always from Supabase
           discount: o.discount,
           material: o.material,
           color: o.color,
@@ -1864,11 +1861,13 @@ function renderAdmin() {
 async function updStatus(id, s, supabaseId) {
   const o = orders.find(x=>x.id===id);
   if(!o) return;
-  o.status = s;
-  renderOrdersList();
-  toast('Status aktualisiert');
   const sid = supabaseId || o.supabaseId;
-  if(sid) await updateOrderStatusInSupabase(sid, s);
+  if(!sid) { toast('Fehler: Keine Supabase-ID.','e'); return; }
+  // First save to Supabase
+  o.status = s;
+  await updateOrderStatusInSupabase(sid, s);
+  renderOrdersList();
+  toast('Status aktualisiert ✓');
 }
 
 async function loadUsersFromSupabase() {
