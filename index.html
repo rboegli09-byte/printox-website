@@ -1152,7 +1152,8 @@ let nProdId = 10;
 let nOrdId = 100;
 let dpOpen = false;
 let selDelivery = 'ship';
-let selectedOptions = {}; // {productId: {color, filament}}
+let selectedOptions = {};
+let pendingStatuses = {}; // {supabaseId: {status, timestamp}} // {productId: {color, filament}}
 let pendingReset = null; // {email, code, expiry}
 
 // ═══ HELPERS ════════════════════════════════════════════════════════════════
@@ -1737,8 +1738,16 @@ async function loadOrdersFromSupabase() {
     const res = await db.from('orders').select('*').order('created_at', {ascending: false});
     if (res.error) { console.error('Supabase:', res.error); return; }
     if (res.data) {
-        // Always use Supabase status as the truth
+        // Clean expired pending statuses (older than 30 seconds)
+      const now = Date.now();
+      Object.keys(pendingStatuses).forEach(function(id) {
+        if (now - pendingStatuses[id].timestamp > 30000) delete pendingStatuses[id];
+      });
+
       orders = res.data.map(function(o) {
+        // Use pending status if recently updated locally
+        const pending = pendingStatuses[o.id];
+        const status = (pending && (now - pending.timestamp < 30000)) ? pending.status : o.status;
         return {
           id: 'ORD-' + o.id.slice(0,8).toUpperCase(),
           supabaseId: o.id,
@@ -1750,7 +1759,7 @@ async function loadOrdersFromSupabase() {
           items: o.items,
           total: o.total,
           payment: o.payment,
-          status: o.status, // always from Supabase
+          status: status,
           discount: o.discount,
           material: o.material,
           color: o.color,
@@ -1863,12 +1872,12 @@ async function updStatus(id, s, supabaseId) {
   if(!o) return;
   const sid = supabaseId || o.supabaseId;
   if(!sid) { toast('Fehler: Keine Supabase-ID.','e'); return; }
-  window._statusUpdating = true;
+  // Store in pending so reloads don't overwrite
+  pendingStatuses[sid] = { status: s, timestamp: Date.now() };
   o.status = s;
-  await updateOrderStatusInSupabase(sid, s);
   renderOrdersList();
+  await updateOrderStatusInSupabase(sid, s);
   toast('Status aktualisiert ✓');
-  setTimeout(function() { window._statusUpdating = false; }, 5000);
 }
 
 async function loadUsersFromSupabase() {
