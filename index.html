@@ -290,6 +290,31 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
 .dp-upload-zone{border:2px dashed rgba(255,255,255,.2);border-radius:10px;padding:1.5rem;text-align:center;cursor:pointer;color:rgba(255,255,255,.45);font-size:.875rem;transition:all .2s}
 .dp-upload-zone:hover{border-color:var(--blue);color:#fff;background:rgba(37,99,235,.08)}
 
+/* ── CHATBOT ── */
+#chat-bubble{position:fixed;bottom:24px;left:24px;z-index:8000}
+#chat-btn{width:56px;height:56px;border-radius:50%;background:var(--blue);border:none;cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,.45);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:all .2s}
+#chat-btn:hover{transform:scale(1.1);background:var(--blue2)}
+#chat-notification{position:absolute;top:-4px;right:-4px;background:#e74c3c;color:#fff;font-size:.65rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+#chat-window{position:fixed;bottom:90px;left:24px;width:340px;height:480px;background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.18);display:none;flex-direction:column;z-index:8000;overflow:hidden;border:1px solid var(--gray-l)}
+#chat-window.open{display:flex}
+#chat-header{background:var(--navy);padding:1rem 1.25rem;display:flex;align-items:center;gap:.75rem;flex-shrink:0}
+#chat-header .av{width:36px;height:36px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+#chat-header .info h4{color:#fff;font-size:.9rem;font-weight:700;margin:0}
+#chat-header .info p{color:rgba(255,255,255,.6);font-size:.75rem;margin:0}
+#chat-header .close-btn{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:1.1rem;padding:.25rem}
+#chat-messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.75rem}
+#chat-messages::-webkit-scrollbar{width:4px}
+#chat-messages::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:4px}
+.chat-msg{max-width:85%;padding:.65rem .9rem;border-radius:12px;font-size:.875rem;line-height:1.5}
+.chat-msg.bot{background:#f1f5f9;color:#1e293b;border-bottom-left-radius:4px;align-self:flex-start}
+.chat-msg.user{background:var(--blue);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.chat-msg.typing{background:#f1f5f9;color:#94a3b8;font-style:italic}
+#chat-input-wrap{padding:.75rem;border-top:1px solid var(--gray-l);display:flex;gap:.5rem;flex-shrink:0}
+#chat-input{flex:1;border:1.5px solid var(--gray-l);border-radius:8px;padding:.6rem .9rem;font-family:Inter,sans-serif;font-size:.875rem;outline:none;resize:none;max-height:80px}
+#chat-input:focus{border-color:var(--blue)}
+#chat-send{background:var(--blue);border:none;color:#fff;width:36px;height:36px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;transition:background .15s}
+#chat-send:hover{background:var(--blue2)}
+
 /* ── SPINNER ── */
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.35);border-top:2px solid #fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:7px;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -1083,6 +1108,26 @@ footer{background:var(--nav);padding:2.5rem 2rem;margin-top:auto;border-top:1px 
   </div>
 </div>
 
+<!-- CHATBOT -->
+<div id="chat-bubble">
+  <button id="chat-btn" onclick="toggleChat()">💬<span id="chat-notification" style="display:none">1</span></button>
+</div>
+<div id="chat-window">
+  <div id="chat-header">
+    <div class="av">🤖</div>
+    <div class="info">
+      <h4>Printox Assistent</h4>
+      <p>Immer für Sie da</p>
+    </div>
+    <button class="close-btn" onclick="toggleChat()">✕</button>
+  </div>
+  <div id="chat-messages"></div>
+  <div id="chat-input-wrap">
+    <textarea id="chat-input" placeholder="Frage stellen..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+    <button id="chat-send" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
 <script>
 // ═══ STATE ═══════════════════════════════════════════════════════════════════
 let users = [{id:1,name:'Remo Bögli',email:'printox26@outlook.com',password:'printox2024',isAdmin:true,role:'admin'}];
@@ -1146,6 +1191,21 @@ function showPage(p) {
   if (p === 'admin') renderAdmin();
 }
 
+
+// ═══ SICHERHEIT - PASSWORT HASHING ══════════════════════════════════════════
+async function hashPassword(password, email) {
+  // SHA-256 mit E-Mail als Salt
+  const data = new TextEncoder().encode(password + email.toLowerCase() + 'printox_salt_2025');
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function isHashed(pw) {
+  // SHA-256 Hashes sind immer 64 hex Zeichen
+  return /^[0-9a-f]{64}$/.test(pw);
+}
+
 // ═══ AUTH ════════════════════════════════════════════════════════════════════
 function renderNav() {
   const nu = document.getElementById('nav-user');
@@ -1186,8 +1246,9 @@ async function doLogin(e) {
     }
   } catch(err) { console.log('Supabase login error:', err); }
   
-  // Fallback to local users
-  const u = users.find(u => u.email.toLowerCase() === em && u.password === pw);
+  // Fallback to local users (check both hashed and plain)
+  const hashedForLocal = await hashPassword(pw, em);
+  const u = users.find(u => u.email.toLowerCase() === em && (u.password === hashedForLocal || u.password === pw));
   if (!u) { toast('E-Mail oder Passwort falsch.','e'); return; }
   currentUser = u; renderNav();
   toast('Willkommen, ' + u.name + '! 👋');
@@ -1206,8 +1267,9 @@ async function doRegister(e) {
     const { data: existing } = await db.from('users').select('id').eq('email', em).single();
     if (existing) { toast('E-Mail bereits registriert.','e'); return; }
     
+    const hashedPw = await hashPassword(pw, em);
     const { data, error } = await db.from('users').insert({
-      name, email: em, password: pw, role: 'user', is_admin: false
+      name, email: em, password: hashedPw, role: 'user', is_admin: false
     }).select().single();
     
     if (error) throw error;
@@ -1914,8 +1976,11 @@ function saveNewPw(idx) {
   const u = users[idx]; if(!u) return;
   const inp = document.getElementById('ri-'+idx);
   if (!inp||inp.value.length<6) { if(inp){inp.style.borderColor='#ef4444';inp.placeholder='Mind. 6 Zeichen!'} return; }
-  u.password=inp.value;
-  db.from('users').update({password: inp.value}).eq('email', u.email).then(()=>console.log('pw updated'));
+  const newPw = inp.value;
+  hashPassword(newPw, u.email).then(function(hashed) {
+    u.password = hashed;
+    db.from('users').update({password: hashed}).eq('email', u.email).then(()=>console.log('pw updated'));
+  });
   document.getElementById('reset-form-'+idx)?.remove();
   toast('✓ Passwort für '+u.name+' geändert.');
 }
@@ -2383,6 +2448,183 @@ async function renderMyOrders() {
 }
 
 
+
+
+// ═══ CHATBOT ════════════════════════════════════════════════════════════════
+let chatOpen = false;
+let chatInitialized = false;
+
+
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  document.getElementById('chat-window').classList.toggle('open', chatOpen);
+  document.getElementById('chat-notification').style.display = 'none';
+  if (chatOpen && !chatInitialized) {
+    chatInitialized = true;
+    addChatMessage('bot', 'Hallo! 👋 Ich bin der Printox-Assistent. Wie kann ich Ihnen helfen? Sie können mich alles zu 3D-Druck, unseren Produkten oder Bestellungen fragen!');
+    // Quick suggestions
+    const sugg = document.getElementById('chat-messages');
+    const chips = document.createElement('div');
+    chips.style.cssText = 'display:flex;flex-wrap:wrap;gap:.4rem;padding:.25rem 0';
+    ['Wie lange dauert ein Druck?','Welche Materialien?','Preise?','Kontakt'].forEach(function(q) {
+      const btn = document.createElement('button');
+      btn.textContent = q;
+      btn.style.cssText = 'padding:.3rem .7rem;border-radius:12px;border:1px solid var(--gray-l);background:#fff;font-size:.78rem;cursor:pointer;font-family:Inter,sans-serif;color:var(--navy)';
+      btn.onclick = function() { document.getElementById('chat-input').value = q; sendChat(); chips.remove(); };
+      chips.appendChild(btn);
+    });
+    sugg.appendChild(chips);
+    sugg.scrollTop = sugg.scrollHeight;
+    setTimeout(() => document.getElementById('chat-input').focus(), 100);
+  }
+}
+
+function addChatMessage(type, text) {
+  const el = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + type;
+  div.textContent = text;
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+  return div;
+}
+
+function getBotReply(msg) {
+  const q = msg.toLowerCase();
+
+  // Gruss
+  if (q.match(/^(hallo|hi|hey|guten tag|grüezi|servus|ciao|hoi|guten morgen|guten abend|moin)[\s!?.]*$/)) {
+    return 'Hallo! 👋 Schön dass Sie da sind! Ich bin der Printox-Assistent und beantworte gerne Ihre Fragen zu 3D-Druck, Produkten, Preisen und mehr!';
+  }
+  // Danke
+  if (q.match(/danke|merci|thank|super|toll|perfekt|top/)) {
+    return 'Sehr gerne! 😊 Kann ich noch sonst etwas für Sie tun?';
+  }
+  // Lieferzeit
+  if (q.match(/lieferzeit|lieferung|wie lang|wann kommt|dauert|werktage|schnell|express/)) {
+    return 'Die Lieferzeit beträgt 7–9 Werktage nach Zahlungseingang. Expresslieferung ist leider nicht möglich. Alternativ: kostenlose Selbstabholung zu den Öffnungszeiten! 📦';
+  }
+  // Versand
+  if (q.match(/versand|versandkosten|porto|lieferkosten|gratis versand/)) {
+    return 'Versandkosten: CHF 6.90–18.90 je nach Grösse. Ab CHF 100 Bestellwert ist der Versand komplett gratis! Selbstabholung ist immer kostenlos. 🚚';
+  }
+  // Preis allgemein
+  if (q.match(/preis|kosten|chf|teuer|günstig|wie viel|was kostet|kosten|angebot/)) {
+    return 'Unsere Preise: Würfelhalter CHF 14.90, Handyständer CHF 19.90, Logo-Keychain CHF 8.50, Organizer-Box CHF 24.90. Individuelle Drucke: Preis auf Anfrage. 💰';
+  }
+  // PLA
+  if (q.match(/pla|polylactid/)) {
+    return 'PLA ist unser Standardmaterial – biologisch abbaubar, günstig, viele Farben, ideal für Dekor und Alltagsgegenstände. Nicht hitzebeständig über 60°C. 🌱';
+  }
+  // PETG
+  if (q.match(/petg/)) {
+    return 'PETG ist robuster als PLA, leicht flexibel und feuchtigkeitsbeständig. Ideal für funktionale Teile die etwas aushalten müssen. Bis ca. 80°C beständig. 💪';
+  }
+  // ABS
+  if (q.match(/abs|acrylnitril/)) {
+    return 'ABS ist hitzebeständig bis ca. 100°C und sehr robust. Ideal für technische Teile. Braucht ein geschlossenes Gehäuse beim Drucken – haben wir mit dem P2S! 🔥';
+  }
+  // TPU
+  if (q.match(/tpu|flexibel|gummi|weich/)) {
+    return 'TPU ist unser flexibles Material – gummiartig, stossdämpfend, ideal für Handyhüllen, Dichtungen oder alles was biegen muss. 🤸';
+  }
+  // Materialien allgemein
+  if (q.match(/material|filament|kunststoff|welche material/)) {
+    return 'Wir drucken mit: PLA (Standard), PETG (robust), ABS (hitzebeständig) und TPU (flexibel). Bei Aufträgen können Sie das Material selbst wählen! 🔧';
+  }
+  // Drucker / P2S
+  if (q.match(/drucker|bambu|p2s|p1s|maschine|welcher drucker|3d drucker/)) {
+    return 'Wir drucken mit dem Bambu Lab P2S – einem der schnellsten und präzisesten Consumer-Drucker der Welt. Geschlossenes Gehäuse, Hochgeschwindigkeit, bis 0.1mm Auflösung! 🚀';
+  }
+  // Druckqualität
+  if (q.match(/qualität|auflösung|präzision|genau|schicht|schichthöhe|detail/)) {
+    return 'Unser Bambu Lab P2S druckt mit bis zu 0.1mm Schichthöhe für sehr feine Details. Standard ist 0.2mm für gute Balance zwischen Qualität und Geschwindigkeit. 🎯';
+  }
+  // Druckgrösse
+  if (q.match(/grösse|größe|maximal|druckvolumen|wie gross|format|abmessung/)) {
+    return 'Das maximale Druckvolumen des Bambu Lab P2S beträgt 256 x 256 x 256mm. Grössere Objekte können mehrteilig gedruckt und zusammengesetzt werden! 📐';
+  }
+  // Kontakt
+  if (q.match(/kontakt|telefon|email|erreich|anruf|melden|schreiben/)) {
+    return 'Kontakt: 📧 printox26@outlook.com · 📱 077 496 28 38. Wir antworten in der Regel innerhalb von 24 Stunden! 😊';
+  }
+  // Öffnungszeiten / Abholung
+  if (q.match(/öffnungszeit|offen|abholung|abholen|zeiten|besuchen|vorbeikommen/)) {
+    return 'Selbstabholung möglich: Mi 17–19h · Fr 17–20h · Sa–So 16–20h. Adresse: Obermatt 19, 5102 Rupperswil (AG). Kostenlos! 🏠';
+  }
+  // Zahlung
+  if (q.match(/zahlung|bezahlen|twint|kreditkarte|debitkarte|visa|mastercard|stripe|wie bezahl/)) {
+    return 'Zahlung möglich mit: Kreditkarte, Debitkarte (Visa/Mastercard via Stripe). TWINT ist in Kürze verfügbar! Zahlung erfolgt sicher und verschlüsselt. 💳';
+  }
+  // Upload / eigenes Modell
+  if (q.match(/eigene|modell|stl|obj|3mf|step|datei|hochladen|upload|design|eigens|individuell|custom|wunsch/)) {
+    return 'Eigene Modelle: Einfach unter "Upload" Ihre STL/OBJ/3MF/STEP-Datei hochladen, Material und Farbe wählen und absenden. Wir melden uns mit einem Angebot! 📁';
+  }
+  // Farben
+  if (q.match(/farbe|farben|schwarz|weiss|grau|rot|blau|grün|gelb|orange|bunt|welche farbe/)) {
+    return 'Verfügbare Farben: Schwarz, Weiss, Grau, Rot, Blau, Grün, Gelb und mehr – je nach Material. Bei Aufträgen gewünschte Farbe einfach angeben! 🎨';
+  }
+  // Produkte im Shop
+  if (q.match(/produkt|shop|angebot|artikel|kaufen|was gibt es|sortiment/)) {
+    return 'Im Shop: Würfelhalter, Handyständer, Logo-Keychain, Organizer-Box. Plus individuelle Aufträge über Upload! Alle mit Farb- und Filamentauswahl. 🛒';
+  }
+  // Rabatt / Gratis
+  if (q.match(/rabatt|gutschein|discount|sparen|günstiger|gratis|kostenlos/)) {
+    return 'Gratis Versand ab CHF 100! Mitarbeiter und Freunde erhalten persönliche Rabatte. Selbstabholung ist immer kostenlos. 🎁';
+  }
+  // Was ist Printox
+  if (q.match(/was ist printox|wer seid ihr|über euch|über uns|info|information/)) {
+    return 'Printox ist ein professioneller 3D-Druck-Service aus Rupperswil (Aargau, Schweiz), betrieben von Remo Bögli. Wir drucken schnell, präzise und günstig mit dem Bambu Lab P2S! 🇨🇭';
+  }
+  // Garantie / Reklamation
+  if (q.match(/garantie|reklamation|defekt|kaputt|falsch|fehler|rückgabe|zurückgeben/)) {
+    return 'Bei Mängeln die auf unseren Fehler zurückzuführen sind, ersetzen wir das Produkt kostenlos! Mängel bitte innerhalb von 14 Tagen melden. 🛡️';
+  }
+  // Wie funktioniert 3D Druck
+  if (q.match(/wie funktioniert|wie geht|was ist 3d druck|fdm|fff|schmelz/)) {
+    return 'FDM-3D-Druck: Kunststoff-Filament wird erhitzt und Schicht für Schicht aufgetragen. Wie ein sehr präziser Heisskleber! Das Ergebnis ist ein festes 3D-Objekt. Wir nutzen den Bambu Lab P2S für maximale Präzision. 🖨️';
+  }
+  // Nachhaltigkeit
+  if (q.match(/nachhaltig|umwelt|bio|recycl|ökolog|green/)) {
+    return 'PLA ist biologisch abbaubar und aus nachwachsenden Rohstoffen. Wir produzieren auf Bestellung – kein Lager, kein Überschuss. So vermeiden wir Abfall! 🌱';
+  }
+  // Schweiz
+  if (q.match(/schweiz|swiss|aargau|rupperswil|wo seid|standort|wo sind/)) {
+    return 'Wir sind in Rupperswil im Kanton Aargau, Schweiz. Lieferung schweizweit per Post. Selbstabholung an der Obermatt 19. 🇨🇭';
+  }
+  // Mehrfarbig / Multicolor
+  if (q.match(/mehrfarbig|multicolor|zwei farben|verschiedene farben|bunt/)) {
+    return 'Mehrfarbige Drucke sind möglich! Der Bambu Lab P2S unterstützt Multi-Material-Druck. Für mehrfarbige Aufträge einfach über Upload anfragen und Ihre Wünsche angeben. 🌈';
+  }
+  // Prototyp
+  if (q.match(/prototyp|prototype|rapid|entwicklung|ingenieur|technik/)) {
+    return 'Prototypen sind eine unserer Stärken! Laden Sie Ihre CAD-Datei hoch (STL/STEP) und wir drucken Ihren Prototyp in wenigen Tagen. Ideal für Produktentwicklung! ⚙️';
+  }
+  // Ersatzteile
+  if (q.match(/ersatzteil|reparatur|spare|part|defekt|kaputt/)) {
+    return 'Ersatzteile drucken ist möglich! Laden Sie die STL-Datei hoch oder beschreiben Sie das Teil im Auftragsformular. Manchmal können wir auch ohne Datei helfen! 🔩';
+  }
+  // Standard Antwort
+  return 'Interessante Frage! Für weitere Details kontaktieren Sie uns gerne: 📧 printox26@outlook.com · 📱 077 496 28 38. Wir helfen schnell und unkompliziert! 😊';
+}
+
+function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  addChatMessage('user', msg);
+
+  // Typing animation
+  const typing = addChatMessage('bot typing', '⋯');
+  setTimeout(function() {
+    typing.remove();
+    const reply = getBotReply(msg);
+    addChatMessage('bot', reply);
+  }, 600 + Math.random() * 400);
+}
 
 // ═══ BEWERTUNGEN ════════════════════════════════════════════════════════════
 let reviews = [];
