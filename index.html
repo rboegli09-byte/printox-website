@@ -700,42 +700,85 @@ footer{background:#060e1e;padding:3rem 2rem;margin-top:auto;border-top:1px solid
 <div class="page" id="page-upload">
   <div class="pg-wrap" style="max-width:780px">
     <div class="pg-title">3D-Modell hochladen</div>
-    <div class="pg-sub">Beschreiben Sie Ihren Wunsch und laden Sie Ihre Datei hoch</div>
-    <form id="upload-form" onsubmit="submitOrder(event)">
-      <div class="upload-drop" id="upload-drop" onclick="document.getElementById('file-in').click()" ondragover="doDragOver(event)" ondrop="doDrop(event)" ondragleave="doDragLeave()">
-        <div style="font-size:2.75rem;margin-bottom:.75rem">📁</div>
-        <h3>Datei hier ablegen oder klicken</h3>
-        <p>.STL · .OBJ · .3MF · .STEP · .IGES</p>
-        <input type="file" id="file-in" accept=".stl,.obj,.3mf,.step,.stp,.iges" onchange="pickFile(event)">
-      </div>
-      <div id="file-pill" style="display:none" class="file-pill">
-        📎 <span id="file-lbl" style="flex:1;font-weight:500"></span>
-        <button type="button" onclick="clearFile()" style="background:none;border:none;color:var(--error);cursor:pointer;font-size:1rem">✕</button>
-      </div>
-      <div class="form-row">
-        <div class="fg"><label>Name *</label><input type="text" id="o-name" required placeholder="Ihr vollständiger Name"></div>
-        <div class="fg"><label>E-Mail *</label><input type="email" id="o-email" required placeholder="ihre@email.ch"></div>
-      </div>
-      <div class="fg"><label>Telefon *</label><input type="tel" id="o-phone" required placeholder="z.B. 077 496 28 38"></div>
-      <div class="fg"><label>Strasse & Hausnummer *</label><input type="text" id="o-street" required placeholder="Musterstrasse 12"></div>
-      <div class="form-row">
-        <div class="fg"><label>PLZ *</label><input type="text" id="o-plz" required placeholder="8000" maxlength="6"></div>
-        <div class="fg"><label>Ort *</label><input type="text" id="o-city" required placeholder="Zürich"></div>
-      </div>
-      <div class="form-row">
-        <div class="fg"><label>Material</label><select id="o-mat"><option>PLA (Standard)</option><option>PETG (Robust)</option><option>ABS (Hitzebeständig)</option><option>TPU (Flexibel)</option><option>Sonstige</option></select></div>
-        <div class="fg"><label>Farbe</label><input type="text" id="o-color" placeholder="z.B. Schwarz, Weiss, Rot"></div>
-      </div>
-      <div class="fg">
-        <label>Anzahl Exemplare</label>
-        <div class="qty-step">
-          <button type="button" onclick="qtyAdj(-1)">−</button>
-          <input type="number" id="o-qty" value="1" min="1" max="999" onchange="qtyClamp()">
-          <button type="button" onclick="qtyAdj(1)">+</button>
+    <div class="pg-sub">Laden Sie Ihr Modell hoch und wir erstellen Ihnen ein Angebot</div>
+
+    <form id="upload-form" onsubmit="submitOrder(event)" novalidate>
+
+      <!-- ── Datei-Upload Zone ── -->
+      <div id="uz" style="border:2px dashed var(--gray-200);border-radius:var(--r-xl);padding:3rem 2rem;text-align:center;background:var(--surface);margin-bottom:1.5rem;cursor:pointer;transition:all .22s;position:relative"
+        onclick="document.getElementById('uz-input').click()"
+        ondragover="uzDragOver(event)" ondragleave="uzDragLeave()" ondrop="uzDrop(event)">
+        <input type="file" id="uz-input" accept=".stl,.obj,.3mf,.step,.stp,.iges" style="display:none" onchange="uzPick(event)">
+        <div id="uz-idle">
+          <div style="font-size:3rem;margin-bottom:.75rem">📁</div>
+          <div style="font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:.35rem">Datei hier ablegen oder klicken</div>
+          <div style="font-size:.85rem;color:var(--gray-400)">.STL · .OBJ · .3MF · .STEP · .IGES</div>
+        </div>
+        <div id="uz-selected" style="display:none">
+          <div style="font-size:2.5rem;margin-bottom:.75rem">✅</div>
+          <div id="uz-filename" style="font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:.25rem"></div>
+          <div id="uz-filesize" style="font-size:.85rem;color:var(--gray-400);margin-bottom:.75rem"></div>
+          <button type="button" onclick="uzClear(event)" style="background:none;border:1px solid var(--error);color:var(--error);padding:.35rem .9rem;border-radius:20px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif">Datei entfernen ✕</button>
+        </div>
+        <div id="uz-uploading" style="display:none">
+          <div style="display:inline-block;width:36px;height:36px;border:3px solid var(--gray-200);border-top:3px solid var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.75rem"></div>
+          <div style="font-size:.95rem;font-weight:600;color:var(--navy)">Wird hochgeladen...</div>
+          <div id="uz-progress-bar" style="height:4px;background:var(--gray-100);border-radius:4px;margin-top:.75rem;overflow:hidden"><div id="uz-progress-fill" style="height:100%;background:var(--blue);width:0%;transition:width .3s"></div></div>
+        </div>
+        <div id="uz-error" style="display:none">
+          <div style="font-size:2rem;margin-bottom:.5rem">⚠️</div>
+          <div id="uz-error-msg" style="font-size:.875rem;color:var(--error);font-weight:600"></div>
+          <button type="button" onclick="uzClear(event)" style="margin-top:.5rem;background:none;border:1px solid var(--gray-200);color:var(--gray-500);padding:.3rem .8rem;border-radius:20px;font-size:.8rem;cursor:pointer;font-family:Inter,sans-serif">Nochmal versuchen</button>
         </div>
       </div>
-      <div class="fg"><label>Beschreibung & Wünsche</label><textarea id="o-desc" placeholder="Projektbeschreibung, Anforderungen, Qualität..."></textarea></div>
-      <button type="submit" class="btn-sub">Bestellung absenden</button>
+
+      <!-- ── Kontaktdaten ── -->
+      <div style="background:var(--surface);border-radius:var(--r-xl);padding:1.75rem;box-shadow:var(--sh-sm),0 0 0 1px rgba(9,20,42,.04);margin-bottom:1.5rem">
+        <div style="font-size:.8rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em;margin-bottom:1.25rem">Ihre Kontaktdaten</div>
+        <div class="form-row">
+          <div class="fg"><label>Name *</label><input type="text" id="o-name" required placeholder="Ihr vollständiger Name"></div>
+          <div class="fg"><label>E-Mail *</label><input type="email" id="o-email" required placeholder="ihre@email.ch"></div>
+        </div>
+        <div class="fg"><label>Telefon</label><input type="tel" id="o-phone" placeholder="z.B. 077 496 28 38"></div>
+        <div class="fg"><label>Strasse & Hausnummer</label><input type="text" id="o-street" placeholder="Musterstrasse 12"></div>
+        <div class="form-row">
+          <div class="fg"><label>PLZ</label><input type="text" id="o-plz" placeholder="5102" maxlength="6"></div>
+          <div class="fg"><label>Ort</label><input type="text" id="o-city" placeholder="Rupperswil"></div>
+        </div>
+      </div>
+
+      <!-- ── Druckoptionen ── -->
+      <div style="background:var(--surface);border-radius:var(--r-xl);padding:1.75rem;box-shadow:var(--sh-sm),0 0 0 1px rgba(9,20,42,.04);margin-bottom:1.5rem">
+        <div style="font-size:.8rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em;margin-bottom:1.25rem">Druckoptionen</div>
+        <div class="form-row">
+          <div class="fg"><label>Material</label>
+            <select id="o-mat">
+              <option>PLA (Standard)</option>
+              <option>PETG (Robust)</option>
+              <option>ABS (Hitzebeständig)</option>
+              <option>TPU (Flexibel)</option>
+              <option>Sonstige</option>
+            </select>
+          </div>
+          <div class="fg"><label>Farbe</label><input type="text" id="o-color" placeholder="z.B. Schwarz, Weiss, Rot"></div>
+        </div>
+        <div class="fg">
+          <label>Anzahl Exemplare</label>
+          <div class="qty-step">
+            <button type="button" onclick="qtyAdj(-1)">−</button>
+            <input type="number" id="o-qty" value="1" min="1" max="999" onchange="qtyClamp()">
+            <button type="button" onclick="qtyAdj(1)">+</button>
+          </div>
+        </div>
+        <div class="fg"><label>Beschreibung & Wünsche</label><textarea id="o-desc" placeholder="Projektbeschreibung, Anforderungen, Qualität, Infill..."></textarea></div>
+      </div>
+
+      <button type="submit" id="upload-submit-btn" class="btn-sub" style="width:100%;display:flex;align-items:center;justify-content:center;gap:.5rem">
+        📤 Bestellung absenden
+      </button>
+      <div style="text-align:center;font-size:.8rem;color:var(--gray-400);margin-top:.75rem">
+        Wir melden uns innerhalb von 24 Stunden mit einem Angebot
+      </div>
     </form>
   </div>
   <footer><div class="ft-bot" style="max-width:780px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2025 Printox</span><span>Made in 🇨🇭</span></div></footer>
@@ -780,23 +823,46 @@ footer{background:#060e1e;padding:3rem 2rem;margin-top:auto;border-top:1px solid
   <div class="pg-wrap" style="max-width:860px">
     <div class="pg-title">Kontakt</div>
     <div class="pg-sub">Wir freuen uns von Ihnen zu hören</div>
+
+    <!-- Info Cards -->
     <div class="con-grid">
-      <div class="con-card"><h4>📧 E-Mail</h4><p>printox26@outlook.com</p></div>
-      <div class="con-card"><h4>📱 Telefon</h4><p>077 496 28 38</p></div>
+      <div class="con-card" style="cursor:pointer" onclick="window.location.href='mailto:printox26@outlook.com'">
+        <h4>📧 E-Mail</h4>
+        <p>printox26@outlook.com</p>
+      </div>
+      <div class="con-card" style="cursor:pointer" onclick="window.location.href='tel:+41774962838'">
+        <h4>📱 Telefon</h4>
+        <p>077 496 28 38</p>
+      </div>
       <div class="con-card" style="cursor:pointer" onclick="window.open('https://wa.me/41774962838','_blank')">
         <h4>💬 WhatsApp</h4>
         <p style="margin-bottom:.75rem">Schnell & unkompliziert schreiben</p>
         <span style="display:inline-flex;align-items:center;gap:.4rem;background:#25d366;color:#fff;padding:.45rem 1rem;border-radius:7px;font-size:.85rem;font-weight:600">WhatsApp öffnen ↗</span>
       </div>
-      <div class="con-card"><h4>🕐 Öffnungszeiten</h4><p>Mi: 17:00–19:00<br>Fr: 17:00–20:00<br>Sa–So: 16:00–20:00</p></div>
-      <div class="con-card"><h4>📦 Lieferung</h4><p>Schweizweit per Post</p></div>
+      <div class="con-card">
+        <h4>🕐 Öffnungszeiten</h4>
+        <p>Mi: 17:00–19:00<br>Fr: 17:00–20:00<br>Sa–So: 16:00–20:00</p>
+      </div>
+      <div class="con-card">
+        <h4>📍 Adresse</h4>
+        <p>Obermatt 19<br>5102 Rupperswil</p>
+      </div>
     </div>
-    <form onsubmit="doContact(event)">
-      <div class="fg"><label>Name</label><input type="text" required placeholder="Ihr Name"></div>
-      <div class="fg"><label>E-Mail</label><input type="email" required placeholder="ihre@email.ch"></div>
-      <div class="fg"><label>Nachricht</label><textarea required placeholder="Ihr Anliegen..."></textarea></div>
-      <button type="submit" class="btn-sub">Nachricht senden</button>
-    </form>
+
+    <!-- Nachricht schreiben -->
+    <div style="background:var(--surface);border-radius:var(--r-xl);padding:2rem;box-shadow:var(--sh-md),0 0 0 1px rgba(9,20,42,.04)">
+      <div style="font-size:1.1rem;font-weight:800;color:var(--navy);margin-bottom:.4rem;letter-spacing:-.01em">Nachricht schreiben</div>
+      <div style="font-size:.875rem;color:var(--gray-500);margin-bottom:1.5rem">Füllen Sie die Felder aus – beim Klick auf "E-Mail öffnen" startet automatisch Ihr E-Mail-Programm (Outlook, Mail, Gmail, etc.).</div>
+      <div class="fg"><label>Ihr Name</label><input type="text" id="c-name" placeholder="Remo Bögli"></div>
+      <div class="fg"><label>Betreff</label><input type="text" id="c-subject" placeholder="z.B. Anfrage 3D-Druck" value="Kontaktanfrage Printox"></div>
+      <div class="fg"><label>Ihre Nachricht</label><textarea id="c-msg" placeholder="Beschreiben Sie Ihr Anliegen..."></textarea></div>
+      <button class="btn-sub" onclick="openContactMail()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:.5rem">
+        📧 E-Mail öffnen
+      </button>
+      <div style="text-align:center;margin-top:.875rem;font-size:.8rem;color:var(--gray-400)">
+        Öffnet Ihren E-Mail-Client · Keine Daten werden direkt von der Website übermittelt
+      </div>
+    </div>
   </div>
   <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2025 Printox · 077 496 28 38</span><span>Made in 🇨🇭</span></div></footer>
 </div>
@@ -2189,65 +2255,116 @@ async function updateOrderStatusInSupabase(supabaseId, status) {
 }
 
 
-// ═══ UPLOAD ══════════════════════════════════════════════════════════════════
-function pickFile(e) { readF(e.target.files[0]); }
-function doDragOver(e) { e.preventDefault(); document.getElementById('upload-drop').classList.add('drag'); }
-function doDragLeave() { document.getElementById('upload-drop').classList.remove('drag'); }
-function doDrop(e) { e.preventDefault(); document.getElementById('upload-drop').classList.remove('drag'); if (e.dataTransfer.files[0]) readF(e.dataTransfer.files[0]); }
-function readF(f) {
-  selFile = f;
-  const r = new FileReader(); r.onload = ev => { selFileData = ev.target.result; }; r.readAsDataURL(f);
-  document.getElementById('file-pill').style.display = 'flex';
-  document.getElementById('file-lbl').textContent = f.name + ' (' + (f.size<1048576?Math.round(f.size/1024)+' KB':(f.size/1048576).toFixed(1)+' MB') + ')';
+// ═══ UPLOAD – komplett neu ═══════════════════════════════════════════════════
+let uzFile = null;
+let uzFileData = null;
+
+function uzFormatSize(bytes) {
+  return bytes < 1048576 ? Math.round(bytes/1024)+' KB' : (bytes/1048576).toFixed(1)+' MB';
 }
-function clearFile() { selFile=null; selFileData=null; document.getElementById('file-in').value=''; document.getElementById('file-pill').style.display='none'; }
-function qtyAdj(d) { const el=document.getElementById('o-qty'); el.value=Math.max(1,parseInt(el.value||1)+d); }
-function qtyClamp() { const el=document.getElementById('o-qty'); if(!el.value||parseInt(el.value)<1) el.value=1; }
-async function uploadFileToStorage(file) {
+function uzSetState(state) {
+  ['uz-idle','uz-selected','uz-uploading','uz-error'].forEach(function(id) {
+    const el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
+  const t = document.getElementById(state); if (t) t.style.display = 'block';
+}
+function uzDragOver(e) {
+  e.preventDefault();
+  document.getElementById('uz').style.borderColor = 'var(--blue)';
+  document.getElementById('uz').style.background = 'var(--blue-light)';
+}
+function uzDragLeave() {
+  document.getElementById('uz').style.borderColor = 'var(--gray-200)';
+  document.getElementById('uz').style.background = 'var(--surface)';
+}
+function uzDrop(e) {
+  e.preventDefault(); uzDragLeave();
+  if (e.dataTransfer.files[0]) uzProcess(e.dataTransfer.files[0]);
+}
+function uzPick(e) { if (e.target.files[0]) uzProcess(e.target.files[0]); }
+function uzProcess(file) {
+  const ext = '.' + file.name.split('.').pop().toLowerCase();
+  if (!['.stl','.obj','.3mf','.step','.stp','.iges'].includes(ext)) {
+    uzSetState('uz-error');
+    document.getElementById('uz-error-msg').textContent = 'Ungültiges Format. Erlaubt: .stl, .obj, .3mf, .step, .iges';
+    return;
+  }
+  if (file.size > 100*1024*1024) {
+    uzSetState('uz-error');
+    document.getElementById('uz-error-msg').textContent = 'Datei zu gross (max. 100 MB).';
+    return;
+  }
+  uzFile = file;
+  document.getElementById('uz-filename').textContent = file.name;
+  document.getElementById('uz-filesize').textContent = uzFormatSize(file.size);
+  uzSetState('uz-selected');
+  const reader = new FileReader();
+  reader.onload = function(ev) { uzFileData = ev.target.result; };
+  reader.readAsDataURL(file);
+}
+function uzClear(e) {
+  if (e) e.stopPropagation();
+  uzFile = null; uzFileData = null;
+  document.getElementById('uz-input').value = '';
+  document.getElementById('uz').style.borderColor = 'var(--gray-200)';
+  document.getElementById('uz').style.background = 'var(--surface)';
+  uzSetState('uz-idle');
+}
+async function uzUpload(file) {
   if (!file) return null;
   try {
     const safeName = Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+    let pct = 0;
+    const iv = setInterval(function() {
+      pct = Math.min(pct+15, 85);
+      const f = document.getElementById('uz-progress-fill'); if (f) f.style.width = pct+'%';
+    }, 200);
     const { data, error } = await db.storage.from('uploads').upload(safeName, file, { upsert: false });
-    if (error) { console.warn('Storage upload failed, using base64 fallback:', error.message); return null; }
+    clearInterval(iv);
+    const f = document.getElementById('uz-progress-fill'); if (f) f.style.width = '100%';
+    if (error) { console.warn('Storage error:', error.message); return null; }
     const { data: urlData } = db.storage.from('uploads').getPublicUrl(safeName);
     return urlData?.publicUrl || null;
-  } catch(e) { console.warn('Storage upload exception, using base64 fallback:', e); return null; }
+  } catch(e) { console.warn('Storage exception:', e.message); return null; }
 }
+function qtyAdj(d) { const el=document.getElementById('o-qty'); el.value=Math.max(1,parseInt(el.value||1)+d); }
+function qtyClamp() { const el=document.getElementById('o-qty'); if(!el.value||parseInt(el.value)<1) el.value=1; }
 
 async function submitOrder(e) {
   e.preventDefault();
-  const submitBtn = e.target.querySelector('button[type=submit]');
-  submitBtn.textContent = 'Wird gesendet...'; submitBtn.disabled = true;
-  const oStreet = document.getElementById('o-street').value.trim();
-  const oPlz    = document.getElementById('o-plz').value.trim();
-  const oCity   = document.getElementById('o-city').value.trim();
-
-  // Upload file to Supabase Storage
+  const name  = document.getElementById('o-name').value.trim();
+  const email = document.getElementById('o-email').value.trim();
+  if (!name || !email) { toast('Name und E-Mail sind erforderlich.','e'); return; }
+  const btn = document.getElementById('upload-submit-btn');
+  btn.textContent = 'Wird gesendet...'; btn.disabled = true;
   let fileUrl = null;
-  if (selFile) {
-    fileUrl = await uploadFileToStorage(selFile);
-    if (!fileUrl) toast('Datei konnte nicht hochgeladen werden – Bestellung trotzdem gesendet.','e');
+  if (uzFile) {
+    uzSetState('uz-uploading');
+    fileUrl = await uzUpload(uzFile);
+    uzSetState(fileUrl ? 'uz-selected' : 'uz-selected');
   }
-
-  const uploadOrder = {id:'ORD-'+String(++nOrdId),type:'upload',
-    name:document.getElementById('o-name').value,
-    email:document.getElementById('o-email').value,
-    phone:document.getElementById('o-phone').value,
-    address: oStreet + ', ' + oPlz + ' ' + oCity,
-    material:document.getElementById('o-mat').value,
-    color:document.getElementById('o-color').value,
-    qty:parseInt(document.getElementById('o-qty').value)||1,
-    desc:document.getElementById('o-desc').value,
-    fileName:selFile?selFile.name:null, fileData:selFileData||null,
-    fileUrl: fileUrl,
-    status:'new', date:new Date().toISOString().slice(0,10)};
-  orders.unshift(uploadOrder);
-  await saveOrderToSupabase(uploadOrder);
-  sendOrderConfirmation(uploadOrder);
-  submitBtn.textContent = 'Bestellung absenden'; submitBtn.disabled = false;
-  toast('Bestellung gesendet! Wir melden uns bald. ✓');
+  const addr = [document.getElementById('o-street').value.trim(), document.getElementById('o-plz').value.trim(), document.getElementById('o-city').value.trim()].filter(Boolean).join(', ');
+  const order = {
+    id:'ORD-'+String(++nOrdId), type:'upload', name, email,
+    phone: document.getElementById('o-phone').value.trim(),
+    address: addr || null,
+    material: document.getElementById('o-mat').value,
+    color: document.getElementById('o-color').value.trim(),
+    qty: parseInt(document.getElementById('o-qty').value)||1,
+    desc: document.getElementById('o-desc').value.trim(),
+    fileName: uzFile ? uzFile.name : null,
+    fileData: (!fileUrl && uzFileData && uzFileData.length < 2000000) ? uzFileData : null,
+    fileUrl,
+    status:'new', date: new Date().toISOString().slice(0,10)
+  };
+  orders.unshift(order);
+  await saveOrderToSupabase(order);
+  sendOrderConfirmation(order);
+  btn.textContent = '📤 Bestellung absenden'; btn.disabled = false;
+  toast('Bestellung gesendet! Wir melden uns bald. ✓','s');
   document.getElementById('upload-form').reset();
-  document.getElementById('o-qty').value=1; clearFile();
+  document.getElementById('o-qty').value = 1;
+  uzClear();
 }
 
 // ═══ ADMIN ═══════════════════════════════════════════════════════════════════
@@ -3631,39 +3748,16 @@ async function deleteReview(id) {
   }
 }
 
-// ═══ KONTAKTFORMULAR ═════════════════════════════════════════════════════════
-async function doContact(e) {
-  e.preventDefault();
-  const btn = e.target.querySelector('button[type=submit]');
-  const name = e.target.querySelector('input[type=text]').value.trim();
-  const email = e.target.querySelector('input[type=email]').value.trim();
-  const msg = e.target.querySelector('textarea').value.trim();
-  if (!name || !email || !msg) { toast('Bitte alle Felder ausfüllen.','e'); return; }
-  const orig = btn.textContent;
-  btn.textContent = 'Wird gesendet...';
-  btn.disabled = true;
-  try {
-    // Sende an Admin (printox26@outlook.com) – customer_email = Admin-Adresse
-    // reply_to = Absender, damit direkt geantwortet werden kann
-    await emailjs.send('service_u2ip6kn', 'template_llwcbhf', {
-      customer_name: 'Kontaktanfrage von: ' + name,
-      customer_email: 'printox26@outlook.com',
-      reply_to: email,
-      items: 'Kontaktformular – ' + name + ' <' + email + '>',
-      total: '—',
-      payment: '—',
-      delivery: msg,
-      order_id: new Date().toLocaleString('de-CH')
-    });
-    toast('Nachricht gesendet! Wir melden uns bald. ✉️', 's');
-    e.target.reset();
-  } catch(err) {
-    console.error('EmailJS contact error:', err);
-    toast('Fehler beim Senden – bitte direkt schreiben: printox26@outlook.com', 'e');
-  } finally {
-    btn.textContent = orig;
-    btn.disabled = false;
-  }
+// ═══ KONTAKT – mailto: ═══════════════════════════════════════════════════════
+function openContactMail() {
+  const name    = (document.getElementById('c-name')?.value.trim()) || '';
+  const subject = (document.getElementById('c-subject')?.value.trim()) || 'Kontaktanfrage Printox';
+  const msg     = (document.getElementById('c-msg')?.value.trim()) || '';
+  const body    = (name ? 'Von: ' + name + '\n\n' : '') + msg;
+  const mailto  = 'mailto:printox26@outlook.com'
+    + '?subject=' + encodeURIComponent(subject)
+    + '&body='    + encodeURIComponent(body);
+  window.location.href = mailto;
 }
 
 // ═══ SCROLL TO TOP ════════════════════════════════════════════════════════════
