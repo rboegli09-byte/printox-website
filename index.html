@@ -2226,6 +2226,8 @@ async function loadOrdersFromSupabase() {
           qty: o.qty,
           desc: o.description,
           fileName: o.file_name,
+          fileUrl: o.file_url || null,
+          fileData: o.file_data || null,
           date: o.created_at ? o.created_at.slice(0,10) : ''
         };
       });
