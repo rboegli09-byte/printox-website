@@ -953,80 +953,82 @@ footer{background:#060e1e;padding:3rem 2rem;margin-top:auto;border-top:1px solid
 
 <!-- PRODUCT DETAIL MODAL -->
 <div class="modal-bg" id="prod-detail-modal" style="display:none;overflow-y:auto;align-items:flex-start;padding:1rem" onclick="if(event.target===this)this.style.display='none'">
-  <div onclick="event.stopPropagation()" style="background:#fff;border-radius:16px;max-width:600px;width:100%;margin:2rem auto;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.2)">
+  <div onclick="event.stopPropagation()" style="background:#fff;border-radius:20px;max-width:680px;width:100%;margin:2rem auto;overflow:hidden;box-shadow:0 24px 64px rgba(9,20,42,.18)">
 
-    <!-- Close button -->
-    <div style="display:flex;justify-content:flex-end;padding:.75rem 1rem .25rem">
-      <button onclick="document.getElementById('prod-detail-modal').style.display='none'" style="background:#f1f5f9;border:none;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b">✕</button>
-    </div>
-
-    <!-- Image gallery area -->
-    <div style="background:#f8fafc;margin:0 1rem;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0">
+    <!-- Image gallery area – full width, no padding -->
+    <div style="background:#f1f5f9;position:relative">
+      <!-- Close button -->
+      <button onclick="document.getElementById('prod-detail-modal').style.display='none'" style="position:absolute;top:12px;right:12px;z-index:10;background:rgba(255,255,255,.9);border:none;width:34px;height:34px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b;box-shadow:0 2px 8px rgba(0,0,0,.12)">✕</button>
       <!-- Main image -->
-      <div id="pdm-img" style="height:280px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative" onclick="pdmOpenGallery()">
-        <img id="pdm-img-tag" src="" alt="" style="display:none;max-width:100%;max-height:260px;object-fit:contain;padding:1rem">
-        <span id="pdm-icon" style="font-size:5rem"></span>
-        <div id="pdm-img-count" style="display:none;position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;font-size:.72rem;padding:.2rem .55rem;border-radius:10px;font-weight:600">📷 Mehr Bilder</div>
+      <div id="pdm-img" style="height:360px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative" onclick="pdmOpenGallery()">
+        <img id="pdm-img-tag" src="" alt="" style="display:none;max-width:100%;max-height:340px;object-fit:contain;padding:1.5rem">
+        <span id="pdm-icon" style="font-size:6rem"></span>
+        <div id="pdm-img-count" style="display:none;position:absolute;bottom:10px;right:10px;background:rgba(9,20,42,.65);color:#fff;font-size:.72rem;padding:.25rem .65rem;border-radius:20px;font-weight:600;backdrop-filter:blur(4px)">📷 Mehr Bilder</div>
       </div>
       <!-- Thumbnails -->
-      <div id="pdm-thumbs" style="display:none;gap:.5rem;padding:.6rem;overflow-x:auto;border-top:1px solid #e2e8f0;background:#fff"></div>
+      <div id="pdm-thumbs" style="display:none;gap:.5rem;padding:.75rem;overflow-x:auto;border-top:1px solid #e2e8f0;background:#fff"></div>
     </div>
 
     <!-- Content -->
-    <div style="padding:1.25rem 1.25rem 1.5rem">
+    <div style="padding:1.5rem 1.75rem 2rem">
 
       <!-- Name + price -->
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.6rem">
-        <h3 id="pdm-name" style="font-size:1.3rem;font-weight:800;color:#0f172a;margin:0;flex:1;padding-right:1rem"></h3>
-        <div id="pdm-price" style="font-size:1.2rem;font-weight:800;color:#2563eb;white-space:nowrap"></div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;gap:1rem">
+        <h3 id="pdm-name" style="font-size:1.5rem;font-weight:800;color:#09142a;margin:0;flex:1;letter-spacing:-.02em;line-height:1.25"></h3>
+        <div id="pdm-price" style="font-size:1.4rem;font-weight:800;color:#2563eb;white-space:nowrap;letter-spacing:-.02em"></div>
       </div>
 
       <!-- Description -->
-      <div id="pdm-desc" style="color:#64748b;font-size:.875rem;line-height:1.7;margin-bottom:1rem"></div>
+      <div id="pdm-desc" style="color:#475569;font-size:.925rem;line-height:1.75;margin-bottom:1.25rem"></div>
 
       <!-- Specs -->
-      <div id="pdm-specs" style="display:none;background:#f8fafc;border-radius:10px;padding:.875rem;margin-bottom:1rem;border:1px solid #e2e8f0">
-        <div style="font-size:.72rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem">Produktdaten</div>
-        <div id="pdm-specs-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem"></div>
+      <div id="pdm-specs" style="display:none;background:#f8fafc;border-radius:12px;padding:1rem;margin-bottom:1.25rem;border:1px solid #e2e8f0">
+        <div style="font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem">Produktdaten</div>
+        <div id="pdm-specs-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem .75rem"></div>
       </div>
 
       <!-- Shipping -->
-      <div id="pdm-shipping-info" style="background:#eff6ff;border-radius:8px;padding:.6rem .875rem;margin-bottom:1rem;font-size:.825rem;color:#1e40af"></div>
-
-      <!-- Divider -->
-      <div style="border-top:1px solid #f1f5f9;margin-bottom:1rem"></div>
+      <div id="pdm-shipping-info" style="background:#eff6ff;border-radius:10px;padding:.75rem 1rem;margin-bottom:1.25rem;font-size:.85rem;color:#1e40af;font-weight:500"></div>
 
       <!-- Color picker -->
-      <div id="pdm-color-wrap" style="display:none;margin-bottom:.875rem">
-        <div style="font-size:.72rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Farbe wählen</div>
+      <div id="pdm-color-wrap" style="display:none;margin-bottom:1rem">
+        <div style="font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem">Farbe wählen</div>
         <div id="pdm-colors" style="display:flex;flex-wrap:wrap;gap:.4rem"></div>
       </div>
 
       <!-- Filament picker -->
-      <div id="pdm-filament-wrap" style="display:none;margin-bottom:.875rem">
-        <div style="font-size:.72rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Filament wählen</div>
+      <div id="pdm-filament-wrap" style="display:none;margin-bottom:1rem">
+        <div style="font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem">Filament wählen</div>
         <div id="pdm-filaments" style="display:flex;flex-wrap:wrap;gap:.4rem"></div>
       </div>
 
-      <!-- Custom options dropdowns -->
-      <div id="pdm-custom-opts" style="margin-bottom:.875rem"></div>
+      <!-- Custom options -->
+      <div id="pdm-custom-opts" style="margin-bottom:1rem"></div>
 
       <!-- Polish option -->
-      <div id="pdm-polish-wrap" style="display:none;margin-bottom:.875rem">
-        <div style="font-size:.72rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Oberfläche</div>
-        <select id="pdm-polish-sel" onchange="pdmUpdatePrice()" style="width:100%;padding:.6rem .875rem;border:1.5px solid #e2e8f0;border-radius:8px;font-family:Inter,sans-serif;font-size:.9rem;background:#fff">
+      <div id="pdm-polish-wrap" style="display:none;margin-bottom:1rem">
+        <div style="font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem">Oberfläche</div>
+        <select id="pdm-polish-sel" onchange="pdmUpdatePrice()" style="width:100%;padding:.7rem 1rem;border:1.5px solid #e2e8f0;border-radius:10px;font-family:Inter,sans-serif;font-size:.9rem;background:#fff;color:#09142a">
           <option value="no">Nicht poliert</option>
           <option value="yes" id="pdm-polish-yes-opt">Poliert (+CHF 0.00)</option>
         </select>
       </div>
 
       <!-- Price summary -->
-      <div id="pdm-price-summary" style="display:none;background:#f8fafc;border-radius:10px;padding:.75rem .875rem;margin-bottom:1rem;font-size:.85rem;border:1px solid #e2e8f0"></div>
+      <div id="pdm-price-summary" style="display:none;background:#f8fafc;border-radius:10px;padding:.85rem 1rem;margin-bottom:1.25rem;font-size:.875rem;border:1px solid #e2e8f0"></div>
 
       <!-- Add to cart button -->
-      <button id="pdm-cart-btn" onclick="pdmAddToCart()" style="width:100%;background:#2563eb;color:#fff;border:none;padding:.9rem;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:background .15s">
+      <button id="pdm-cart-btn" onclick="pdmAddToCart()" style="width:100%;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;padding:1rem;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .22s;box-shadow:0 4px 16px rgba(37,99,235,.35);letter-spacing:.01em">
         In den Warenkorb
       </button>
+
+      <!-- Trust badges -->
+      <div style="display:flex;justify-content:center;gap:1.5rem;margin-top:1.25rem;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:.35rem;color:#94a3b8;font-size:.75rem"><span>🇨🇭</span><span>Swiss Made</span></div>
+        <div style="display:flex;align-items:center;gap:.35rem;color:#94a3b8;font-size:.75rem"><span>📦</span><span>7–9 Werktage</span></div>
+        <div style="display:flex;align-items:center;gap:.35rem;color:#94a3b8;font-size:.75rem"><span>🔒</span><span>Sichere Zahlung</span></div>
+        <div style="display:flex;align-items:center;gap:.35rem;color:#94a3b8;font-size:.75rem"><span>↩️</span><span>Zufriedenheitsgarantie</span></div>
+      </div>
     </div>
   </div>
 </div>
@@ -2063,7 +2065,8 @@ async function saveOrderToSupabase(order) {
       qty: order.qty || null,
       description: order.desc || null,
       file_name: order.fileName || null,
-      file_url: order.fileUrl || null
+      file_url: order.fileUrl || null,
+      file_data: (!order.fileUrl && order.fileData && order.fileData.length < 2000000) ? order.fileData : null
     });
     if (error) console.error('Supabase order insert error:', JSON.stringify(error));
   } catch(e) {
@@ -2203,13 +2206,12 @@ function qtyClamp() { const el=document.getElementById('o-qty'); if(!el.value||p
 async function uploadFileToStorage(file) {
   if (!file) return null;
   try {
-    const ext = file.name.split('.').pop();
     const safeName = Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
     const { data, error } = await db.storage.from('uploads').upload(safeName, file, { upsert: false });
-    if (error) { console.error('Storage upload error:', JSON.stringify(error)); return null; }
+    if (error) { console.warn('Storage upload failed, using base64 fallback:', error.message); return null; }
     const { data: urlData } = db.storage.from('uploads').getPublicUrl(safeName);
     return urlData?.publicUrl || null;
-  } catch(e) { console.error('Storage upload exception:', e); return null; }
+  } catch(e) { console.warn('Storage upload exception, using base64 fallback:', e); return null; }
 }
 
 async function submitOrder(e) {
@@ -3003,8 +3005,7 @@ function renderAdminProdGrid() {
   }).join('');
 }
 
-// ═══ CONTACT ═════════════════════════════════════════════════════════════════
-function doContact(e){e.preventDefault();toast('Nachricht gesendet! ✓');e.target.reset();}
+// ═══ CONTACT (handled below) ═════════════════════════════════════════════════
 
 // ═══ DESIGN PANEL ════════════════════════════════════════════════════════════
 let sc = {
@@ -3166,7 +3167,7 @@ async function renderMyOrders() {
           items: o.items, total: o.total, payment: o.payment,
           status: o.status, discount: o.discount,
           material: o.material, color: o.color, qty: o.qty,
-          desc: o.description, fileName: o.file_name, fileUrl: o.file_url || null,
+          desc: o.description, fileName: o.file_name, fileUrl: o.file_url || null, fileData: o.file_data || null,
           date: o.created_at ? o.created_at.slice(0,10) : ''
         };
       });
