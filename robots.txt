@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://printox.ch/sitemap.xml
