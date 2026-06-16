@@ -284,6 +284,12 @@ nav{background:rgba(9,20,42,.97);backdrop-filter:blur(12px);-webkit-backdrop-fil
 .img-drop-zone:hover .img-overlay{opacity:1}
 .img-lbl{font-size:.875rem;color:var(--gray-400);font-weight:500}
 .img-hint{font-size:.75rem;color:var(--gray-300)}
+.img-thumbs{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.6rem}
+.img-thumb{position:relative;width:74px;height:74px;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--gray-200);background:var(--gray-50)}
+.img-thumb img{width:100%;height:100%;object-fit:cover}
+.img-thumb-rm{position:absolute;top:3px;right:3px;width:20px;height:20px;border:none;border-radius:50%;background:rgba(9,20,42,.7);color:#fff;font-size:.7rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.img-thumb-rm:hover{background:var(--error)}
+.img-thumb-main{position:absolute;bottom:0;left:0;right:0;background:var(--blue);color:#fff;font-size:.6rem;font-weight:700;text-align:center;padding:1px 0;letter-spacing:.02em}
 
 /* ── FORGOT MODAL ── */
 .fp-err{color:var(--error);font-size:.85rem;margin-bottom:.75rem;display:none}
@@ -1308,14 +1314,12 @@ footer{background:#060e1e;padding:3rem 2rem;margin-top:auto;border-top:1px solid
   <div class="modal-box" onclick="event.stopPropagation()">
     <h3 id="prod-modal-title">Produkt hinzufügen</h3>
     <div class="fg">
-      <label>Produktbild</label>
+      <label>Produktbilder</label>
       <div class="img-drop-zone" id="img-drop" onclick="document.getElementById('p-img').click()">
-        <input type="file" id="p-img" accept="image/*" onchange="pickProdImg(event)">
-        <img id="p-img-prev" src="" alt="" style="display:none">
-        <div class="img-overlay">🖼️ Bild ändern</div>
-        <div id="img-ph"><div style="font-size:2rem;margin-bottom:.4rem">🖼️</div><div class="img-lbl">Klicken zum Hochladen</div><div class="img-hint">JPG · PNG · WEBP</div></div>
+        <input type="file" id="p-img" accept="image/*" multiple onchange="pickProdImg(event)">
+        <div id="img-ph"><div style="font-size:2rem;margin-bottom:.4rem">🖼️</div><div class="img-lbl">Klicken zum Hochladen</div><div class="img-hint">Mehrere möglich · JPG · PNG · WEBP</div></div>
       </div>
-      <div id="img-rm" style="display:none;margin-top:.5rem"><button type="button" onclick="rmProdImg()" style="background:none;border:none;color:var(--error);font-size:.85rem;cursor:pointer;font-weight:600">✕ Bild entfernen</button></div>
+      <div id="img-thumbs" class="img-thumbs"></div>
     </div>
     <div class="fg"><label>Produktname *</label><input type="text" id="p-name" placeholder="z.B. Würfelhalter"></div>
     <div class="fg"><label>Beschreibung</label><textarea id="p-desc" style="min-height:75px" placeholder="Kurze Beschreibung..."></textarea></div>
@@ -2870,7 +2874,8 @@ function openProdModal(id) {
     document.getElementById('p-wid').value=p.wid||'';
     document.getElementById('p-hei').value=p.hei||'';
     document.getElementById('p-kg').value=p.kg||'';
-    if(p.image){pendingImg=p.image;showProdImg(p.image);}
+    pendingImgs = (p.images && p.images.length) ? [...p.images] : (p.image ? [p.image] : []);
+    renderImgThumbs();
   } else {
     document.getElementById('p-name').value='';
     document.getElementById('p-desc').value='';
@@ -2889,10 +2894,55 @@ function openProdModal(id) {
   }
   document.getElementById('prod-modal').style.display='flex';
 }
-function pickProdImg(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{pendingImg=ev.target.result;showProdImg(pendingImg);};r.readAsDataURL(f);}
-function showProdImg(s){document.getElementById('p-img-prev').src=s;document.getElementById('p-img-prev').style.display='block';document.getElementById('img-ph').style.display='none';document.getElementById('img-rm').style.display='block';}
-function clrProdImg(){const pr=document.getElementById('p-img-prev');pr.src='';pr.style.display='none';document.getElementById('img-ph').style.display='flex';document.getElementById('img-rm').style.display='none';document.getElementById('p-img').value='';pendingImg=null;}
-function rmProdImg(){clrProdImg();}
+function compressImg(dataUrl, maxPx, quality){
+  return new Promise(function(resolve){
+    const img = new Image();
+    img.onload = function(){
+      let w = img.width, h = img.height;
+      if(w > maxPx || h > maxPx){
+        if(w >= h){ h = Math.round(h * maxPx / w); w = maxPx; }
+        else { w = Math.round(w * maxPx / h); h = maxPx; }
+      }
+      const cv = document.createElement('canvas');
+      cv.width = w; cv.height = h;
+      cv.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(cv.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = function(){ resolve(dataUrl); };
+    img.src = dataUrl;
+  });
+}
+function pickProdImg(e){
+  const files = Array.from(e.target.files || []);
+  if(!files.length) return;
+  files.forEach(function(f){
+    if(!f.type.startsWith('image/')) return;
+    const r = new FileReader();
+    r.onload = function(ev){
+      compressImg(ev.target.result, 1000, 0.82).then(function(small){
+        pendingImgs.push(small);
+        renderImgThumbs();
+      });
+    };
+    r.readAsDataURL(f);
+  });
+  e.target.value = ''; // gleiche Datei erneut wählbar
+}
+function renderImgThumbs(){
+  const box = document.getElementById('img-thumbs');
+  if(!box) return;
+  box.innerHTML = pendingImgs.map(function(src,i){
+    return '<div class="img-thumb">'
+      + '<img src="'+src+'" alt="">'
+      + (i===0 ? '<span class="img-thumb-main">Haupt</span>' : '')
+      + '<button type="button" class="img-thumb-rm" onclick="removeImgAt('+i+')" title="Entfernen">✕</button>'
+      + '</div>';
+  }).join('');
+}
+function removeImgAt(i){ pendingImgs.splice(i,1); renderImgThumbs(); }
+function showProdImg(){ renderImgThumbs(); }
+function clrProdImg(){ pendingImgs=[]; pendingImg=null; renderImgThumbs(); }
+function rmProdImg(){ clrProdImg(); }
 
 
 // ═══ TAG INPUT (Farben & Filamente) ═════════════════════════════════════════
