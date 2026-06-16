@@ -134,7 +134,7 @@ nav{background:rgba(9,20,42,.97);backdrop-filter:blur(12px);-webkit-backdrop-fil
 .product-card:hover .product-img .ef{transform:scale(1.08)}
 .product-body{padding:1.5rem;display:flex;flex-direction:column;flex:1}
 .product-name{font-weight:700;font-size:1rem;color:var(--navy);margin-bottom:.35rem;letter-spacing:-.01em;line-height:1.4}
-.product-desc{color:var(--gray-500);font-size:.845rem;line-height:1.6;margin-bottom:.9rem;flex:1}
+.product-desc{color:var(--gray-500);font-size:.845rem;line-height:1.6;margin-bottom:.9rem;flex:1;white-space:pre-wrap}
 .product-price{font-weight:800;font-size:1.25rem;color:var(--navy);margin-bottom:1rem;letter-spacing:-.02em}
 .product-actions{display:flex;gap:.6rem;margin-top:auto}
 .btn-cart{flex:1;background:var(--navy);color:#fff;border:none;padding:.7rem .5rem;border-radius:var(--r-md);font-family:'Inter',sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s;letter-spacing:.01em}
@@ -913,28 +913,11 @@ footer{background:#060e1e;padding:3rem 2rem;margin-top:auto;border-top:1px solid
       <div id="admin-reviews-list"></div>
     </div>
     <div class="a-sec" id="a-team">
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem">
-        <!-- Remo -->
-        <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.5rem">
-          <div style="font-weight:700;color:#fff;margin-bottom:1rem;font-size:1rem">Remo Bögli</div>
-          <div id="team-admin-remo-preview" style="width:90px;height:90px;border-radius:50%;overflow:hidden;background:#1e293b;border:2px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:1rem">👤</div>
-          <label style="display:block;background:var(--blue);color:#fff;padding:.55rem 1.1rem;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;width:fit-content;margin-bottom:.75rem">
-            📷 Foto hochladen
-            <input type="file" accept="image/*" style="display:none" onchange="uploadTeamPhoto(this,'remo')">
-          </label>
-          <button onclick="removeTeamPhoto('remo')" style="background:none;border:1px solid rgba(239,68,68,.5);color:#f87171;padding:.4rem .9rem;border-radius:7px;font-size:.8rem;cursor:pointer;font-family:Inter,sans-serif">Foto entfernen</button>
-        </div>
-        <!-- Jeromin -->
-        <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.5rem">
-          <div style="font-weight:700;color:#fff;margin-bottom:1rem;font-size:1rem">Jeromin Bühler</div>
-          <div id="team-admin-jeromin-preview" style="width:90px;height:90px;border-radius:50%;overflow:hidden;background:#1e293b;border:2px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:1rem">👤</div>
-          <label style="display:block;background:var(--blue);color:#fff;padding:.55rem 1.1rem;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;width:fit-content;margin-bottom:.75rem">
-            📷 Foto hochladen
-            <input type="file" accept="image/*" style="display:none" onchange="uploadTeamPhoto(this,'jeromin')">
-          </label>
-          <button onclick="removeTeamPhoto('jeromin')" style="background:none;border:1px solid rgba(239,68,68,.5);color:#f87171;padding:.4rem .9rem;border-radius:7px;font-size:.8rem;cursor:pointer;font-family:Inter,sans-serif">Foto entfernen</button>
-        </div>
+      <div style="margin-bottom:1.25rem">
+        <button onclick="addTeamMember()" style="background:var(--blue);color:#fff;border:none;padding:.6rem 1.2rem;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif">+ Mitarbeiter hinzufügen</button>
+        <div style="color:#94a3b8;font-size:.8rem;margin-top:.5rem">Änderungen werden automatisch gespeichert.</div>
       </div>
+      <div id="team-admin-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem"></div>
     </div>
     <div class="a-sec" id="a-layout">
       <div style="background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);border-radius:14px;padding:2rem;text-align:center;color:#fff">
@@ -1051,7 +1034,7 @@ footer{background:#060e1e;padding:3rem 2rem;margin-top:auto;border-top:1px solid
       </div>
 
       <!-- Description -->
-      <div id="pdm-desc" style="color:#475569;font-size:.925rem;line-height:1.75;margin-bottom:1.25rem"></div>
+      <div id="pdm-desc" style="color:#475569;font-size:.925rem;line-height:1.75;margin-bottom:1.25rem;white-space:pre-wrap"></div>
 
       <!-- Specs -->
       <div id="pdm-specs" style="display:none;background:#f8fafc;border-radius:12px;padding:1rem;margin-bottom:1.25rem;border:1px solid #e2e8f0">
@@ -1112,36 +1095,7 @@ footer{background:#060e1e;padding:3rem 2rem;margin-top:auto;border-top:1px solid
     <div class="pg-sub">Der Mensch hinter Printox</div>
 
     <!-- Team -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.25rem;margin-bottom:1.5rem">
-      <!-- Remo -->
-      <div style="background:#fff;border:1px solid var(--gray-l);border-radius:16px;padding:2rem;box-shadow:0 1px 4px rgba(13,27,46,0.06)">
-        <div style="width:110px;height:110px;border-radius:50%;overflow:hidden;margin:0 auto 1.25rem;border:3px solid var(--gray-l);background:#f0f3f8;display:flex;align-items:center;justify-content:center">
-          <img id="team-photo-remo" src="" alt="Remo Bögli" style="width:100%;height:100%;object-fit:cover;display:none">
-          <span id="team-photo-remo-placeholder" style="font-size:2.5rem">👤</span>
-        </div>
-        <div style="text-align:center;margin-bottom:1rem">
-          <div style="font-size:1.1rem;font-weight:800;color:var(--navy)">Remo Bögli</div>
-          <div style="font-size:.85rem;color:var(--gray);margin-top:.2rem">Gründer & Betreiber · Rupperswil, Aargau</div>
-        </div>
-        <p style="color:#475569;line-height:1.8;font-size:.9rem;text-align:center">
-          Printox ist ein kleiner, persönlicher 3D-Druck-Service aus der Schweiz. Ich drucke mit einem <strong>Bambu Lab P2S</strong> und lege grossen Wert auf Qualität und schnelle Lieferung.
-        </p>
-      </div>
-      <!-- Jeromin -->
-      <div style="background:#fff;border:1px solid var(--gray-l);border-radius:16px;padding:2rem;box-shadow:0 1px 4px rgba(13,27,46,0.06)">
-        <div style="width:110px;height:110px;border-radius:50%;overflow:hidden;margin:0 auto 1.25rem;border:3px solid var(--gray-l);background:#f0f3f8;display:flex;align-items:center;justify-content:center">
-          <img id="team-photo-jeromin" src="" alt="Jeromin Bühler" style="width:100%;height:100%;object-fit:cover;display:none">
-          <span id="team-photo-jeromin-placeholder" style="font-size:2.5rem">👤</span>
-        </div>
-        <div style="text-align:center;margin-bottom:1rem">
-          <div style="font-size:1.1rem;font-weight:800;color:var(--navy)">Jeromin Bühler</div>
-          <div style="font-size:.85rem;color:var(--gray);margin-top:.2rem">Mitarbeiter · Printox Team</div>
-        </div>
-        <p style="color:#475569;line-height:1.8;font-size:.9rem;text-align:center">
-          Als Mitglied des Printox-Teams sorgt Jeromin für reibungslose Abläufe und unterstützt bei der Produktion und dem Kundenkontakt.
-        </p>
-      </div>
-    </div>
+    <div id="team-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.25rem;margin-bottom:1.5rem"></div>
 
     <!-- Drucker / Technik -->
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;margin-bottom:1.5rem">
@@ -2551,7 +2505,7 @@ function aTab(t) {
   document.querySelectorAll('.a-sec').forEach(s=>s.classList.remove('active'));
   document.querySelector('.a-tab[onclick="aTab(\''+t+'\')"]').classList.add('active');
   document.getElementById('a-'+t).classList.add('active');
-  if (t === 'team') loadTeamAdminPreviews();
+  if (t === 'team') renderTeamAdmin();
   if (t === 'reviews') loadAndRenderAdminReviews();
 }
 
@@ -2610,60 +2564,172 @@ async function deleteReviewAdmin(id) {
   }
 }
 
-function uploadTeamPhoto(input, person) {
+// ═══ TEAM (dynamisch · Supabase) ═══════════════════════════════════════════
+let team = [];
+
+function teamEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function teamEscAttr(s){ return teamEsc(s).replace(/"/g,'&quot;'); }
+
+function defaultTeamInMemory() {
+  return [
+    { id:'local-0', name:'Remo Bögli', role:'Gründer & Betreiber · Rupperswil, Aargau',
+      desc:'Printox ist ein kleiner, persönlicher 3D-Druck-Service aus der Schweiz. Ich drucke mit einem Bambu Lab P2S und lege grossen Wert auf Qualität und schnelle Lieferung.',
+      photo: localStorage.getItem('team_photo_remo') || null },
+    { id:'local-1', name:'Jeromin Bühler', role:'Mitarbeiter · Printox Team',
+      desc:'Als Mitglied des Printox-Teams sorgt Jeromin für reibungslose Abläufe und unterstützt bei der Produktion und dem Kundenkontakt.',
+      photo: localStorage.getItem('team_photo_jeromin') || null }
+  ];
+}
+
+async function loadTeam() {
+  try {
+    const { data, error } = await db.from('team').select('*').order('sort', {ascending:true}).order('created_at', {ascending:true});
+    if (error) { console.error('Team load error (Tabelle fehlt?):', error.message); team = defaultTeamInMemory(); renderTeamPublic(); renderTeamAdmin(); return; }
+    team = (data || []).map(function(m){
+      return { id:m.id, name:m.name||'', role:m.role||'', desc:m.description||'', photo:m.photo||null };
+    });
+    if (team.length === 0) { await seedDefaultTeam(); return; }
+    renderTeamPublic();
+    renderTeamAdmin();
+  } catch(e) { console.error('loadTeam error:', e); team = defaultTeamInMemory(); renderTeamPublic(); renderTeamAdmin(); }
+}
+
+async function seedDefaultTeam() {
+  const defaults = [
+    { name:'Remo Bögli', role:'Gründer & Betreiber · Rupperswil, Aargau',
+      description:'Printox ist ein kleiner, persönlicher 3D-Druck-Service aus der Schweiz. Ich drucke mit einem Bambu Lab P2S und lege grossen Wert auf Qualität und schnelle Lieferung.',
+      photo: localStorage.getItem('team_photo_remo') || null, sort:0 },
+    { name:'Jeromin Bühler', role:'Mitarbeiter · Printox Team',
+      description:'Als Mitglied des Printox-Teams sorgt Jeromin für reibungslose Abläufe und unterstützt bei der Produktion und dem Kundenkontakt.',
+      photo: localStorage.getItem('team_photo_jeromin') || null, sort:1 }
+  ];
+  try {
+    const { data, error } = await db.from('team').insert(defaults).select();
+    if (error) {
+      console.error('Seed team error:', error.message);
+      team = defaults.map(function(d,i){ return { id:'local-'+i, name:d.name, role:d.role, desc:d.description, photo:d.photo }; });
+    } else {
+      team = (data||[]).map(function(m){ return { id:m.id, name:m.name, role:m.role, desc:m.description, photo:m.photo }; });
+    }
+  } catch(e) { console.error('seed err', e); }
+  renderTeamPublic();
+  renderTeamAdmin();
+}
+
+function renderTeamPublic() {
+  const grid = document.getElementById('team-grid');
+  if (!grid) return;
+  if (!team.length) { grid.innerHTML = ''; return; }
+  grid.innerHTML = team.map(function(m){
+    const photo = m.photo
+      ? '<img src="'+m.photo+'" alt="'+teamEscAttr(m.name)+'" style="width:100%;height:100%;object-fit:cover">'
+      : '<span style="font-size:2.5rem">👤</span>';
+    return '<div style="background:#fff;border:1px solid var(--gray-l);border-radius:16px;padding:2rem;box-shadow:0 1px 4px rgba(13,27,46,0.06)">'
+      + '<div style="width:110px;height:110px;border-radius:50%;overflow:hidden;margin:0 auto 1.25rem;border:3px solid var(--gray-l);background:#f0f3f8;display:flex;align-items:center;justify-content:center">'+photo+'</div>'
+      + '<div style="text-align:center;margin-bottom:1rem">'
+      + '<div style="font-size:1.1rem;font-weight:800;color:var(--navy)">'+teamEsc(m.name)+'</div>'
+      + '<div style="font-size:.85rem;color:var(--gray);margin-top:.2rem">'+teamEsc(m.role)+'</div>'
+      + '</div>'
+      + '<p style="color:#475569;line-height:1.8;font-size:.9rem;text-align:center;white-space:pre-wrap">'+teamEsc(m.desc)+'</p>'
+      + '</div>';
+  }).join('');
+}
+
+function renderTeamAdmin() {
+  const grid = document.getElementById('team-admin-grid');
+  if (!grid) return;
+  if (!team.length) {
+    grid.innerHTML = '<div style="color:#94a3b8;font-size:.9rem">Noch keine Mitarbeiter. Klicke oben auf „+ Mitarbeiter hinzufügen".</div>';
+    return;
+  }
+  const inS = 'width:100%;box-sizing:border-box;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;padding:.5rem .7rem;border-radius:7px;font-size:.85rem;font-family:Inter,sans-serif;margin-bottom:.6rem';
+  const lbS = 'color:#94a3b8;font-size:.72rem;display:block;margin-bottom:.2rem';
+  grid.innerHTML = team.map(function(m){
+    const photo = m.photo ? '<img src="'+m.photo+'" style="width:100%;height:100%;object-fit:cover">' : '👤';
+    return '<div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.5rem">'
+      + '<div style="width:90px;height:90px;border-radius:50%;overflow:hidden;background:#1e293b;border:2px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1rem">'+photo+'</div>'
+      + '<label style="display:block;background:var(--blue);color:#fff;padding:.5rem 1rem;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;width:fit-content;margin:0 auto .5rem">📷 Foto<input type="file" accept="image/*" style="display:none" onchange="uploadTeamMemberPhoto(this,\''+m.id+'\')"></label>'
+      + (m.photo ? '<div style="text-align:center;margin-bottom:.9rem"><button onclick="removeTeamMemberPhoto(\''+m.id+'\')" style="background:none;border:none;color:#f87171;font-size:.78rem;cursor:pointer;font-family:Inter,sans-serif">Foto entfernen</button></div>' : '<div style="height:.3rem"></div>')
+      + '<label style="'+lbS+'">Name</label>'
+      + '<input type="text" value="'+teamEscAttr(m.name)+'" onchange="saveTeamMember(\''+m.id+'\',\'name\',this.value)" style="'+inS+'">'
+      + '<label style="'+lbS+'">Rolle / Untertitel</label>'
+      + '<input type="text" value="'+teamEscAttr(m.role)+'" onchange="saveTeamMember(\''+m.id+'\',\'role\',this.value)" style="'+inS+'">'
+      + '<label style="'+lbS+'">Beschreibung</label>'
+      + '<textarea onchange="saveTeamMember(\''+m.id+'\',\'desc\',this.value)" style="'+inS+';min-height:90px;resize:vertical">'+teamEsc(m.desc)+'</textarea>'
+      + '<button onclick="deleteTeamMember(\''+m.id+'\')" style="background:none;border:1px solid rgba(239,68,68,.5);color:#f87171;padding:.45rem .9rem;border-radius:7px;font-size:.8rem;cursor:pointer;font-family:Inter,sans-serif;width:100%;margin-top:.3rem">🗑 Mitarbeiter löschen</button>'
+      + '</div>';
+  }).join('');
+}
+
+async function addTeamMember() {
+  try {
+    const { data, error } = await db.from('team').insert({ name:'Neuer Mitarbeiter', role:'Printox Team', description:'', photo:null, sort:team.length }).select().single();
+    if (error) { console.error('Add team error:', error.message); toast('Fehler: '+error.message,'e'); return; }
+    team.push({ id:data.id, name:data.name||'', role:data.role||'', desc:data.description||'', photo:data.photo||null });
+    renderTeamAdmin();
+    renderTeamPublic();
+    toast('Mitarbeiter hinzugefügt ✓','s');
+  } catch(e) { console.error(e); toast('Fehler beim Hinzufügen','e'); }
+}
+
+async function saveTeamMember(id, field, value) {
+  const m = team.find(function(x){ return String(x.id)===String(id); });
+  if (!m) return;
+  m[field] = value;
+  renderTeamPublic();
+  const col = field === 'desc' ? 'description' : field;
+  try {
+    const payload = {}; payload[col] = value;
+    const { error } = await db.from('team').update(payload).eq('id', id);
+    if (error) { console.error('Team save error:', error.message); toast('Fehler beim Speichern','e'); return; }
+    toast('Gespeichert ✓','s');
+  } catch(e) { console.error(e); toast('Fehler beim Speichern','e'); }
+}
+
+async function deleteTeamMember(id) {
+  if (!confirm('Diesen Mitarbeiter wirklich löschen?')) return;
+  try {
+    const { error } = await db.from('team').delete().eq('id', id);
+    if (error) { console.error('Delete team error:', error.message); toast('Fehler beim Löschen','e'); return; }
+  } catch(e) { console.error(e); }
+  team = team.filter(function(x){ return String(x.id)!==String(id); });
+  renderTeamAdmin();
+  renderTeamPublic();
+  toast('Mitarbeiter gelöscht','s');
+}
+
+async function uploadTeamMemberPhoto(input, id) {
   const file = input.files[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = function(e) {
-    const dataUrl = e.target.result;
-    localStorage.setItem('team_photo_' + person, dataUrl);
-    applyTeamPhoto(person, dataUrl);
-    loadTeamAdminPreviews();
-    toast('Foto gespeichert ✓', 's');
+    compressImg(e.target.result, 600, 0.82).then(async function(small){
+      const m = team.find(function(x){ return String(x.id)===String(id); });
+      if (!m) return;
+      m.photo = small;
+      renderTeamAdmin();
+      renderTeamPublic();
+      try {
+        const { error } = await db.from('team').update({ photo: small }).eq('id', id);
+        if (error) { console.error('Photo save error:', error.message); toast('Fehler beim Speichern','e'); return; }
+        toast('Foto gespeichert ✓','s');
+      } catch(err) { console.error(err); }
+    });
   };
   reader.readAsDataURL(file);
 }
 
-function removeTeamPhoto(person) {
-  localStorage.removeItem('team_photo_' + person);
-  applyTeamPhoto(person, null);
-  loadTeamAdminPreviews();
-  toast('Foto entfernt', 's');
-}
-
-function applyTeamPhoto(person, dataUrl) {
-  const img = document.getElementById('team-photo-' + person);
-  const placeholder = document.getElementById('team-photo-' + person + '-placeholder');
-  if (!img) return;
-  if (dataUrl) {
-    img.src = dataUrl;
-    img.style.display = 'block';
-    if (placeholder) placeholder.style.display = 'none';
-  } else {
-    img.src = '';
-    img.style.display = 'none';
-    if (placeholder) placeholder.style.display = '';
-  }
-}
-
-function loadTeamPhotos() {
-  ['remo', 'jeromin'].forEach(function(p) {
-    const saved = localStorage.getItem('team_photo_' + p);
-    if (saved) applyTeamPhoto(p, saved);
-  });
-}
-
-function loadTeamAdminPreviews() {
-  ['remo', 'jeromin'].forEach(function(p) {
-    const saved = localStorage.getItem('team_photo_' + p);
-    const preview = document.getElementById('team-admin-' + p + '-preview');
-    if (!preview) return;
-    if (saved) {
-      preview.innerHTML = '<img src="'+saved+'" style="width:100%;height:100%;object-fit:cover">';
-    } else {
-      preview.innerHTML = '👤';
-    }
-  });
+async function removeTeamMemberPhoto(id) {
+  const m = team.find(function(x){ return String(x.id)===String(id); });
+  if (!m) return;
+  m.photo = null;
+  renderTeamAdmin();
+  renderTeamPublic();
+  try {
+    const { error } = await db.from('team').update({ photo: null }).eq('id', id);
+    if (error) console.error('Remove photo error:', error.message);
+    else toast('Foto entfernt','s');
+  } catch(e) { console.error(e); }
 }
 
 // ═══ PRODUCT MODAL ════════════════════════════════════════════════════════════
@@ -3827,7 +3893,7 @@ renderShop();
 handleStripeReturn();
 loadReviews();
 loadProductsFromSupabase();
-loadTeamPhotos();
+loadTeam();
 </script>
 </body>
 </html>
