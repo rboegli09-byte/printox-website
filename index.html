@@ -453,6 +453,79 @@ footer{background:#060e1e;padding:3rem 2rem;margin-top:auto;border-top:1px solid
   .product-img{height:200px}
   .hero{padding:4rem 1.25rem 3.5rem}
 }
+
+/* ════ MOBILE RESPONSIVE (Hamburger, Touch-Targets, kein Overflow) ════ */
+/* Globale Schutzregeln */
+html{overflow-x:hidden}
+body{overflow-x:hidden}
+img{max-width:100%}
+/* Hamburger-Button: Desktop ausgeblendet */
+.nav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:46px;height:46px;background:none;border:none;cursor:pointer;padding:11px;border-radius:var(--r-sm);margin-left:.25rem;flex-shrink:0}
+.nav-toggle span{display:block;height:2px;width:100%;background:#fff;border-radius:2px;transition:transform .25s ease,opacity .2s ease}
+.nav-toggle:hover{background:rgba(255,255,255,.08)}
+nav.nav-open .nav-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+nav.nav-open .nav-toggle span:nth-child(2){opacity:0}
+nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+@media(max-width:768px){
+  /* Hamburger sichtbar, horizontale Links werden zum Dropdown-Menü */
+  .nav-toggle{display:flex}
+  .nav-links{
+    position:absolute;top:100%;left:0;right:0;
+    flex-direction:column;align-items:stretch;gap:.25rem;
+    padding:.65rem .8rem 1rem;
+    background:var(--nav);
+    border-top:1px solid rgba(255,255,255,.08);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    box-shadow:0 18px 34px rgba(0,0,0,.4);
+    max-height:calc(100dvh - 72px);overflow-y:auto;
+    display:none;z-index:600;
+  }
+  nav.nav-open .nav-links{display:flex}
+  .nav-links .nav-btn{width:100%;text-align:left;padding:.95rem 1rem;font-size:1rem;border-radius:var(--r-md);min-height:48px;display:flex;align-items:center}
+  .nav-cart-wrap{justify-content:flex-start}
+  .nav-cart-wrap::after{content:'Warenkorb';margin-left:.5rem;font-weight:500}
+  .nav-cart-wrap .cart-badge{position:static;margin-left:.55rem;border:none}
+  /* Login/Anmelden: grösseres Touch-Target im Bar */
+  .nav-action{padding:.6rem 1.1rem;min-height:44px;font-size:.85rem}
+  .nav-right{margin-left:auto}
+  /* Lesbare Fliesstexte (≥16px) */
+  .product-desc,.feat-card p,.con-card p,.sec-sub{font-size:1rem;line-height:1.6}
+  .pg-sub{font-size:1rem}
+  /* Touch-Targets vergrössern */
+  .qty-btn{width:40px;height:40px}
+  .btn-edit-sm,.btn-del-sm{padding:.7rem .9rem;min-height:44px}
+  .ci-rem{padding:.6rem;font-size:1.3rem}
+  .ft-col a{padding:.35rem 0;display:inline-block}
+  /* Chat-Fenster passt auf den Screen */
+  #chat-window{width:calc(100vw - 32px);left:16px;right:16px;height:64vh;max-height:480px}
+  /* Seiten-Drawer (#dp) nicht breiter als Screen */
+  #dp{width:88vw;max-width:390px}
+  /* Galerie-/Detailmodals */
+  #pdm-specs-grid{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:480px){
+  nav{height:64px}
+  .nav-links{max-height:calc(100dvh - 64px)}
+  .nav-logo svg{width:32px;height:32px}
+  .hero h1{font-size:1.85rem}
+  .hero p{font-size:1rem}
+  .btn-fill,.btn-ghost{padding:.8rem 1.5rem;width:100%;max-width:280px}
+  .hero-btns{flex-direction:column;align-items:center;width:100%}
+  .sec-title,.pg-title{font-size:1.6rem}
+  .cta-band h2{font-size:1.6rem}
+  .feat-grid{grid-template-columns:1fr}
+  .con-grid{grid-template-columns:1fr}
+  #pdm-specs-grid{grid-template-columns:1fr}
+  .modal-box{padding:1.5rem 1.25rem;border-radius:var(--r-xl)}
+  .modal-btns{flex-direction:column-reverse}
+  .modal-btns button{width:100%}
+  .stats-grid{gap:.6rem}
+  .stat-val{font-size:1.75rem}
+  /* Footer-Zeilen sauberer stapeln */
+  .ft-bot{flex-direction:column;gap:.5rem;text-align:center}
+}
 </style>
 </head>
 <body>
@@ -487,6 +560,9 @@ footer{background:#060e1e;padding:3rem 2rem;margin-top:auto;border-top:1px solid
   <div class="nav-right" id="nav-user">
     <button class="nav-action" onclick="showPage('login')">Anmelden</button>
   </div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- HOME -->
@@ -1501,7 +1577,21 @@ function toast(msg, t) {
 }
 
 // ═══ NAVIGATION ═════════════════════════════════════════════════════════════
+function toggleNav() {
+  const nav = document.querySelector('nav');
+  const open = nav.classList.toggle('nav-open');
+  const t = document.getElementById('nav-toggle');
+  if (t) { t.setAttribute('aria-expanded', open ? 'true' : 'false'); t.setAttribute('aria-label', open ? 'Menü schliessen' : 'Menü öffnen'); }
+}
+function closeNav() {
+  const nav = document.querySelector('nav');
+  if (nav) nav.classList.remove('nav-open');
+  const t = document.getElementById('nav-toggle');
+  if (t) { t.setAttribute('aria-expanded', 'false'); t.setAttribute('aria-label', 'Menü öffnen'); }
+}
+
 function showPage(p) {
+  closeNav();
   document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
   document.getElementById('page-' + p).classList.add('active');
