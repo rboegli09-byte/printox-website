@@ -2237,7 +2237,8 @@ function renderCart() {
     + '</div>'
     + '<div class="pay-title">Lieferung</div>'
     + '<div class="pay-opt ' + (selDelivery==='ship'?'sel':'') + '" onclick="setDelivery(\'ship\')" style="margin-bottom:.4rem"><input type="radio" name="delivery" ' + (selDelivery==='ship'?'checked':'') + '><label>📦 Lieferung per Post (Versandkosten werden berechnet)</label></div>'
-    + '<div class="pay-opt ' + (selDelivery==='pickup'?'sel':'') + '" onclick="setDelivery(\'pickup\')" style="margin-bottom:.75rem"><input type="radio" name="delivery" ' + (selDelivery==='pickup'?'checked':'') + '><label>🏪 Selbst abholen (Kostenlos) – Mi/Fr 17–20 Uhr, Sa–So 16–20 Uhr</label></div>'
+    + '<div class="pay-opt ' + (selDelivery==='pickup'?'sel':'') + '" onclick="setDelivery(\'pickup\')" style="margin-bottom:.5rem"><input type="radio" name="delivery" ' + (selDelivery==='pickup'?'checked':'') + '><label>🏪 Selbst abholen (Kostenlos) – Mi/Fr 17–20 Uhr, Sa–So 16–20 Uhr</label></div>'
+    + (selDelivery==='pickup' ? '<div class="fg" style="margin-bottom:.75rem"><label>Ihre Telefonnummer * <span style="font-size:.75rem;font-weight:400;color:var(--gray)">(für Abholbenachrichtigung)</span></label><input class="addr-in" type="tel" id="pickup-phone" placeholder="077 123 45 67" autocomplete="tel"></div>' : '<div style="margin-bottom:.75rem"></div>')
     + '<div class="pay-title">Zahlungsmethode</div>'
     + '<div class="pay-opt ' + (selPay==='twint'?'sel':'') + '" onclick="setPay(\'twint\')"><input type="radio" name="pay" ' + (selPay==='twint'?'checked':'') + '><label>📱 TWINT</label></div>'
     + '<div class="pay-opt ' + (selPay==='card'?'sel':'') + '" onclick="setPay(\'card\')"><input type="radio" name="pay" ' + (selPay==='card'?'checked':'') + '><label>💳 Debitkarte</label></div>'
@@ -2268,7 +2269,7 @@ async function startStripeCheckout() {
   const st = document.getElementById('addr-street')?.value.trim();
   const pl = document.getElementById('addr-plz')?.value.trim();
   const ci = document.getElementById('addr-city')?.value.trim();
-  const ph = document.getElementById('addr-phone')?.value.trim();
+  const ph = (selDelivery==='pickup' ? document.getElementById('pickup-phone') : document.getElementById('addr-phone'))?.value.trim();
   if (!ph) { toast('Bitte Telefonnummer eingeben.','e'); return; }
   if (selDelivery !== 'pickup' && (!fn||!ln||!st||!pl||!ci)) { toast('Bitte alle Adressfelder ausfüllen.','e'); return; }
   const address = selDelivery==='pickup' ? '🏪 Selbstabholung' : (fn+' '+ln+', '+st+', '+pl+' '+ci);
@@ -2313,7 +2314,7 @@ function placeOrder(method) {
   const st = document.getElementById('addr-street')?.value.trim();
   const pl = document.getElementById('addr-plz')?.value.trim();
   const ci = document.getElementById('addr-city')?.value.trim();
-  const ph2 = document.getElementById('addr-phone')?.value.trim();
+  const ph2 = (selDelivery==='pickup' ? document.getElementById('pickup-phone') : document.getElementById('addr-phone'))?.value.trim();
   if (!ph2) { toast('Bitte Telefonnummer eingeben.','e'); return; }
   if (selDelivery !== 'pickup' && (!fn||!ln||!st||!pl||!ci)) { toast('Bitte alle Adressfelder ausfüllen.','e'); return; }
   const address = selDelivery==='pickup' ? '🏪 Selbstabholung' : (fn + ' ' + ln + ', ' + st + ', ' + pl + ' ' + ci);
@@ -2324,6 +2325,7 @@ function placeOrder(method) {
   const disc = getUserDiscount();
   const total = sub*(1-disc) + shipping;
   const order = {id:'ORD-'+String(++nOrdId),type:'shop',name:currentUser.name,email:currentUser.email,
+    phone: ph2,
     address: selDelivery==='pickup' ? '🏪 Selbstabholung' : address,
     items:cart.map(x=>({name:x.name,qty:x.qty,price:x.price,shipping:x.shipping||7.90,options:x.optionsSummary||''})),
     total, payment:method, discount: disc>0 ? (disc*100)+'%' : null,
