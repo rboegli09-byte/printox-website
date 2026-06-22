@@ -979,6 +979,18 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
   <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2025 Printox</span><span>Made in 🇨🇭</span></div></footer>
 </div>
 
+<!-- SHOP LOCKED -->
+<div class="page" id="page-shop-locked">
+  <div style="min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 1.5rem;text-align:center">
+    <div style="font-size:3rem;margin-bottom:1.5rem;opacity:.35">🛠</div>
+    <div style="font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--navy);opacity:.55;margin-bottom:.75rem">Shop</div>
+    <h1 style="font-size:2rem;font-weight:800;color:var(--navy);margin:0 0 1rem">Wir bauen den Shop aus</h1>
+    <p style="max-width:480px;color:#64748b;font-size:1rem;line-height:1.65;margin:0 0 2rem">Unser Shop befindet sich momentan im Aufbau. Wir arbeiten daran, euch bald ein vollständiges Sortiment anbieten zu können. In der Zwischenzeit könnt ihr euer eigenes Modell hochladen und direkt bestellen.</p>
+    <button class="btn-fill" onclick="showPage('upload')">Modell hochladen</button>
+    <p style="margin-top:1.5rem;font-size:.85rem;color:#94a3b8">Fragen? <span style="color:var(--navy);cursor:pointer;text-decoration:underline" onclick="showPage('contact')">Schreibt uns.</span></p>
+  </div>
+</div>
+
 <!-- UPLOAD -->
 <div class="page" id="page-upload">
   <div class="pg-wrap" style="max-width:780px">
@@ -1772,10 +1784,12 @@ function closeNav() {
 
 function showPage(p) {
   closeNav();
+  if (p === 'shop' && !(currentUser && currentUser.isAdmin)) p = 'shop-locked';
   document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
   document.getElementById('page-' + p).classList.add('active');
-  const nb = document.getElementById('nav-' + p); if (nb) nb.classList.add('active');
+  const navKey = p === 'shop-locked' ? 'shop' : p;
+  const nb = document.getElementById('nav-' + navKey); if (nb) nb.classList.add('active');
   window.scrollTo(0,0);
   if (p === 'shop') renderShop();
   if (p === 'cart') renderCart();
