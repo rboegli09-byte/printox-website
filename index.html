@@ -353,11 +353,11 @@ footer{background:#060e1e;padding:3rem 2rem;margin-top:auto;border-top:1px solid
 .dp-upload-zone:hover{border-color:var(--blue);color:#fff;background:rgba(37,99,235,.08)}
 
 /* ── CHATBOT ── */
-#chat-bubble{position:fixed;bottom:24px;left:24px;z-index:8000}
+#chat-bubble{position:fixed;bottom:24px;right:24px;z-index:8000}
 #chat-btn{width:56px;height:56px;border-radius:50%;background:var(--blue);border:none;cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,.45);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:all .2s}
 #chat-btn:hover{transform:scale(1.1);background:var(--blue2)}
 #chat-notification{position:absolute;top:-4px;right:-4px;background:#e74c3c;color:#fff;font-size:.65rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
-#chat-window{position:fixed;bottom:90px;left:24px;width:340px;height:480px;background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.18);display:none;flex-direction:column;z-index:8000;overflow:hidden;border:1px solid var(--gray-l)}
+#chat-window{position:fixed;bottom:90px;right:24px;width:340px;height:480px;background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.18);display:none;flex-direction:column;z-index:8000;overflow:hidden;border:1px solid var(--gray-l)}
 #chat-window.open{display:flex}
 #chat-header{background:var(--navy);padding:1rem 1.25rem;display:flex;align-items:center;gap:.75rem;flex-shrink:0}
 #chat-header .av{width:36px;height:36px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
@@ -1757,7 +1757,7 @@ function renderNav() {
     const disc = getUserDiscount();
     let html = '<div class="user-av">' + ini + '</div>';
     if (disc > 0) html += '<span class="disc-badge">' + Math.round(disc*100) + '% Rabatt</span>';
-    html += '<button class="nav-action" onclick="showPage(\'myorders\');renderMyOrders()" style="background:rgba(255,255,255,.1);color:#fff">📦 Meine Bestellungen</button>';
+    html += '<button class="nav-action" onclick="showPage(\'myorders\');renderMyOrders()" style="background:#f2f1ee;color:#14233f;box-shadow:none">📦 Bestellungen</button>';
     if (currentUser.isAdmin) html += '<button class="nav-action" onclick="showPage(\'admin\')">Dashboard</button>';
     html += '<button class="nav-action" onclick="doLogout()">Abmelden</button>';
     nu.innerHTML = html;
