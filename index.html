@@ -645,7 +645,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
   <div class="nav-right">
     <div class="ex-search">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
-      <input placeholder="Produkt suchen…" id="topbar-search" oninput="doTopSearch(this.value)">
+      <input placeholder="Produkt suchen…" id="topbar-search" type="search" name="produktsuche" autocomplete="off" autocapitalize="off" oninput="doTopSearch(this.value)">
     </div>
     <button class="ex-cart" onclick="showPage('cart')" aria-label="Warenkorb">🛒<span class="ex-cart-badge" id="cart-badge">0</span></button>
     <div id="nav-user" class="ex-user">
@@ -799,10 +799,6 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
     </div>
     <div class="ex-sec-head"><h2>Beliebte Produkte</h2><a onclick="showPage('shop')">Alle ansehen →</a></div>
     <div class="ex-prod-grid" id="home-products"></div>
-    <div class="ex-cta-strip">
-      <div><div class="t">Eigenes Modell drucken?</div><div class="s">STL, OBJ, 3MF oder STEP hochladen — wir melden uns mit einem Angebot.</div></div>
-      <button class="ex-btn-light" onclick="showPage('upload')">Modell hochladen →</button>
-    </div>
   </div>
   <div class="features-wrap" style="padding-top:0">
     <div class="sec-label">Warum Printox?</div>
@@ -861,7 +857,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       <button class="btn-add-prod" id="admin-add-btn" onclick="openProdModal()" style="display:none">+ Produkt hinzufügen</button>
     </div>
     <div style="margin-bottom:1.75rem">
-      <input type="text" id="shop-search" class="shop-search-input" placeholder="🔍 Produkte suchen..." oninput="renderShop()">
+      <input type="search" id="shop-search" name="produktsuche" autocomplete="off" autocapitalize="off" class="shop-search-input" placeholder="🔍 Produkte suchen..." oninput="renderShop()">
     </div>
     <div id="shop-loading" style="display:none;text-align:center;padding:4rem 2rem;color:var(--gray)">
       <div style="display:inline-block;width:36px;height:36px;border:3px solid var(--gray-l);border-top:3px solid var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:1rem"></div>
