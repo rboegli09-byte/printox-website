@@ -2032,27 +2032,7 @@ function renderShop() {
       ? '<span class="dg-price-old">CHF '+p.price.toFixed(2)+'</span><span class="dg-price red">CHF '+(p.price*(1-p.discount/100)).toFixed(2)+'</span>'
       : '<span class="dg-price">CHF '+p.price.toFixed(2)+'</span>';
 
-    const optsHtml = (p.customOptions && p.customOptions.length > 0
-      ? p.customOptions.map(function(opt) {
-          if (!opt.label || !opt.values || !opt.values.length) return '';
-          const selVal = ((selectedOptions[p.id]||{}).custom||{})[opt.label] || opt.values[0];
-          return '<div class="dg-opt-lbl">'+opt.label+'</div>'
-            + '<div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.35rem">'
-            + opt.values.map(function(v) {
-                const sel = selVal === v;
-                return '<button type="button" data-pid="'+p.id+'" data-label="'+opt.label+'" data-val="'+v+'" onclick="event.stopPropagation();handleCustomOptClick(this)" style="padding:.2rem .6rem;border-radius:10px;font-size:.73rem;font-weight:600;border:1.5px solid '+(sel?'#2563eb':'#e2e8f0')+';background:'+(sel?'#2563eb':'#fff')+';color:'+(sel?'#fff':'#475569')+';cursor:pointer;font-family:Inter,sans-serif;transition:all .15s">'+v+'</button>';
-              }).join('')
-            + '</div>';
-        }).join('') : '')
-    + (p.polishPrice > 0
-      ? '<div class="dg-opt-lbl">Oberfläche</div><div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.35rem">'
-        + ['Nicht poliert','Poliert (+CHF '+p.polishPrice.toFixed(2)+')'].map(function(v,i) {
-            const polVal = i===0?'no':'yes';
-            const sel = ((selectedOptions[p.id]||{}).polish||'no') === polVal;
-            return '<button type="button" data-pid="'+p.id+'" data-polval="'+polVal+'" onclick="event.stopPropagation();handlePolishClick(this)" style="padding:.2rem .6rem;border-radius:10px;font-size:.73rem;font-weight:600;border:1.5px solid '+(sel?'#7c3aed':'#e2e8f0')+';background:'+(sel?'#7c3aed':'#fff')+';color:'+(sel?'#fff':'#475569')+';cursor:pointer;font-family:Inter,sans-serif;transition:all .15s">'+v+'</button>';
-          }).join('')
-        + '</div>'
-      : '');
+    const optsHtml = '';
 
     return '<div class="dg-card" onclick="openProductDetail('+p.id+')">'
       + '<div class="dg-card-img">'
