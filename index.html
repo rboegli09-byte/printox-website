@@ -3162,11 +3162,33 @@ function openProductDetail(id) {
     pdmImgCount.style.display = 'none';
   }
 
-  // Colors & Filaments hidden
-  document.getElementById('pdm-color-wrap').style.display = 'none';
+  // Colors
+  const colorWrap = document.getElementById('pdm-color-wrap');
+  const colorCont = document.getElementById('pdm-colors');
   window._pdmColor = null;
-  document.getElementById('pdm-filament-wrap').style.display = 'none';
+  if (p.colors && p.colors.length) {
+    colorCont.innerHTML = p.colors.map(function(c) {
+      return '<button onclick="pdmSelectColor(this,\''+c+'\')" style="padding:.35rem .8rem;border:1.5px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:.85rem;font-weight:500">'+c+'</button>';
+    }).join('');
+    colorWrap.style.display = 'block';
+  } else {
+    colorCont.innerHTML = '';
+    colorWrap.style.display = 'none';
+  }
+
+  // Filaments
+  const filWrap = document.getElementById('pdm-filament-wrap');
+  const filCont = document.getElementById('pdm-filaments');
   window._pdmFilament = null;
+  if (p.filaments && p.filaments.length) {
+    filCont.innerHTML = p.filaments.map(function(f) {
+      return '<button onclick="pdmSelectFilament(this,\''+f+'\')" style="padding:.35rem .8rem;border:1.5px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:.85rem;font-weight:500">'+f+'</button>';
+    }).join('');
+    filWrap.style.display = 'block';
+  } else {
+    filCont.innerHTML = '';
+    filWrap.style.display = 'none';
+  }
 
   window._pdpFrom = document.querySelector('.page.active')?.id?.replace('page-','') || 'shop';
   showPage('product');
