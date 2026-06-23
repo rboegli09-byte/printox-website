@@ -2083,6 +2083,10 @@ function clearShopSearch() {
 function renderHomeProducts() {
   const el = document.getElementById('home-products');
   if (!el) return;
+  if (!(currentUser && currentUser.isAdmin)) {
+    el.innerHTML = '<div style="grid-column:1/-1;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:2.5rem 2rem;text-align:center"><div style="font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:.5rem">Shop im Aufbau</div><p style="color:#64748b;font-size:.9rem;margin:0 0 1.25rem">Wir arbeiten daran, euch bald ein vollständiges Sortiment anbieten zu können.</p><button class="btn-fill" onclick="showPage(\'upload\')">Eigenes Modell hochladen</button></div>';
+    return;
+  }
   const list = products.slice(0, 3);
   if (!list.length) { el.innerHTML = '<div class="empty-st" style="grid-column:1/-1"><div class="ei">🖨️</div><p>Produkte folgen in Kürze.</p></div>'; return; }
   const media = function(p){ const imgs = p.images && p.images.length ? p.images : (p.image ? [p.image] : []); return imgs.length ? '<img src="'+imgs[0]+'" alt="'+(p.name||'')+'">' : '<span class="ic">'+(p.icon||'🖨️')+'</span>'; };
