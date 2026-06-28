@@ -268,17 +268,29 @@ body{padding-left:0}
 /* ── ADMIN ── */
 #page-admin{background:#0a0e1a;color:#fff;background-image:radial-gradient(900px 480px at 82% -12%,rgba(37,99,235,.10),transparent 60%)}
 .admin-wrap{padding:2.5rem 2rem 3rem;max-width:1280px;margin:0 auto;width:100%}
-.admin-head{display:flex;align-items:center;gap:.85rem;margin-bottom:.35rem}
-.admin-title{font-size:1.6rem;font-weight:800;color:#fff;letter-spacing:-.03em}
-.admin-sub{font-size:.9rem;color:rgba(255,255,255,.45);margin-bottom:2rem}
+.adm-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2rem;gap:1rem}
+.adm-title{font-size:1.75rem;font-weight:800;color:#fff;letter-spacing:-.04em;line-height:1.15}
+.adm-sub{font-size:.875rem;color:rgba(255,255,255,.38);margin-top:.3rem}
+.adm-btn{background:var(--blue);color:#fff;border:none;padding:.6rem 1.25rem;border-radius:9px;font-family:Inter,sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;transition:opacity .15s}
+.adm-btn:hover{opacity:.85}
+.adm-sec-head{margin-bottom:1.5rem}
+.adm-sec-title{font-size:1.05rem;font-weight:700;color:#fff;letter-spacing:-.01em}
+.adm-sec-sub{font-size:.82rem;color:rgba(255,255,255,.38);margin-top:.25rem}
+.ord-filter-row{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.ord-ftab{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.5);padding:.55rem 1rem;border-radius:9px;font-family:Inter,sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.45rem;transition:all .15s}
+.ord-ftab.active{background:rgba(37,99,235,.22);border-color:rgba(37,99,235,.45);color:#fff}
+.ord-ftab:hover:not(.active){background:rgba(255,255,255,.1);color:#fff}
+.ord-badge{background:rgba(255,255,255,.13);color:rgba(255,255,255,.75);border-radius:10px;padding:1px 8px;font-size:.75rem}
+.ord-ftab.active .ord-badge{background:rgba(37,99,235,.45);color:#fff}
+.stat-rev-reset{display:block;margin-top:.7rem;background:none;border:none;color:rgba(255,255,255,.28);font-size:.72rem;font-family:Inter,sans-serif;cursor:pointer;padding:0;text-decoration:underline;transition:color .15s;text-align:left}
+.stat-rev-reset:hover{color:rgba(255,255,255,.65)}
 .abadge{background:rgba(239,68,68,.14);color:#fca5a5;font-size:.66rem;padding:4px 10px;border-radius:6px;font-weight:700;letter-spacing:.6px;border:1px solid rgba(239,68,68,.3)}
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:1rem;margin-bottom:2.25rem}
 .stat-card{background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:1.4rem 1.5rem;transition:transform .2s,border-color .2s,background .2s;position:relative;overflow:hidden}
 .stat-card:hover{transform:translateY(-3px);border-color:rgba(37,99,235,.45);background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.03))}
-.stat-top{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem}
-.stat-ic{width:36px;height:36px;border-radius:10px;background:rgba(37,99,235,.16);border:1px solid rgba(37,99,235,.28);display:flex;align-items:center;justify-content:center;font-size:1.05rem;flex-shrink:0}
-.stat-lbl{font-size:.8rem;color:rgba(255,255,255,.55);font-weight:600;letter-spacing:.01em}
-.stat-val{font-size:2.05rem;font-weight:800;color:#fff;letter-spacing:-.04em;line-height:1}
+.stat-top{margin-bottom:.6rem}
+.stat-lbl{font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.38)}
+.stat-val{font-size:2.1rem;font-weight:800;color:#fff;letter-spacing:-.04em;line-height:1.1}
 .a-tabs{display:inline-flex;gap:.25rem;margin-bottom:2rem;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);padding:.3rem;border-radius:12px;flex-wrap:wrap;max-width:100%}
 .a-tab{background:none;border:none;padding:.55rem 1rem;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;color:rgba(255,255,255,.5);border-radius:9px;transition:all .15s;letter-spacing:.01em;white-space:nowrap}
 .a-tab.active{background:var(--blue);color:#fff;box-shadow:0 4px 14px rgba(37,99,235,.4)}
@@ -1166,57 +1178,74 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
 <div class="page" id="page-profile"></div>
   <div class="page" id="page-admin">
   <div class="admin-wrap">
-    <div class="admin-head">
-      <div class="admin-title">Dashboard</div>
+
+    <div class="adm-header">
+      <div>
+        <div class="adm-title">Dashboard</div>
+        <div class="adm-sub">Bestellungen · Produkte · Benutzer</div>
+      </div>
       <span class="abadge">ADMIN</span>
     </div>
-    <div class="admin-sub">Übersicht über Umsatz, Bestellungen, Produkte und Kund:innen</div>
+
     <div class="stats-grid" id="admin-stats"></div>
+
     <div class="a-tabs">
       <button class="a-tab active" onclick="aTab('orders')">Bestellungen</button>
       <button class="a-tab" onclick="aTab('products')">Produkte</button>
       <button class="a-tab" onclick="aTab('users')">Benutzer</button>
-      <button class="a-tab" onclick="aTab('team')">👥 Team</button>
-      <button class="a-tab" onclick="aTab('reviews')">⭐ Bewertungen</button>
-      <button class="a-tab" onclick="aTab('layout')">🎨 Layout</button>
+      <button class="a-tab" onclick="aTab('team')">Team</button>
+      <button class="a-tab" onclick="aTab('reviews')">Bewertungen</button>
+      <button class="a-tab" onclick="aTab('layout')">Layout</button>
     </div>
+
     <div class="a-sec active" id="a-orders">
-      <div style="display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap">
-        <button id="ord-tab-new" onclick="switchOrdTab('new')" style="background:#3b82f6;color:#fff;border:none;padding:.6rem 1.2rem;border-radius:8px;font-family:Inter,sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.4rem">🆕 Neu <span id="ord-count-new" style="background:rgba(255,255,255,.3);border-radius:10px;padding:0 7px;font-size:.8rem">0</span></button>
-        <button id="ord-tab-processing" onclick="switchOrdTab('processing')" style="background:rgba(255,255,255,.15);color:#fff;border:none;padding:.6rem 1.2rem;border-radius:8px;font-family:Inter,sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.4rem">🔄 In Bearbeitung <span id="ord-count-processing" style="background:rgba(255,255,255,.3);border-radius:10px;padding:0 7px;font-size:.8rem">0</span></button>
-        <button id="ord-tab-done" onclick="switchOrdTab('done')" style="background:rgba(255,255,255,.15);color:#fff;border:none;padding:.6rem 1.2rem;border-radius:8px;font-family:Inter,sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.4rem">📦 Versandt <span id="ord-count-done" style="background:rgba(255,255,255,.3);border-radius:10px;padding:0 7px;font-size:.8rem">0</span></button>
+      <div class="ord-filter-row">
+        <button id="ord-tab-new" class="ord-ftab active" onclick="switchOrdTab('new')">
+          Neu <span class="ord-badge" id="ord-count-new">0</span>
+        </button>
+        <button id="ord-tab-processing" class="ord-ftab" onclick="switchOrdTab('processing')">
+          In Bearbeitung <span class="ord-badge" id="ord-count-processing">0</span>
+        </button>
+        <button id="ord-tab-done" class="ord-ftab" onclick="switchOrdTab('done')">
+          Abgeschlossen <span class="ord-badge" id="ord-count-done">0</span>
+        </button>
       </div>
       <div class="o-list" id="orders-list"></div>
     </div>
+
     <div class="a-sec" id="a-products">
-      <div style="margin-bottom:1.25rem"><button class="btn-add-prod" onclick="openProdModal()">+ Produkt hinzufügen</button></div>
+      <div style="margin-bottom:1.25rem">
+        <button class="adm-btn" onclick="openProdModal()">+ Produkt hinzufügen</button>
+      </div>
       <div class="products-grid" id="admin-prod-grid"></div>
     </div>
+
     <div class="a-sec" id="a-users"><div id="users-list"></div></div>
+
     <div class="a-sec" id="a-reviews">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
-        <div>
-          <div style="font-size:1.1rem;font-weight:700;color:#fff">Alle Bewertungen</div>
-          <div id="admin-reviews-count" style="font-size:.82rem;color:rgba(255,255,255,.45);margin-top:.2rem"></div>
-        </div>
+      <div class="adm-sec-head">
+        <div class="adm-sec-title">Bewertungen</div>
+        <div id="admin-reviews-count" class="adm-sec-sub"></div>
       </div>
       <div id="admin-reviews-list"></div>
     </div>
+
     <div class="a-sec" id="a-team">
       <div style="margin-bottom:1.25rem">
-        <button onclick="addTeamMember()" style="background:var(--blue);color:#fff;border:none;padding:.6rem 1.2rem;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif">+ Mitarbeiter hinzufügen</button>
-        <div style="color:#94a3b8;font-size:.8rem;margin-top:.5rem">Änderungen werden automatisch gespeichert.</div>
+        <button class="adm-btn" onclick="addTeamMember()">+ Mitarbeiter hinzufügen</button>
+        <div style="color:rgba(255,255,255,.35);font-size:.8rem;margin-top:.6rem">Änderungen werden automatisch gespeichert.</div>
       </div>
       <div id="team-admin-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem"></div>
     </div>
+
     <div class="a-sec" id="a-layout">
-      <div style="background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);border-radius:14px;padding:2rem;text-align:center;color:#fff">
-        <div style="font-size:2.5rem;margin-bottom:.75rem">🎨</div>
-        <h3 style="margin-bottom:.5rem;font-size:1.1rem">Design-Editor</h3>
-        <p style="color:rgba(255,255,255,.65);font-size:.9rem;margin-bottom:1.25rem">Zugänglich auf jeder Seite über den blauen ✏️-Button unten rechts.</p>
-        <button class="btn-save" onclick="toggleDP()" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer">✏️ Design-Editor öffnen</button>
+      <div style="background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.22);border-radius:14px;padding:2rem">
+        <div class="adm-sec-title">Design-Editor</div>
+        <p style="color:rgba(255,255,255,.5);font-size:.875rem;margin:.5rem 0 1.25rem">Zugänglich auf jeder Seite über den Stift-Button unten rechts.</p>
+        <button class="adm-btn" onclick="toggleDP()">Design-Editor öffnen</button>
       </div>
     </div>
+
   </div>
   <footer><div class="ft-bot" style="max-width:1200px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox Admin · Remo Bögli</span><span>Made in 🇨🇭</span></div></footer>
 </div>
@@ -2466,17 +2495,7 @@ function renderOrdersList() {
   if(cNew) cNew.textContent = nNew;
   if(cProc) cProc.textContent = nProc;
   if(cDone) cDone.textContent = nDone;
-  const statsEl = document.getElementById('admin-stats');
-  if (statsEl) {
-    const _rev = orders.reduce(function(s,o){ return s + (parseFloat(o.total)||0); }, 0);
-    const _kpi = function(ic,val,lbl){ return '<div class="stat-card"><div class="stat-top"><span class="stat-ic">'+ic+'</span><span class="stat-lbl">'+lbl+'</span></div><div class="stat-val">'+val+'</div></div>'; };
-    statsEl.innerHTML =
-        _kpi('💰','CHF '+_rev.toFixed(0),'Umsatz')
-      + _kpi('📦',orders.length,'Bestellungen')
-      + _kpi('🆕',nNew,'Neu')
-      + _kpi('🔄',nProc,'In Bearbeitung')
-      + _kpi('✅',nDone,'Versandt');
-  }
+  _renderAdminStats(nNew, nProc, nDone);
   var filtered = orders.filter(function(o){ return o.status === currentOrdTab; });
   if (!filtered.length) {
     el.innerHTML = '<p style="color:rgba(255,255,255,.5);text-align:center;padding:3rem">Keine Bestellungen hier.</p>';
@@ -2686,16 +2705,27 @@ async function submitOrder(e) {
 }
 
 // ═══ ADMIN ═══════════════════════════════════════════════════════════════════
+function _renderAdminStats(nNew, nProc, nDone) {
+  const el = document.getElementById('admin-stats');
+  if (!el) return;
+  const raw = orders.reduce(function(s,o){ return s + (parseFloat(o.total)||0); }, 0);
+  const rev = Math.max(0, raw - revenueOffset);
+  const kpi = function(val,lbl){ return '<div class="stat-card"><div class="stat-top"><span class="stat-lbl">'+lbl+'</span></div><div class="stat-val">'+val+'</div></div>'; };
+  const kpiRev = '<div class="stat-card"><div class="stat-top"><span class="stat-lbl">Umsatz</span></div><div class="stat-val">CHF '+rev.toFixed(0)+'</div><button class="stat-rev-reset" onclick="resetRevenue()">Auf 0 setzen</button></div>';
+  const nn = nNew !== undefined ? nNew : orders.filter(function(o){return o.status==='new';}).length;
+  const np = nProc !== undefined ? nProc : orders.filter(function(o){return o.status==='processing';}).length;
+  const nd = nDone !== undefined ? nDone : orders.filter(function(o){return o.status==='done';}).length;
+  el.innerHTML = kpiRev
+    + kpi(orders.length, 'Bestellungen')
+    + kpi(nn, 'Neu')
+    + kpi(np, 'In Bearbeitung')
+    + kpi(nd, 'Abgeschlossen')
+    + kpi(products.length, 'Produkte')
+    + kpi(users.length, 'Benutzer');
+}
+
 function renderAdmin() {
-  // Render immediately with current data
-  const _rev = orders.reduce(function(s,o){ return s + (parseFloat(o.total)||0); }, 0);
-  const _kpi = function(ic,val,lbl){ return '<div class="stat-card"><div class="stat-top"><span class="stat-ic">'+ic+'</span><span class="stat-lbl">'+lbl+'</span></div><div class="stat-val">'+val+'</div></div>'; };
-  document.getElementById('admin-stats').innerHTML =
-      _kpi('💰','CHF '+_rev.toFixed(0),'Umsatz')
-    + _kpi('📦',orders.length,'Bestellungen')
-    + _kpi('🆕',orders.filter(o=>o.status==='new').length,'Neue Bestellungen')
-    + _kpi('🖨️',products.length,'Produkte')
-    + _kpi('👤',users.length,'Benutzer');
+  _renderAdminStats();
 
   if (false) document.getElementById('orders-list').innerHTML = orders.length ? orders.map(o => {
     const fs = o.type==='upload'
@@ -2856,9 +2886,18 @@ function switchOrdTab(tab) {
   currentOrdTab = tab;
   ['new','processing','done'].forEach(function(t) {
     var btn = document.getElementById('ord-tab-'+t);
-    if (btn) btn.style.background = (t === tab) ? '#3b82f6' : 'rgba(255,255,255,.15)';
+    if (btn) { btn.style.background = ''; btn.classList.toggle('active', t === tab); }
   });
   renderOrdersList();
+}
+
+let revenueOffset = parseFloat(localStorage.getItem('px_rev_offset') || '0');
+function resetRevenue() {
+  const total = orders.reduce(function(s,o){ return s + (parseFloat(o.total)||0); }, 0);
+  revenueOffset = total;
+  localStorage.setItem('px_rev_offset', String(revenueOffset));
+  _renderAdminStats();
+  toast('Umsatz auf CHF 0 zurückgesetzt');
 }
 
 function aTab(t) {
