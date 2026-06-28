@@ -366,39 +366,17 @@ footer{background:#060e1e;padding:3rem 2rem;margin-top:auto;border-top:1px solid
 .ft-logo{display:flex;align-items:center;gap:8px;margin-bottom:1rem}
 .ft-logo-text{color:#fff;font-weight:800;font-size:.95rem;letter-spacing:2.5px}
 
-/* ── FAB DESIGN EDITOR ── */
-#design-fab{position:fixed;bottom:24px;right:24px;z-index:8000;display:none}
-#design-fab button{display:flex;align-items:center;gap:7px;background:var(--blue);color:#fff;border:none;padding:.65rem 1.2rem;border-radius:50px;font-family:'Inter',sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,.45);transition:all .2s}
-#design-fab button:hover{background:var(--blue2);transform:translateY(-2px)}
-#dp{position:fixed;top:0;right:-410px;width:390px;height:100vh;background:#0d1b2e;border-left:1px solid rgba(255,255,255,.1);z-index:9000;transition:right .3s ease;display:flex;flex-direction:column;box-shadow:-8px 0 32px rgba(0,0,0,.4)}
-#dp.open{right:0}
-#dp-header{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.4rem;border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0}
-#dp-title{font-size:.95rem;font-weight:700;color:#fff}
-#dp-close{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
-#dp-tabs{display:flex;flex-wrap:wrap;gap:3px;padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.2);flex-shrink:0}
-.dp-tab{background:none;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);padding:.3rem .7rem;border-radius:6px;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:500;cursor:pointer;transition:all .15s}
-.dp-tab:hover{color:#fff;border-color:rgba(255,255,255,.3)}
-.dp-tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
-#dp-content{flex:1;overflow-y:auto;padding:1.25rem}
-#dp-content::-webkit-scrollbar{width:4px}
-#dp-content::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:4px}
-.dp-sec{display:none;flex-direction:column;gap:.9rem}
-.dp-sec.active{display:flex}
-.dp-field label{display:block;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem}
-.dp-field input[type=text],.dp-field input[type=email],.dp-field textarea{width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);border-radius:8px;padding:.6rem .85rem;color:#fff;font-family:'Inter',sans-serif;font-size:.875rem;outline:none;transition:border .15s}
-.dp-field input:focus,.dp-field textarea:focus{border-color:var(--blue)}
-.dp-field textarea{resize:vertical;min-height:65px}
-.dp-field input::placeholder,.dp-field textarea::placeholder{color:rgba(255,255,255,.25)}
-.dp-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
-.dp-color-row{display:flex;align-items:center;gap:.75rem}
-.dp-color-row input[type=color]{width:46px;height:38px;border:none;border-radius:8px;cursor:pointer;padding:2px;background:none;flex-shrink:0}
-.dp-color-row input[type=text]{flex:1}
-.dp-save-btn{background:var(--blue);color:#fff;border:none;padding:.65rem;border-radius:8px;font-family:'Inter',sans-serif;font-weight:600;font-size:.875rem;cursor:pointer;width:100%;margin-top:.25rem;transition:background .15s}
-.dp-save-btn:hover{background:var(--blue2)}
-.dp-feat-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.85rem;display:flex;flex-direction:column;gap:.6rem}
-.dp-feat-lbl{font-size:.7rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.05em}
-.dp-upload-zone{border:2px dashed rgba(255,255,255,.2);border-radius:10px;padding:1.5rem;text-align:center;cursor:pointer;color:rgba(255,255,255,.45);font-size:.875rem;transition:all .2s}
-.dp-upload-zone:hover{border-color:var(--blue);color:#fff;background:rgba(37,99,235,.08)}
+/* ── TEXT EDITOR (Admin) ── */
+.te-group{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:1.5rem;margin-bottom:1.25rem}
+.te-group-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:1rem}
+.te-field{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.75rem}
+.te-lbl{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.04em}
+.te-in{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.1);border-radius:8px;padding:.6rem .85rem;color:#fff;font-family:Inter,sans-serif;font-size:.875rem;outline:none;transition:border .15s;width:100%;box-sizing:border-box}
+.te-in:focus{border-color:var(--blue)}
+.te-in::placeholder{color:rgba(255,255,255,.2)}
+textarea.te-in{resize:vertical}
+.te-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.te-feat-block{background:rgba(255,255,255,.03);border-radius:9px;padding:1rem;margin-bottom:.75rem}
 
 /* ── CHATBOT ── */
 #chat-bubble{position:fixed;bottom:24px;right:24px;z-index:8000}
@@ -1195,7 +1173,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       <button class="a-tab" onclick="aTab('users')">Benutzer</button>
       <button class="a-tab" onclick="aTab('team')">Team</button>
       <button class="a-tab" onclick="aTab('reviews')">Bewertungen</button>
-      <button class="a-tab" onclick="aTab('layout')">Layout</button>
+      <button class="a-tab" onclick="aTab('texte')">Texte</button>
     </div>
 
     <div class="a-sec active" id="a-orders">
@@ -1238,13 +1216,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       <div id="team-admin-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem"></div>
     </div>
 
-    <div class="a-sec" id="a-layout">
-      <div style="background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.22);border-radius:14px;padding:2rem">
-        <div class="adm-sec-title">Design-Editor</div>
-        <p style="color:rgba(255,255,255,.5);font-size:.875rem;margin:.5rem 0 1.25rem">Zugänglich auf jeder Seite über den Stift-Button unten rechts.</p>
-        <button class="adm-btn" onclick="toggleDP()">Design-Editor öffnen</button>
-      </div>
-    </div>
+    <div class="a-sec" id="a-texte"></div>
 
   </div>
   <footer><div class="ft-bot" style="max-width:1200px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox Admin · Remo Bögli</span><span>Made in 🇨🇭</span></div></footer>
@@ -1666,65 +1638,6 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
   </div>
 </div>
 
-<!-- FAB + DESIGN PANEL -->
-<div id="design-fab">
-  <button onclick="toggleDP()">✏️ Design</button>
-</div>
-
-<div id="dp">
-  <div id="dp-header">
-    <span id="dp-title">🎨 Design bearbeiten</span>
-    <button id="dp-close" onclick="toggleDP()">✕</button>
-  </div>
-  <div id="dp-tabs">
-    <button class="dp-tab active" onclick="dpTab('hero')">Hero</button>
-    <button class="dp-tab" onclick="dpTab('features')">Features</button>
-    <button class="dp-tab" onclick="dpTab('cta')">CTA</button>
-    <button class="dp-tab" onclick="dpTab('contact')">Kontakt</button>
-    <button class="dp-tab" onclick="dpTab('footer')">Footer</button>
-    <button class="dp-tab" onclick="dpTab('colors')">Farben</button>
-  </div>
-  <div id="dp-content">
-    <div class="dp-sec active" id="dps-hero">
-      <div class="dp-field"><label>Titel Zeile 1</label><input type="text" id="dp-h1" oninput="liveHero()"></div>
-      <div class="dp-field"><label>Titel Zeile 2 (blau)</label><input type="text" id="dp-h2" oninput="liveHero()"></div>
-      <div class="dp-field"><label>Untertitel</label><textarea id="dp-hsub" oninput="liveHero()"></textarea></div>
-      <div class="dp-row">
-        <div class="dp-field"><label>Button 1</label><input type="text" id="dp-hb1" oninput="liveHero()"></div>
-        <div class="dp-field"><label>Button 2</label><input type="text" id="dp-hb2" oninput="liveHero()"></div>
-      </div>
-      <button class="dp-save-btn" onclick="saveHero()">✓ Speichern</button>
-    </div>
-    <div class="dp-sec" id="dps-features">
-      <div id="dp-feat-list"></div>
-      <button class="dp-save-btn" onclick="saveFeats()">✓ Speichern</button>
-    </div>
-    <div class="dp-sec" id="dps-cta">
-      <div class="dp-field"><label>Überschrift</label><input type="text" id="dp-ctah" oninput="liveCTA()"></div>
-      <div class="dp-field"><label>Untertitel</label><input type="text" id="dp-ctap" oninput="liveCTA()"></div>
-      <div class="dp-field"><label>Button Text</label><input type="text" id="dp-ctab" oninput="liveCTA()"></div>
-      <button class="dp-save-btn" onclick="saveCTA()">✓ Speichern</button>
-    </div>
-    <div class="dp-sec" id="dps-contact">
-      <div class="dp-field"><label>E-Mail</label><input type="email" id="dp-cemail"></div>
-      <div class="dp-field"><label>Telefon / TWINT</label><input type="text" id="dp-cphone"></div>
-      <div class="dp-field"><label>Öffnungszeiten</label><textarea id="dp-chours" style="min-height:80px"></textarea></div>
-      <div class="dp-field"><label>Lieferung</label><input type="text" id="dp-cship"></div>
-      <button class="dp-save-btn" onclick="saveContact()">✓ Speichern</button>
-    </div>
-    <div class="dp-sec" id="dps-footer">
-      <div class="dp-field"><label>Beschreibung</label><input type="text" id="dp-fdesc"></div>
-      <div class="dp-field"><label>Copyright</label><input type="text" id="dp-fcopy"></div>
-      <button class="dp-save-btn" onclick="saveFooter()">✓ Speichern</button>
-    </div>
-    <div class="dp-sec" id="dps-colors">
-      <div class="dp-field"><label>Navigationsleiste</label><div class="dp-color-row"><input type="color" id="dp-cnav" value="#0d1b2e" oninput="syncHex('cnav');liveColors()"><input type="text" id="dp-cnav-h" value="#0d1b2e" oninput="syncPick('cnav');liveColors()"></div></div>
-      <div class="dp-field"><label>Akzentfarbe (Blau)</label><div class="dp-color-row"><input type="color" id="dp-cblue" value="#2563eb" oninput="syncHex('cblue');liveColors()"><input type="text" id="dp-cblue-h" value="#2563eb" oninput="syncPick('cblue');liveColors()"></div></div>
-      <div class="dp-field"><label>Hintergrund</label><div class="dp-color-row"><input type="color" id="dp-cbg" value="#0f2040" oninput="syncHex('cbg');liveColors()"><input type="text" id="dp-cbg-h" value="#0f2040" oninput="syncPick('cbg');liveColors()"></div></div>
-      <button class="dp-save-btn" onclick="saveColors()">✓ Farben anwenden</button>
-    </div>
-  </div>
-</div>
 
 <!-- CHATBOT -->
 <div id="chat-bubble">
@@ -1769,7 +1682,6 @@ let selFile = null;
 let selFileData = null;
 let nProdId = 10;
 let nOrdId = 100;
-let dpOpen = false;
 let selDelivery = 'ship';
 let selectedOptions = {};
 let pendingStatuses = {}; // {supabaseId: {status, timestamp}} // {productId: {color, filament}}
@@ -2905,6 +2817,7 @@ function aTab(t) {
   document.querySelectorAll('.a-sec').forEach(s=>s.classList.remove('active'));
   document.querySelector('.a-tab[onclick="aTab(\''+t+'\')"]').classList.add('active');
   document.getElementById('a-'+t).classList.add('active');
+  if (t === 'texte') renderTexteTab();
   if (t === 'team') renderTeamAdmin();
   if (t === 'reviews') loadAndRenderAdminReviews();
 }
@@ -3668,111 +3581,91 @@ function renderAdminProdGrid() {
 
 // ═══ CONTACT (handled below) ═════════════════════════════════════════════════
 
-// ═══ DESIGN PANEL ════════════════════════════════════════════════════════════
+// ═══ TEXT EDITOR ═════════════════════════════════════════════════════════════
 let sc = {
-  hero:{h1:'Professioneller',h2:'3D-Druck-Service',sub:'Hochwertige 3D-Drucke nach Ihren Wünschen. Laden Sie Ihr Modell hoch und wir drucken es für Sie.',b1:'Shop ansehen',b2:'Modell hochladen'},
+  hero:{sub:'Modell hochladen, Angebot erhalten, fertig. Vom Prototyp bis zur Kleinserie.'},
   feats:[
-    {icon:'⚡',title:'Schnelle Lieferung',text:'Innerhalb von 7–9 Werktagen geliefert.'},
-    {icon:'🎯',title:'Hochpräzision',text:'Druckauflösung bis zu 0.1 mm für exakte Ergebnisse.'},
-    {icon:'🔧',title:'Alle Materialien',text:'PLA, PETG, ABS, TPU und weitere auf Anfrage.'},
-    {icon:'💬',title:'Persönlicher Support',text:'Beratung direkt per Telefon oder E-Mail.'},
+    {title:'Schnelle Lieferung',text:'Innerhalb von 7–9 Werktagen geliefert.'},
+    {title:'Hochpräzision',text:'Druckauflösung bis zu 0.1 mm für exakte Ergebnisse.'},
+    {title:'Alle Materialien',text:'PLA, PETG, ABS, TPU und weitere auf Anfrage.'},
+    {title:'Persönlicher Support',text:'Beratung direkt per Telefon oder E-Mail.'},
   ],
-  cta:{h:'Bereit für Ihr Projekt?',p:'Laden Sie Ihr 3D-Modell hoch und erhalten Sie ein Angebot.',b:'Jetzt Bestellung starten'},
   contact:{email:'printox26@outlook.com',phone:'077 496 28 38',hours:'Mi: 17:00–19:00\nFr: 17:00–20:00\nSa–So: 16:00–20:00',ship:'Schweizweit per Post'},
-  footer:{desc:'3D-Druck-Service aus der Schweiz.',copy:'© 2026 Printox'},
-  colors:{nav:'#0d1b2e',blue:'#2563eb',bg:'#0f2040'}
+  footer:{desc:'3D-Druck-Service aus der Schweiz.'}
 };
 
-function toggleDP(){dpOpen=!dpOpen;document.getElementById('dp').classList.toggle('open',dpOpen);if(dpOpen)dpFillAll();}
-function dpTab(t){document.querySelectorAll('.dp-tab').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.dp-sec').forEach(s=>s.classList.remove('active'));document.querySelector('.dp-tab[onclick="dpTab(\''+t+'\')"]').classList.add('active');document.getElementById('dps-'+t).classList.add('active');}
-function dpFillAll(){
-  const h=sc.hero;
-  document.getElementById('dp-h1').value=h.h1;
-  document.getElementById('dp-h2').value=h.h2;
-  document.getElementById('dp-hsub').value=h.sub;
-  document.getElementById('dp-hb1').value=h.b1;
-  document.getElementById('dp-hb2').value=h.b2;
-  const c=sc.cta;
-  document.getElementById('dp-ctah').value=c.h;
-  document.getElementById('dp-ctap').value=c.p;
-  document.getElementById('dp-ctab').value=c.b;
-  const ct=sc.contact;
-  document.getElementById('dp-cemail').value=ct.email;
-  document.getElementById('dp-cphone').value=ct.phone;
-  document.getElementById('dp-chours').value=ct.hours;
-  document.getElementById('dp-cship').value=ct.ship;
-  const f=sc.footer;
-  document.getElementById('dp-fdesc').value=f.desc;
-  document.getElementById('dp-fcopy').value=f.copy;
-  dpFillFeats();
+function loadSc() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('px_sc') || '{}');
+    if (saved.hero) Object.assign(sc.hero, saved.hero);
+    if (saved.contact) Object.assign(sc.contact, saved.contact);
+    if (saved.footer) Object.assign(sc.footer, saved.footer);
+    if (saved.feats && saved.feats.length) sc.feats = saved.feats;
+  } catch(e) {}
+  applyScToPage();
 }
-function liveHero(){
-  const h1=document.getElementById('dp-h1').value;
-  const h2=document.getElementById('dp-h2').value;
-  const el=document.querySelector('#page-home .hero h1');
-  if(el) el.innerHTML=h1+'<br><span>'+h2+'</span>';
-  const p=document.querySelector('#page-home .hero p');
-  if(p) p.textContent=document.getElementById('dp-hsub').value;
-  const btns=document.querySelectorAll('#page-home .hero-btns button');
-  if(btns[0]) btns[0].textContent=document.getElementById('dp-hb1').value;
-  if(btns[1]) btns[1].textContent=document.getElementById('dp-hb2').value;
+
+function saveSc() {
+  localStorage.setItem('px_sc', JSON.stringify({hero:sc.hero, contact:sc.contact, footer:sc.footer, feats:sc.feats}));
 }
-function saveHero(){sc.hero={h1:document.getElementById('dp-h1').value,h2:document.getElementById('dp-h2').value,sub:document.getElementById('dp-hsub').value,b1:document.getElementById('dp-hb1').value,b2:document.getElementById('dp-hb2').value};liveHero();toast('Hero gespeichert ✓');}
-function dpFillFeats(){
-  document.getElementById('dp-feat-list').innerHTML=sc.feats.map((f,i)=>
-    '<div class="dp-feat-card"><div class="dp-feat-lbl">Karte '+(i+1)+'</div>'
-    +'<div class="dp-row"><div class="dp-field"><label>Icon</label><input type="text" id="dpf-icon-'+i+'" value="'+f.icon+'" maxlength="4" oninput="liveFeat('+i+')"></div>'
-    +'<div class="dp-field"><label>Titel</label><input type="text" id="dpf-title-'+i+'" value="'+f.title+'" oninput="liveFeat('+i+')"></div></div>'
-    +'<div class="dp-field"><label>Text</label><input type="text" id="dpf-text-'+i+'" value="'+f.text+'" oninput="liveFeat('+i+')"></div></div>'
-  ).join('');
+
+function applyScToPage() {
+  document.querySelectorAll('#page-home .hero p, .ex-hero-in p').forEach(function(el){ el.textContent = sc.hero.sub; });
+  const cards = document.querySelectorAll('#page-home .feat-card');
+  sc.feats.forEach(function(f, i) {
+    if (!cards[i]) return;
+    const h3 = cards[i].querySelector('h3'); if (h3) h3.textContent = f.title;
+    const p  = cards[i].querySelector('p');  if (p)  p.textContent  = f.text;
+  });
+  const ftEmail = document.getElementById('ft-email'); if (ftEmail) ftEmail.textContent = sc.contact.email;
+  const ftPhone = document.getElementById('ft-phone'); if (ftPhone) ftPhone.textContent = sc.contact.phone;
+  const ftDesc  = document.getElementById('ft-desc');  if (ftDesc)  ftDesc.textContent  = sc.footer.desc;
+  const conCards = document.querySelectorAll('#page-contact .con-card p');
+  if (conCards[0]) conCards[0].textContent = sc.contact.email;
+  if (conCards[1]) conCards[1].textContent = sc.contact.phone;
+  if (conCards[2]) conCards[2].innerHTML   = sc.contact.hours.replace(/\n/g,'<br>');
+  if (conCards[3]) conCards[3].textContent = sc.contact.ship;
 }
-function liveFeat(i){
-  const cards=document.querySelectorAll('#page-home .feat-card');
-  if(!cards[i])return;
-  cards[i].querySelector('.feat-icon').textContent=document.getElementById('dpf-icon-'+i).value;
-  cards[i].querySelector('h3').textContent=document.getElementById('dpf-title-'+i).value;
-  cards[i].querySelector('p').textContent=document.getElementById('dpf-text-'+i).value;
+
+function teUpdate(field, value) {
+  if      (field === 'hero-sub')       sc.hero.sub          = value;
+  else if (field === 'contact-email')  sc.contact.email     = value;
+  else if (field === 'contact-phone')  sc.contact.phone     = value;
+  else if (field === 'contact-hours')  sc.contact.hours     = value;
+  else if (field === 'contact-ship')   sc.contact.ship      = value;
+  else if (field === 'footer-desc')    sc.footer.desc       = value;
+  else if (field.startsWith('feat-title-')) { var i=parseInt(field.split('-')[2]); if(sc.feats[i]) sc.feats[i].title=value; }
+  else if (field.startsWith('feat-text-'))  { var i=parseInt(field.split('-')[2]); if(sc.feats[i]) sc.feats[i].text =value; }
+  applyScToPage();
+  saveSc();
+  var ind = document.getElementById('te-saved-ind');
+  if (ind) { ind.style.opacity='1'; clearTimeout(window._teST); window._teST=setTimeout(function(){ ind.style.opacity='0'; },1800); }
 }
-function saveFeats(){sc.feats=sc.feats.map((f,i)=>({icon:document.getElementById('dpf-icon-'+i)?.value||f.icon,title:document.getElementById('dpf-title-'+i)?.value||f.title,text:document.getElementById('dpf-text-'+i)?.value||f.text}));toast('Features gespeichert ✓');}
-function liveCTA(){
-  const b=document.querySelector('#page-home .cta-band');if(!b)return;
-  b.querySelector('h2').textContent=document.getElementById('dp-ctah').value;
-  b.querySelector('p').textContent=document.getElementById('dp-ctap').value;
-  b.querySelector('button').textContent=document.getElementById('dp-ctab').value;
+
+function renderTexteTab() {
+  const el = document.getElementById('a-texte'); if (!el) return;
+  let h = '<div style="font-size:.8rem;color:rgba(255,255,255,.35);margin-bottom:1.5rem">Änderungen werden sofort gespeichert. <span id="te-saved-ind" style="color:#10b981;opacity:0;transition:opacity .3s;font-weight:600">Gespeichert</span></div>';
+  h += '<div class="te-group"><div class="te-group-title">Hero</div>';
+  h += '<div class="te-field"><label class="te-lbl">Untertitel</label><textarea class="te-in" rows="2" oninput="teUpdate(\'hero-sub\',this.value)">' + esc(sc.hero.sub) + '</textarea></div></div>';
+  h += '<div class="te-group"><div class="te-group-title">Feature-Karten</div>';
+  sc.feats.forEach(function(f, i) {
+    h += '<div class="te-feat-block"><div style="font-size:.7rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem">Karte '+(i+1)+'</div>';
+    h += '<div class="te-row">';
+    h += '<div class="te-field"><label class="te-lbl">Titel</label><input class="te-in" type="text" value="'+esc(f.title)+'" oninput="teUpdate(\'feat-title-'+i+'\',this.value)"></div>';
+    h += '<div class="te-field"><label class="te-lbl">Beschreibung</label><input class="te-in" type="text" value="'+esc(f.text)+'" oninput="teUpdate(\'feat-text-'+i+'\',this.value)"></div>';
+    h += '</div></div>';
+  });
+  h += '</div>';
+  h += '<div class="te-group"><div class="te-group-title">Kontakt</div>';
+  h += '<div class="te-row"><div class="te-field"><label class="te-lbl">E-Mail</label><input class="te-in" type="email" value="'+esc(sc.contact.email)+'" oninput="teUpdate(\'contact-email\',this.value)"></div>';
+  h += '<div class="te-field"><label class="te-lbl">Telefon</label><input class="te-in" type="text" value="'+esc(sc.contact.phone)+'" oninput="teUpdate(\'contact-phone\',this.value)"></div></div>';
+  h += '<div class="te-row"><div class="te-field"><label class="te-lbl">Öffnungszeiten</label><textarea class="te-in" rows="3" oninput="teUpdate(\'contact-hours\',this.value)">'+esc(sc.contact.hours)+'</textarea></div>';
+  h += '<div class="te-field"><label class="te-lbl">Lieferinfo</label><input class="te-in" type="text" value="'+esc(sc.contact.ship)+'" oninput="teUpdate(\'contact-ship\',this.value)"></div></div></div>';
+  h += '<div class="te-group"><div class="te-group-title">Footer</div>';
+  h += '<div class="te-field"><label class="te-lbl">Beschreibung</label><input class="te-in" type="text" value="'+esc(sc.footer.desc)+'" oninput="teUpdate(\'footer-desc\',this.value)"></div></div>';
+  el.innerHTML = h;
 }
-function saveCTA(){sc.cta={h:document.getElementById('dp-ctah').value,p:document.getElementById('dp-ctap').value,b:document.getElementById('dp-ctab').value};liveCTA();toast('CTA gespeichert ✓');}
-function saveContact(){
-  sc.contact={email:document.getElementById('dp-cemail').value,phone:document.getElementById('dp-cphone').value,hours:document.getElementById('dp-chours').value,ship:document.getElementById('dp-cship').value};
-  document.getElementById('ft-email').textContent=sc.contact.email;
-  document.getElementById('ft-phone').textContent=sc.contact.phone;
-  const cards=document.querySelectorAll('#page-contact .con-card p');
-  if(cards[0])cards[0].textContent=sc.contact.email;
-  if(cards[1])cards[1].textContent=sc.contact.phone;
-  if(cards[2])cards[2].innerHTML=sc.contact.hours.replace(/\n/g,'<br>');
-  if(cards[3])cards[3].textContent=sc.contact.ship;
-  toast('Kontakt gespeichert ✓');
-}
-function saveFooter(){
-  sc.footer={desc:document.getElementById('dp-fdesc').value,copy:document.getElementById('dp-fcopy').value};
-  const fd=document.getElementById('ft-desc');if(fd)fd.textContent=sc.footer.desc;
-  const fc=document.getElementById('ft-copy');if(fc)fc.textContent=sc.footer.copy;
-  toast('Footer gespeichert ✓');
-}
-function syncHex(id){const p=document.getElementById('dp-c'+id);const h=document.getElementById('dp-c'+id+'-h');if(p&&h)h.value=p.value;}
-function syncPick(id){const h=document.getElementById('dp-c'+id+'-h');const p=document.getElementById('dp-c'+id);if(h&&p&&/^#[0-9a-f]{6}$/i.test(h.value))p.value=h.value;}
-function liveColors(){
-  const nav=document.getElementById('dp-cnav-h').value;
-  const blue=document.getElementById('dp-cblue-h').value;
-  const bg=document.getElementById('dp-cbg-h').value;
-  const r=document.documentElement;
-  if(/^#[0-9a-f]{6}$/i.test(nav))r.style.setProperty('--nav',nav);
-  if(/^#[0-9a-f]{6}$/i.test(blue)){r.style.setProperty('--blue',blue);r.style.setProperty('--blue2',blue);}
-  if(/^#[0-9a-f]{6}$/i.test(bg)){
-    const hero=document.querySelector('#page-home .hero');
-    if(hero)hero.style.background='linear-gradient(150deg,'+bg+' 0%,'+bg+' 50%,'+bg+' 100%)';
-  }
-}
-function saveColors(){sc.colors={nav:document.getElementById('dp-cnav-h').value,blue:document.getElementById('dp-cblue-h').value,bg:document.getElementById('dp-cbg-h').value};liveColors();toast('Farben gespeichert ✓');}
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 
 async function handleStripeReturn() {
@@ -4352,6 +4245,7 @@ window.addEventListener('scroll', function() {
 
 // ═══ INIT ════════════════════════════════════════════════════════════════════
 emailjs.init("QLPGP9zFVb-4wzfiU");
+loadSc();
 renderNav();
 renderShop();
 handleStripeReturn();
