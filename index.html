@@ -3860,120 +3860,324 @@ function addChatMessage(type, text) {
 function getBotReply(msg) {
   const q = msg.toLowerCase();
 
-  // Gruss
-  if (q.match(/^(hallo|hi|hey|guten tag|grüezi|servus|ciao|hoi|guten morgen|guten abend|moin)[\s!?.]*$/)) {
-    return 'Hallo! 👋 Schön dass Sie da sind! Ich bin der Printox-Assistent und beantworte gerne Ihre Fragen zu 3D-Druck, Produkten, Preisen und mehr!';
-  }
-  // Danke
-  if (q.match(/danke|merci|thank|super|toll|perfekt|top/)) {
-    return 'Sehr gerne! 😊 Kann ich noch sonst etwas für Sie tun?';
-  }
-  // Lieferzeit
-  if (q.match(/lieferzeit|lieferung|wie lang|wann kommt|dauert|werktage|schnell|express/)) {
-    return 'Die Lieferzeit beträgt 7–9 Werktage nach Zahlungseingang. Expresslieferung ist leider nicht möglich. Alternativ: kostenlose Selbstabholung zu den Öffnungszeiten! 📦';
-  }
-  // Versand
-  if (q.match(/versand|versandkosten|porto|lieferkosten|gratis versand/)) {
-    return 'Versandkosten: CHF 6.90–18.90 je nach Grösse. Ab CHF 100 Bestellwert ist der Versand komplett gratis! Selbstabholung ist immer kostenlos. 🚚';
-  }
-  // Preis allgemein
-  if (q.match(/preis|kosten|chf|teuer|günstig|wie viel|was kostet|kosten|angebot/)) {
-    return 'Unsere Preise: Würfelhalter CHF 14.90, Handyständer CHF 19.90, Logo-Keychain CHF 8.50, Organizer-Box CHF 24.90. Individuelle Drucke: Preis auf Anfrage. 💰';
-  }
-  // PLA
-  if (q.match(/pla|polylactid/)) {
-    return 'PLA ist unser Standardmaterial – biologisch abbaubar, günstig, viele Farben, ideal für Dekor und Alltagsgegenstände. Nicht hitzebeständig über 60°C. 🌱';
-  }
-  // PETG
-  if (q.match(/petg/)) {
-    return 'PETG ist robuster als PLA, leicht flexibel und feuchtigkeitsbeständig. Ideal für funktionale Teile die etwas aushalten müssen. Bis ca. 80°C beständig. 💪';
-  }
-  // ABS
-  if (q.match(/abs|acrylnitril/)) {
-    return 'ABS ist hitzebeständig bis ca. 100°C und sehr robust. Ideal für technische Teile. Braucht ein geschlossenes Gehäuse beim Drucken – haben wir mit dem P2S! 🔥';
-  }
-  // TPU
-  if (q.match(/tpu|flexibel|gummi|weich/)) {
-    return 'TPU ist unser flexibles Material – gummiartig, stossdämpfend, ideal für Handyhüllen, Dichtungen oder alles was biegen muss. 🤸';
-  }
-  // Materialien allgemein
-  if (q.match(/material|filament|kunststoff|welche material/)) {
-    return 'Wir drucken mit: PLA (Standard), PETG (robust), ABS (hitzebeständig) und TPU (flexibel). Bei Aufträgen können Sie das Material selbst wählen! 🔧';
-  }
-  // Drucker / P2S
-  if (q.match(/drucker|bambu|p2s|p1s|maschine|welcher drucker|3d drucker/)) {
-    return 'Wir drucken mit dem Bambu Lab P2S – einem der schnellsten und präzisesten Consumer-Drucker der Welt. Geschlossenes Gehäuse, Hochgeschwindigkeit, bis 0.1mm Auflösung! 🚀';
-  }
-  // Druckqualität
-  if (q.match(/qualität|auflösung|präzision|genau|schicht|schichthöhe|detail/)) {
-    return 'Unser Bambu Lab P2S druckt mit bis zu 0.1mm Schichthöhe für sehr feine Details. Standard ist 0.2mm für gute Balance zwischen Qualität und Geschwindigkeit. 🎯';
-  }
-  // Druckgrösse
-  if (q.match(/grösse|größe|maximal|druckvolumen|wie gross|format|abmessung/)) {
-    return 'Das maximale Druckvolumen des Bambu Lab P2S beträgt 256 x 256 x 256mm. Grössere Objekte können mehrteilig gedruckt und zusammengesetzt werden! 📐';
-  }
-  // Kontakt
-  if (q.match(/kontakt|telefon|email|erreich|anruf|melden|schreiben/)) {
-    return 'Kontakt: 📧 printox26@outlook.com · 📱 077 496 28 38. Wir antworten in der Regel innerhalb von 24 Stunden! 😊';
-  }
-  // Öffnungszeiten / Abholung
-  if (q.match(/öffnungszeit|offen|abholung|abholen|zeiten|besuchen|vorbeikommen/)) {
-    return 'Selbstabholung möglich: Mi 17–19h · Fr 17–20h · Sa–So 16–20h. Die Abholadresse teilen wir dir nach deiner Bestellung mit. Kostenlos! 🏠';
-  }
-  // Zahlung
-  if (q.match(/zahlung|bezahlen|twint|kreditkarte|debitkarte|visa|mastercard|stripe|wie bezahl/)) {
-    return 'Zahlung möglich mit: Kreditkarte, Debitkarte (Visa/Mastercard via Stripe). TWINT ist in Kürze verfügbar! Zahlung erfolgt sicher und verschlüsselt. 💳';
-  }
-  // Upload / eigenes Modell
-  if (q.match(/eigene|modell|stl|obj|3mf|step|datei|hochladen|upload|design|eigens|individuell|custom|wunsch/)) {
-    return 'Eigene Modelle: Einfach unter "Upload" Ihre STL/OBJ/3MF/STEP-Datei hochladen, Material und Farbe wählen und absenden. Wir melden uns mit einem Angebot! 📁';
-  }
-  // Farben
-  if (q.match(/farbe|farben|schwarz|weiss|grau|rot|blau|grün|gelb|orange|bunt|welche farbe/)) {
-    return 'Verfügbare Farben: Schwarz, Weiss, Grau, Rot, Blau, Grün, Gelb und mehr – je nach Material. Bei Aufträgen gewünschte Farbe einfach angeben! 🎨';
-  }
-  // Produkte im Shop
-  if (q.match(/produkt|shop|angebot|artikel|kaufen|was gibt es|sortiment/)) {
-    return 'Im Shop: Würfelhalter, Handyständer, Logo-Keychain, Organizer-Box. Plus individuelle Aufträge über Upload! Alle mit Farb- und Filamentauswahl. 🛒';
-  }
-  // Rabatt / Gratis
-  if (q.match(/rabatt|gutschein|discount|sparen|günstiger|gratis|kostenlos/)) {
-    return 'Gratis Versand ab CHF 100! Mitarbeiter und Freunde erhalten persönliche Rabatte. Selbstabholung ist immer kostenlos. 🎁';
-  }
-  // Was ist Printox
-  if (q.match(/was ist printox|wer seid ihr|über euch|über uns|info|information/)) {
-    return 'Printox ist ein 3D-Druck-Service aus dem Kanton Aargau (Schweiz), betrieben von Remo Bögli. Wir drucken schnell, präzise und günstig mit dem Bambu Lab P2S! 🇨🇭';
-  }
-  // Garantie / Reklamation
-  if (q.match(/garantie|reklamation|defekt|kaputt|falsch|fehler|rückgabe|zurückgeben/)) {
-    return 'Bei Mängeln die auf unseren Fehler zurückzuführen sind, ersetzen wir das Produkt kostenlos! Mängel bitte innerhalb von 14 Tagen melden. 🛡️';
-  }
-  // Wie funktioniert 3D Druck
-  if (q.match(/wie funktioniert|wie geht|was ist 3d druck|fdm|fff|schmelz/)) {
-    return 'FDM-3D-Druck: Kunststoff-Filament wird erhitzt und Schicht für Schicht aufgetragen. Wie ein sehr präziser Heisskleber! Das Ergebnis ist ein festes 3D-Objekt. Wir nutzen den Bambu Lab P2S für maximale Präzision. 🖨️';
-  }
-  // Nachhaltigkeit
-  if (q.match(/nachhaltig|umwelt|bio|recycl|ökolog|green/)) {
-    return 'PLA ist biologisch abbaubar und aus nachwachsenden Rohstoffen. Wir produzieren auf Bestellung – kein Lager, kein Überschuss. So vermeiden wir Abfall! 🌱';
-  }
-  // Schweiz
-  if (q.match(/schweiz|swiss|aargau|rupperswil|wo seid|standort|wo sind/)) {
-    return 'Wir sind im Kanton Aargau, Schweiz. Lieferung schweizweit per Post. Selbstabholung möglich – die Adresse teilen wir nach der Bestellung mit. 🇨🇭';
-  }
-  // Mehrfarbig / Multicolor
-  if (q.match(/mehrfarbig|multicolor|zwei farben|verschiedene farben|bunt/)) {
-    return 'Mehrfarbige Drucke sind möglich! Der Bambu Lab P2S unterstützt Multi-Material-Druck. Für mehrfarbige Aufträge einfach über Upload anfragen und Ihre Wünsche angeben. 🌈';
-  }
-  // Prototyp
-  if (q.match(/prototyp|prototype|rapid|entwicklung|ingenieur|technik/)) {
-    return 'Prototypen sind eine unserer Stärken! Laden Sie Ihre CAD-Datei hoch (STL/STEP) und wir drucken Ihren Prototyp in wenigen Tagen. Ideal für Produktentwicklung! ⚙️';
-  }
-  // Ersatzteile
-  if (q.match(/ersatzteil|reparatur|spare|part|defekt|kaputt/)) {
-    return 'Ersatzteile drucken ist möglich! Laden Sie die STL-Datei hoch oder beschreiben Sie das Teil im Auftragsformular. Manchmal können wir auch ohne Datei helfen! 🔩';
-  }
-  // Standard Antwort
-  return 'Interessante Frage! Für weitere Details kontaktieren Sie uns gerne: 📧 printox26@outlook.com · 📱 077 496 28 38. Wir helfen schnell und unkompliziert! 😊';
+  // ── Begrüssung ──────────────────────────────────────────────────────────────
+  if (q.match(/^(hallo|hi|hey|guten tag|grüezi|servus|ciao|hoi|guten morgen|guten abend|moin|salü|sali|tschüss|tschau|auf wiedersehen|bis bald)[\s!?.]*$/))
+    return 'Hallo! Schön dass du da bist. Ich bin der Printox-Assistent und beantworte gerne deine Fragen rund um unsere Website, den Shop und den 3D-Druck-Service!';
+  if (q.match(/danke|merci|thank|super|toll|perfekt|top|prima|bravo|wunderbar/))
+    return 'Sehr gerne! Kann ich noch etwas für dich tun?';
+  if (q.match(/^(ja|nein|ok|okay|alles klar|verstanden|gut|passt)[\s!?.]*$/))
+    return 'Gut! Falls du weitere Fragen hast, stehe ich gerne zur Verfügung.';
+
+  // ── Was ist Printox / Über uns ────────────────────────────────────────────
+  if (q.match(/was ist printox|wer seid ihr|über euch|über uns|wer bist du|stell dich vor/))
+    return 'Printox ist ein junger 3D-Druck-Service aus dem Kanton Aargau, Schweiz – gegründet 2026 von Remo Bögli. Wir sind neu, aber mit vollem Einsatz dabei!';
+  if (q.match(/wer betreibt|wer macht|gründer|inhaber|remo|bögli/))
+    return 'Printox wird von Remo Bögli betrieben – einem Automatiker in Ausbildung aus dem Kanton Aargau. Kleine Firma, grosser Einsatz!';
+  if (q.match(/seit wann|wie alt|gegründet|gründungsjahr|2026/))
+    return 'Printox wurde 2026 gegründet. Wir sind ein junges Unternehmen und bauen den Service stetig aus.';
+  if (q.match(/mission|vision|ziel|wofür steht|werte/))
+    return 'Unser Ziel: 3D-Druck einfach, günstig und zuverlässig für jeden zugänglich machen – direkt aus der Schweiz.';
+  if (q.match(/vertrauen|seriös|sicher.*firma|legit|echt/))
+    return 'Printox ist ein echter Schweizer Betrieb mit vollständigem Impressum, AGB und Datenschutzerklärung. Du kannst uns jederzeit per E-Mail oder Telefon erreichen.';
+
+  // ── Standort / Schweiz ────────────────────────────────────────────────────
+  if (q.match(/schweiz|swiss|aargau|wo seid ihr|standort|wo sind/))
+    return 'Wir sind im Kanton Aargau, Schweiz. Lieferung schweizweit per Post. Selbstabholung möglich – die Adresse teilen wir nach der Bestellung mit.';
+  if (q.match(/rupperswil|aarau|brugg|wo genau|welche stadt|welcher ort/))
+    return 'Unser genaue Standort im Kanton Aargau teilen wir nach der Bestellung mit. So können wir dir die Abholung koordinieren.';
+  if (q.match(/deutschland|österreich|europa|eu|ausland|international/))
+    return 'Momentan liefern wir nur innerhalb der Schweiz. Lieferungen ins Ausland sind aktuell nicht möglich.';
+
+  // ── Website / Konto ───────────────────────────────────────────────────────
+  if (q.match(/konto|registrier|anmeld|account|erstell.*konto|sign up/))
+    return 'Konto erstellen: Klick oben rechts auf "Anmelden" → dann auf "Noch kein Konto? Registrieren". Name, E-Mail und Passwort eingeben – fertig!';
+  if (q.match(/passwort.*vergessen|reset.*passwort|passwort.*zurück|vergessen.*passwort/))
+    return 'Passwort vergessen? Beim Login-Formular gibt es den Link "Passwort vergessen". Gib deine E-Mail ein und wir senden dir einen Reset-Link.';
+  if (q.match(/passwort.*ändern|neues passwort|passwort.*wechseln/))
+    return 'Passwort ändern: Melde dich an → Klick auf dein Profilbild oben rechts → "Mein Profil" → dort kannst du das Passwort ändern.';
+  if (q.match(/konto.*löschen|account.*lösch|profil.*lösch/))
+    return 'Zum Löschen deines Kontos kontaktiere uns bitte direkt: printox26@outlook.com. Wir erledigen das umgehend für dich.';
+  if (q.match(/profil|meine daten|persönliche daten|daten ändern|name ändern/))
+    return 'Dein Profil findest du oben rechts hinter dem Profilbild. Dort siehst du deine Bestellungen und Kontodaten.';
+  if (q.match(/einloggen|login|anmeld|einloggen|wie melde ich mich an/))
+    return 'Einloggen: Klick oben rechts auf "Anmelden", dann E-Mail und Passwort eingeben. Falls du noch kein Konto hast, einfach registrieren – es dauert 30 Sekunden!';
+  if (q.match(/ausloggen|abmelden|logout|sign out/))
+    return 'Abmelden: Klick oben rechts auf dein Profilbild → im Dropdown-Menü auf "Abmelden".';
+  if (q.match(/bestellung.*sehen|meine.*bestellung|wo.*bestellung|bestellhistorie|bestellverlauf/))
+    return 'Deine Bestellungen findest du unter: Profilbild oben rechts → "Mein Profil" → Tab "Bestellungen". Dort siehst du alle aktuellen und vergangenen Aufträge.';
+
+  // ── Shop ──────────────────────────────────────────────────────────────────
+  if (q.match(/shop|was gibt es|sortiment|was kaufen|artikel|was verkauft/))
+    return 'Unser Shop befindet sich momentan im Aufbau! In Kürze findest du dort Standard-Produkte wie Würfelhalter, Handyständer, Keychains und Organizer-Boxen. Eigene Modelle kannst du jetzt schon über "Upload" bestellen.';
+  if (q.match(/würfelhalter|würfel.*halter|dice.*holder/))
+    return 'Der Würfelhalter fasst bis zu 20 Spiele, misst ca. 15×15×8cm und kostet CHF 14.90. Erhältlich in verschiedenen Farben und Filamenten.';
+  if (q.match(/handyständer|handy.*ständer|smartphone.*ständer|phone.*stand/))
+    return 'Unser Handyständer ist verstellbar, aus PLA, ca. 20×12×10cm und kostet CHF 19.90. Erhältlich in Schwarz, Weiss, Blau, Rot und weiteren Farben.';
+  if (q.match(/keychain|schlüsselanhänger|logo.*keychain|anhänger/))
+    return 'Logo-Keychains kosten CHF 8.50 – ideal als Werbeartikel oder Geschenk. Eigenes Logo? Einfach als STL hochladen und wir drucken es!';
+  if (q.match(/organizer|aufbewahrung|box|organizer.box/))
+    return 'Die Organizer-Box ist massgeschneidert für Büro oder Zuhause: 35×25×15cm, CHF 24.90. Praktisch und stabil aus PLA oder PETG.';
+  if (q.match(/neue.*produkt|mehr produkte|wann.*mehr|produkt.*bald|wann.*shop/))
+    return 'Unser Shop wächst stetig! Wir arbeiten daran, bald mehr Produkte anzubieten. Schau regelmässig vorbei oder schreib uns für Sonderwünsche.';
+  if (q.match(/produkt.*anpassen|anpassbar|personali|eigene.*text|text.*drauf/))
+    return 'Ja, viele Produkte sind anpassbar! Für individuelle Texte, Logos oder Formen nutze die Upload-Funktion und beschreibe deinen Wunsch im Kommentarfeld.';
+  if (q.match(/in.*warenkorb|zum.*warenkorb|cart|warenkorb/))
+    return 'Produkt in den Warenkorb legen: Klick auf das gewünschte Produkt → Farbe und Filament wählen → "In den Warenkorb". Danach kannst du zur Kasse gehen.';
+  if (q.match(/warenkorb.*leer|warenkorb.*entfernen|produkt.*entfernen/))
+    return 'Im Warenkorb (Warenkorbsymbol oben) kannst du Produkte mit dem Mülleimer-Symbol entfernen oder die Menge anpassen.';
+
+  // ── Bestellprozess ────────────────────────────────────────────────────────
+  if (q.match(/wie bestell|bestellung aufgeb|wie funktioniert.*bestell|ablauf/))
+    return 'So bestellst du: 1) Produkt wählen oder Datei hochladen 2) Farbe & Material wählen 3) Lieferart wählen 4) Bezahlen → Fertig! Wir melden uns innerhalb von 24h.';
+  if (q.match(/bestellung.*stornieren|abbrechen|storno|order.*cancel/))
+    return 'Bestellung stornieren: Schreib uns so schnell wie möglich an printox26@outlook.com oder ruf an: 077 496 28 38. Wir versuchen alles was noch nicht gedruckt ist zu stornieren.';
+  if (q.match(/bestellung.*status|status.*bestellung|wo.*mein.*paket|tracking/))
+    return 'Den Status deiner Bestellung siehst du in deinem Profil unter "Bestellungen". Sobald dein Paket verschickt wird, erhältst du eine E-Mail mit Tracking-Infos.';
+  if (q.match(/bestellung.*bearbeiten|bestellung.*ändern|nachträglich.*ändern/))
+    return 'Bestellungen nach Absenden ändern ist nur möglich, solange der Druck noch nicht gestartet wurde. Melde dich sofort per E-Mail oder Telefon!';
+  if (q.match(/nachbestellen|erneut bestellen|gleiche bestellung/))
+    return 'Für eine Nachbestellung einfach das gleiche Produkt nochmals in den Warenkorb legen oder uns kontaktieren – wir haben alle Details gespeichert.';
+  if (q.match(/mindest.*bestell|minimum|minimum.*menge|kleinste.*bestellung/))
+    return 'Es gibt keine Mindestbestellmenge! Du kannst auch nur ein einzelnes Stück bestellen. Für Kleinserien oder Sammelbestellungen melde dich gerne direkt bei uns.';
+  if (q.match(/menge|stückzahl|mehrere|viele|serie|kleinserie|bulk/))
+    return 'Kleinserie oder Sammelbestellung? Kein Problem! Kontaktiere uns direkt für ein Mengenangebot: printox26@outlook.com oder 077 496 28 38.';
+  if (q.match(/bearbeitungszeit|wann.*anfang|wie lang.*bis.*anfang|produktionsdauer/))
+    return 'Nach Zahlungseingang starten wir in der Regel innerhalb von 1–2 Werktagen mit dem Druck. Die gesamte Lieferzeit beträgt 7–9 Werktage.';
+  if (q.match(/rechnung|quittung|beleg|invoice|kassenbon/))
+    return 'Nach jeder Bestellung erhältst du eine Bestätigungs-E-Mail als Beleg. Benötigst du eine offizielle Rechnung, melde dich per E-Mail.';
+  if (q.match(/firmen.*bestell|gewerbe|b2b|firma|unternehmen.*bestell/))
+    return 'Firmenbestellungen sind willkommen! Wir können Rechnungen ausstellen. Kontaktiere uns direkt für Geschäftsbestellungen: printox26@outlook.com';
+
+  // ── Bezahlung ─────────────────────────────────────────────────────────────
+  if (q.match(/zahlung|bezahl|wie bezahl|zahlungsmethode|zahlungsmittel/))
+    return 'Zahlungsmethoden: Kreditkarte und Debitkarte (Visa/Mastercard) via Stripe. TWINT kommt bald! Alle Zahlungen sind SSL-verschlüsselt und sicher.';
+  if (q.match(/kreditkarte|visa|mastercard|debitkarte/))
+    return 'Wir akzeptieren Visa und Mastercard (Kredit- und Debitkarten) über Stripe – einer der sichersten Zahlungsanbieter der Welt.';
+  if (q.match(/twint/))
+    return 'TWINT ist leider noch nicht verfügbar, kommt aber bald! Aktuell bezahlst du per Kreditkarte oder Debitkarte via Stripe.';
+  if (q.match(/paypal|klarna|sofort|banküberweisung|bank/))
+    return 'PayPal, Klarna und Banküberweisung sind aktuell nicht verfügbar. Wir akzeptieren Kredit- und Debitkarten sowie bald TWINT.';
+  if (q.match(/sicher.*zahlung|ssl|verschlüssel|datenschutz.*zahlung|kreditkarte.*sicher/))
+    return 'Alle Zahlungen werden über Stripe abgewickelt – ein PCI-DSS-zertifizierter Zahlungsanbieter mit SSL-Verschlüsselung. Deine Kartendaten speichern wir nicht.';
+  if (q.match(/wann.*abgebucht|wann.*bezahl|sofort.*abbuch/))
+    return 'Die Zahlung wird sofort bei der Bestellung abgebucht. Erst nach erfolgreicher Zahlung beginnt die Produktion deines Auftrags.';
+
+  // ── Lieferung ─────────────────────────────────────────────────────────────
+  if (q.match(/lieferzeit|wie lang.*liefer|wann.*kommt|dauert.*liefer|wann.*erhalte/))
+    return 'Die Lieferzeit beträgt 7–9 Werktage nach Zahlungseingang. Expresslieferung ist aktuell nicht möglich. Alternativ: kostenlose Selbstabholung!';
+  if (q.match(/versandkosten|versand.*kosten|porto|lieferkosten|was kostet.*versand/))
+    return 'Versandkosten: CHF 6.90–18.90 je nach Produktgrösse. Ab CHF 100 Bestellwert ist der Versand gratis! Selbstabholung ist immer kostenlos.';
+  if (q.match(/gratis.*versand|kostenlos.*versand|ab wann.*gratis|ab wann.*kostenlos/))
+    return 'Ab einem Bestellwert von CHF 100 ist der Versand komplett kostenlos! Oder du holst direkt ab – das ist immer gratis.';
+  if (q.match(/post.*lieferung|brief|paket|briefkasten|wie.*geliefert/))
+    return 'Wir versenden per Schweizer Post als Paket. Du erhältst eine Trackingnummer per E-Mail sobald das Paket aufgegeben wurde.';
+  if (q.match(/express.*liefer|schnell.*liefer|priority|urgent|dringend/))
+    return 'Expresslieferung ist leider nicht möglich – der Druckprozess braucht seine Zeit für beste Qualität. Für dringende Aufträge empfehlen wir die Selbstabholung.';
+  if (q.match(/liefer.*deutschland|liefer.*österreich|liefer.*eu|ins ausland|international/))
+    return 'Wir liefern momentan nur innerhalb der Schweiz. Bestellungen ins Ausland sind aktuell nicht möglich.';
+  if (q.match(/paket.*verlor|verloren|nicht angekommen|wo ist mein/))
+    return 'Paket nicht angekommen? Kontaktiere uns sofort: printox26@outlook.com oder 077 496 28 38. Mit der Trackingnummer klären wir das gemeinsam mit der Post.';
+  if (q.match(/beschädigt|kaputt.*geliefert|defekt.*geliefert|schaden/))
+    return 'Paket beschädigt angekommen? Mach sofort Fotos und schreib uns: printox26@outlook.com. Wir kümmern uns um Ersatz oder Erstattung!';
+
+  // ── Selbstabholung ────────────────────────────────────────────────────────
+  if (q.match(/abhol|selbst.*abhol|abholen|pickup|abholzeit|vorbeikommen/))
+    return 'Selbstabholung ist kostenlos und immer möglich! Öffnungszeiten: Mi 17–19h · Fr 17–20h · Sa–So 16–20h. Die genaue Adresse teilen wir nach der Bestellung mit.';
+  if (q.match(/öffnungszeit|wann offen|abholzeiten|besuchen|wann kann ich/))
+    return 'Öffnungszeiten für Abholung: Mittwoch 17–19 Uhr · Freitag 17–20 Uhr · Samstag & Sonntag 16–20 Uhr. Andere Zeiten: kurze Absprache per Telefon möglich.';
+  if (q.match(/adresse|wo abholen|ort.*abholen|abholadresse|printox.*adresse/))
+    return 'Die genaue Abholadresse teilen wir nach der Bestellung per E-Mail mit. Wir sind im Kanton Aargau.';
+
+  // ── Upload / Eigenes Modell ───────────────────────────────────────────────
+  if (q.match(/upload|eigene.*datei|datei.*hochladen|hochladen|mein.*modell|eigenes.*design/))
+    return 'Eigenes Modell hochladen: Unter "Upload" auf der Website → Datei auswählen (STL, OBJ, 3MF oder STEP) → Material und Farbe wählen → absenden. Wir melden uns mit einem Preis!';
+  if (q.match(/stl.*datei|stl format|was ist stl/))
+    return 'STL ist das häufigste Format für 3D-Druckdateien. Du kannst es aus Programmen wie Fusion 360, Blender, Tinkercad oder Bambu Studio exportieren.';
+  if (q.match(/\bobj\b|obj.*format|wavefront/))
+    return 'OBJ ist ein weiteres 3D-Format das wir akzeptieren. Gut geeignet für Modelle mit Texturen. Für den 3D-Druck ist STL aber am gebräuchlichsten.';
+  if (q.match(/3mf|3mf.*format/))
+    return '3MF ist ein modernes 3D-Druckformat mit mehr Informationen als STL (Farben, Massstab, Orientierung). Wird von Bambu Studio nativ unterstützt – perfekt!';
+  if (q.match(/step|stp|cad.*format|step.*datei/))
+    return 'STEP/STP-Dateien sind CAD-Formate aus Programmen wie Fusion 360 oder SolidWorks. Wir akzeptieren sie gerne – oft sogar besser als STL für technische Teile.';
+  if (q.match(/fusion 360|fusion360|autodesk/))
+    return 'Fusion 360 ist ein grossartiges CAD-Programm! Exportiere dein Modell als STL oder STEP und lade es bei uns hoch. Kostenlose Hobbyversion verfügbar.';
+  if (q.match(/blender/))
+    return 'Blender ist ideal für kreative 3D-Modelle. Exportiere als STL oder OBJ und lade es bei uns hoch. Gratis und sehr leistungsfähig!';
+  if (q.match(/tinkercad/))
+    return 'Tinkercad ist perfekt für Einsteiger! Einfach das fertige Modell als STL exportieren und bei uns hochladen. Komplett kostenlos im Browser!';
+  if (q.match(/kein.*modell|kein.*datei|keine.*cad|kann nicht.*model|ich.*kein.*3d/))
+    return 'Kein eigenes 3D-Modell? Kein Problem! Beschreibe uns im Upload-Formular was du brauchst – wir können einfache Teile auch selber modellieren oder dir helfen, das Richtige zu finden.';
+  if (q.match(/datei.*zu gross|file.*too large|maximale.*dateigrösse|wie gross.*datei/))
+    return 'Die maximale Dateigrösse beim Upload beträgt 50MB. Bei grösseren Dateien schreib uns direkt per E-Mail: printox26@outlook.com';
+
+  // ── Materialien ───────────────────────────────────────────────────────────
+  if (q.match(/welche.*material|was für.*material|material.*übersicht|materialien/))
+    return 'Unsere Materialien: PLA (Standard, günstig), PETG (robust, feuchtigkeitsbeständig), ABS (hitzebeständig, technisch), TPU (flexibel, gummiartig). Auf Anfrage auch weitere!';
+  if (q.match(/pla\b|polylactic|polylactid/))
+    return 'PLA ist unser Standardmaterial – biologisch abbaubar, günstig, in vielen Farben verfügbar. Ideal für Dekor, Spielzeug und Alltagsgegenstände. Nicht hitzebeständig über 60°C.';
+  if (q.match(/pla\+|pla plus|toughpla|tough pla/))
+    return 'PLA+ ist eine verstärkte Version von PLA – etwas robuster und zäher, aber immer noch leicht zu drucken. Auf Anfrage erhältlich.';
+  if (q.match(/\bpetg\b/))
+    return 'PETG ist robuster als PLA, leicht flexibel und feuchtigkeitsbeständig. Hitzebeständig bis ca. 80°C. Ideal für funktionale Teile, Flaschen, Gehäuse.';
+  if (q.match(/\babs\b|acrylnitril/))
+    return 'ABS ist hitzebeständig bis ca. 100°C und sehr robust – ideal für technische Teile im Auto oder in der Industrie. Braucht ein geschlossenes Gehäuse beim Drucken.';
+  if (q.match(/\btpu\b|thermoplastisch.*urethan|flexibel.*material|gummi.*material/))
+    return 'TPU ist unser flexibles Material – gummiartig, stossdämpfend, ideal für Handyhüllen, Schuheinlagen, Dichtungen oder alles was biegen muss.';
+  if (q.match(/asa\b|uv.*beständig|aussen.*material|wetterfest/))
+    return 'ASA ist UV- und wetterbeständig – ideal für Aussenanwendungen. Ähnlich wie ABS aber widerstandsfähiger gegen Sonne und Regen. Auf Anfrage verfügbar.';
+  if (q.match(/nylon|pa\b|polyamid/))
+    return 'Nylon (PA) ist sehr robust und abriebfest – perfekt für mechanisch belastete Teile. Schwieriger zu drucken und teurer. Auf Anfrage verfügbar.';
+  if (q.match(/holz.*filament|wood|holz.*druck/))
+    return 'Holzfilament (PLA mit Holzanteil) gibt deinem Druck eine holzähnliche Optik und Haptik. Auf spezielle Anfrage verfügbar.';
+  if (q.match(/metall.*filament|metal|carbon|kohlefaser/))
+    return 'Carbon- und Metallfilamente (z.B. Kupfer, Bronze) sind auf Anfrage verfügbar. Diese sehen sehr edel aus und fühlen sich schwerer an!';
+  if (q.match(/lebensmittel.*sicher|food safe|trinkwasser|lebensmittel.*kontakt/))
+    return 'Für lebensmittelkontakt empfehlen wir PETG (lebensmittelsicher). Hinweis: Die Druckoberflächenkann Bakterien beherbergen – daher empfehlen wir keine Nutzung für Behälter mit offenem Kontakt.';
+  if (q.match(/kind.*sicher|spielzeug.*sicher|sicher.*kind|toxisch|ungiftig/))
+    return 'PLA ist aus nachwachsenden Rohstoffen und gilt als ungiftig. Für Kinderspielzeug empfehlen wir PLA ohne Additives. Bei Fragen gerne melden!';
+  if (q.match(/hitzebeständig|temperatur.*beständig|hohe.*temperatur|heiss/))
+    return 'Hitzebeständigkeit nach Material: PLA ≈60°C · PETG ≈80°C · ABS ≈100°C · ASA ≈100°C. Für Hochtemperaturanwendungen (>100°C) bitte anfragen.';
+  if (q.match(/welches material.*|was.*material.*empfehlen|material.*empfehlung/))
+    return 'Empfehlung: Für Einsteiger → PLA. Für robuste Teile → PETG. Für Hitze → ABS. Für Flexibles → TPU. Für Aussen → ASA. Bei Unsicherheit einfach fragen!';
+
+  // ── Farben ────────────────────────────────────────────────────────────────
+  if (q.match(/welche farbe|farben.*verfügbar|farbauswahl|was für.*farben/))
+    return 'Verfügbare Farben (je nach Material): Schwarz, Weiss, Grau, Rot, Blau, Grün, Gelb, Orange, und weitere. Bei der Bestellung einfach die gewünschte Farbe angeben.';
+  if (q.match(/schwarz|black/)) return 'Schwarz ist für alle unsere Materialien verfügbar – eine der beliebtesten Farben!';
+  if (q.match(/weiss|weiß|white/)) return 'Weiss ist für PLA, PETG und TPU verfügbar. Sieht sehr sauber aus und lässt sich gut bemalen!';
+  if (q.match(/mehrfarbig|multicolor|zwei.*farb|multi.*material|verschiedene.*farben/))
+    return 'Mehrfarbige Drucke sind möglich! Der Bambu Lab P2S unterstützt Multi-Material-Druck. Für mehrfarbige Aufträge bitte Details im Upload-Formular angeben.';
+  if (q.match(/eigene.*farbe|spezielle.*farbe|sonderfart|wunschfarbe/))
+    return 'Sonderfarben auf Anfrage! Schreib uns deine Wunschfarbe und wir schauen was möglich ist. Für grössere Aufträge können wir spezielle Farben besorgen.';
+
+  // ── Drucker / Technik ────────────────────────────────────────────────────
+  if (q.match(/welcher drucker|bambu|p2s|bambu lab|welche maschine/))
+    return 'Wir drucken mit dem Bambu Lab P2S – einem der schnellsten und präzisesten Consumer-3D-Drucker. Geschlossenes Gehäuse für ABS, bis 0.1mm Auflösung, sehr zuverlässig!';
+  if (q.match(/wie funktioniert.*3d.*druck|was ist fdm|fdm|fff|schmelzschicht/))
+    return '3D-Druck (FDM): Kunststoff-Filament wird erhitzt und Schicht für Schicht auf einer Plattform aufgetragen. Das Ergebnis ist ein vollständiges 3D-Objekt – wie ein sehr präziser Heisskleber!';
+  if (q.match(/schichthöhe|layer.*height|0\.1|0\.2|auflösung.*druck/))
+    return 'Schichthöhe: 0.1mm = sehr fein (langsam), 0.2mm = Standard (gut & schnell), 0.3mm = grob (schnell, weniger Detail). Wir wählen die passende Einstellung für dein Objekt.';
+  if (q.match(/druckvolumen|druckgrösse|maximale.*grösse|wie gross.*drucken|max.*abmessung/))
+    return 'Maximales Druckvolumen: 256 × 256 × 256mm. Grössere Objekte werden aufgeteilt und zusammengeklebt. Für sehr grosse Teile kurz anfragen!';
+  if (q.match(/infill|füllung|wie viel.*füllung|stärke|festigkeit/))
+    return 'Infill (Füllung): Standard ist 15–20% für normale Objekte. Für mechanisch belastete Teile erhöhen wir auf 40–100%. Du kannst deine Präferenz angeben.';
+  if (q.match(/wandstärke|perimeter|shells|wie dick.*wand/))
+    return 'Standard-Wandstärke: 3 Perimeter (ca. 1.2mm). Für stärkere Teile erhöhen wir das. Sag uns einfach für was das Teil gebraucht wird!';
+  if (q.match(/stützen|support|stützstruktur|überhang/))
+    return 'Bei starken Überhängen drucken wir Stützstrukturen die nach dem Druck entfernt werden. Kleine Spuren können sichtbar bleiben – für technische Teile ideal.';
+  if (q.match(/slicer|cura|bambu.*studio|prusaslicer|drucksoftware/))
+    return 'Wir nutzen Bambu Studio als Slicer-Software – perfekt abgestimmt auf unseren P2S. Du musst nichts selbst slicen, wir erledigen das für dich!';
+  if (q.match(/druckgeschwindigkeit|wie.*schnell.*druck|speed/))
+    return 'Der Bambu Lab P2S druckt mit bis zu 500mm/s – einer der schnellsten Drucker am Markt. Trotzdem dauert ein typisches Objekt je nach Grösse 1–4 Stunden.';
+
+  // ── Qualität / Nachbearbeitung ────────────────────────────────────────────
+  if (q.match(/qualität|präzision|genauigkeit|wie gut|ergebnis/))
+    return 'Unsere Qualität: bis 0.1mm Schichthöhe mit dem Bambu Lab P2S. Saubere Kanten, gute Oberflächenqualität. Für Hochglanz oder spezielle Oberflächen anfragen.';
+  if (q.match(/schleifen|sand|oberfläche.*glätten|nachbearbeiten|lackieren/))
+    return 'Nachbearbeitung ist möglich! Schleifen für glattere Oberflächen oder Lackieren für Farben die wir nicht als Filament haben. Auf Anfrage als Zusatzleistung.';
+  if (q.match(/lackier|bemalen|anstreichen|farbe.*auftragen/))
+    return 'Drucke können nach dem Druck lackiert oder bemalt werden. PLA lässt sich gut grundieren und lackieren. Wir bieten Bemalen als Zusatzleistung auf Anfrage an.';
+  if (q.match(/oberflächenqualität|rau|glatt|schicht.*sichtbar|layer.*lines/))
+    return 'Standard FDM-Drucke haben sichtbare Schichtlinien – das ist normal. Mit 0.1mm Schichthöhe deutlich feiner. Für hochglatte Oberflächen: Schleifen als Zusatzoption anfragen.';
+  if (q.match(/wasser.*dicht|wasserdicht|wasserfest|wasserfestigkeit/))
+    return 'Für wasserdichte Teile empfehlen wir PETG mit 100% Infill und 4+ Perimetern. Kleinere Lecks können mit Epoxy abgedichtet werden. Anfragen lohnt sich!';
+
+  // ── Prototypen / Spezialanwendungen ─────────────────────────────────────
+  if (q.match(/prototyp|prototype|rapid prototyping|entwicklung/))
+    return 'Prototypen drucken ist eine unserer Stärken! STL oder STEP hochladen und wir drucken deinen Prototyp in wenigen Tagen. Ideal für Produktentwicklung und Tests.';
+  if (q.match(/ersatzteil|spare part|ersatz|reparatur.*teil/))
+    return 'Ersatzteile drucken? Sehr gerne! STL-Datei hochladen oder das Teil beschreiben – manchmal können wir sogar ohne Datei nachmodellieren. Kontaktiere uns!';
+  if (q.match(/deko|dekoration|figur|skulptur|kunst|kunstobjekt/))
+    return 'Dekorationsobjekte, Figuren und Kunstobjekte sind wunderbar für den 3D-Druck geeignet! PLA in bunten Farben und bis 0.1mm Detailgenauigkeit. Einfach hochladen!';
+  if (q.match(/werbeartikel|merchandise|werbegeschenk|firmenlogo|branded/))
+    return 'Werbeartikel mit Firmenlogo? Ideal für 3D-Druck! Logoanhänger, Visitenkartenhalter, Namenschilder – einfach anfragen und wir erstellen ein Angebot.';
+  if (q.match(/schmuck|ring|armband|halskette|anhänger|jewel/))
+    return 'Schmuck aus PLA oder TPU ist möglich – als Prototyp oder für einfache Designs. Für Hochglanz-Schmuck empfehlen wir eine professionelle Nachbearbeitung.';
+  if (q.match(/architektur.*modell|hausmodell|baumodell|architektur/))
+    return 'Architekturmodelle sind ein Klassiker im 3D-Druck! STL-Datei hochladen – wir empfehlen PLA in Weiss oder Grau für einen sauberen Look.';
+  if (q.match(/medizin|prothese|orthopädie|anatomie|chirurgie/))
+    return 'Für medizinische Anwendungen bitte direkt Kontakt aufnehmen – wir beraten individuell welche Materialien und Qualitäten geeignet sind.';
+  if (q.match(/elektronik.*gehäuse|gehäuse|case|box.*elektronik|raspberry|arduino/))
+    return 'Elektronikgehäuse sind sehr beliebt! PETG oder ABS empfohlen (Hitzebeständigkeit). Masse deiner Platine angeben und wir drucken das perfekte Gehäuse.';
+  if (q.match(/spielzeug|toy|kind.*spielzeug|lego/))
+    return 'Spielzeug aus PLA ist sicher und einfarbig oder mehrfarbig möglich. Für Kleinkinder sicherstellen dass keine kleinen Teile abbrechen können.';
+  if (q.match(/brettspiel|spielstein|spielfigur|tabletop|miniatur/))
+    return 'Brettspielteile, Tabletop-Miniaturen und Spielsteine sind eine Spezialität des 3D-Drucks! Hochauflösend bei 0.1mm, ideal für Spielbegeisterte.';
+  if (q.match(/küche|küchenutensil|lebensmittel.*kontakt|küchenhelfer/))
+    return 'Für Küchenutensilien: PETG verwenden (lebensmittelfreundlicher als PLA). Wichtig: Drucke sind nicht vollständig hygienisch – nicht für direkte Lebensmittelberührung empfohlen.';
+  if (q.match(/büro|büroartikel|stiftehalter|kabelmanagement|desk/))
+    return 'Bürozubehör wie Stiftehalter, Kabelmanager oder Handyhalter – PLA reicht vollkommen! Eigenes Design hochladen oder eines unserer Shop-Produkte wählen.';
+
+  // ── Nachhaltigkeit / Umwelt ───────────────────────────────────────────────
+  if (q.match(/nachhaltig|umwelt|bio|recycl|ökolog|green|klimafreundlich/))
+    return 'PLA ist biologisch abbaubar aus nachwachsenden Rohstoffen (Mais, Zuckerrohr). Wir produzieren ausschliesslich auf Bestellung – kein Lager, kein Überschuss!';
+  if (q.match(/co2|carbon.*footprint|klimaschutz|emission/))
+    return '3D-Druck auf Bestellung ist nachhaltiger als Massenproduktion – kein Lager, kein Überbestand. PLA hat einen niedrigen CO2-Fussabdruck. Wir arbeiten lokal in der Schweiz.';
+
+  // ── Garantie / Reklamation / Rückgabe ─────────────────────────────────────
+  if (q.match(/garantie|gewährleistung|reklamation|rückgabe.*recht|umtausch/))
+    return 'Bei Mängeln durch unseren Fehler ersetzen wir das Produkt kostenlos oder erstatten den Betrag. Reklamationen bitte innerhalb von 14 Tagen melden.';
+  if (q.match(/rückgabe|rückgeben|retour|rücksendung|zurückschicken/))
+    return 'Rückgabe: Bei berechtigten Reklamationen übernehmen wir die Rücksendekosten. Kontaktiere uns zuerst per E-Mail mit Fotos und Beschreibung des Problems.';
+  if (q.match(/nicht zufrieden|schlechte qualität|enttäuscht|entspricht nicht/))
+    return 'Das tut uns leid! Schreib uns mit Fotos an printox26@outlook.com und wir finden gemeinsam eine Lösung. Kundenzufriedenheit ist uns sehr wichtig!';
+
+  // ── Datenschutz / Rechtliches ─────────────────────────────────────────────
+  if (q.match(/datenschutz|dsgvo|gdpr|daten.*verwendung|was macht ihr mit meinen daten/))
+    return 'Deine Daten werden nur für die Auftragsabwicklung verwendet. Vollständige Infos in unserer Datenschutzerklärung auf der Website.';
+  if (q.match(/agb|geschäftsbedingungen|bedingungen|konditionen/))
+    return 'Unsere AGB findest du ganz unten auf der Website. Sie regeln alle wichtigen Punkte zur Bestellung, Lieferung und Garantie.';
+  if (q.match(/impressum|firmendaten|rechtlich|rechtliche hinweise/))
+    return 'Das Impressum mit allen Firmendaten findest du im Footer der Website ganz unten.';
+  if (q.match(/cookie|cookies/))
+    return 'Wir setzen nur notwendige Cookies für den Betrieb der Website. Keine Tracking- oder Werbe-Cookies!';
+
+  // ── Kontakt ───────────────────────────────────────────────────────────────
+  if (q.match(/kontakt|wie erreiche|wie melde|erreich|kontaktier/))
+    return 'Kontakt: E-Mail printox26@outlook.com · Telefon 077 496 28 38. Wir antworten in der Regel innerhalb von 24 Stunden!';
+  if (q.match(/email|e-mail|mail.*adresse|emailadresse/))
+    return 'Unsere E-Mail-Adresse ist printox26@outlook.com. Für Bestellanfragen, Fragen und Reklamationen!';
+  if (q.match(/telefon|anruf|telefonisch|nummer|077/))
+    return 'Telefon: 077 496 28 38. Erreichbar zu unseren Abholzeiten (Mi/Fr/Sa/So) und nach Vereinbarung.';
+  if (q.match(/wie lang.*antwort|wann.*antwort|response.*time|antwortzeit/))
+    return 'Wir antworten in der Regel innerhalb von 24 Stunden, meist aber deutlich schneller! Bei dringenden Anliegen direkt anrufen: 077 496 28 38.';
+  if (q.match(/social media|instagram|facebook|tiktok|youtube/))
+    return 'Social-Media-Kanäle sind aktuell in Aufbau. Folg uns bald auf Instagram und TikTok – wir zeigen dann Druckvorgänge, neue Produkte und mehr!';
+
+  // ── Website-Technik ──────────────────────────────────────────────────────
+  if (q.match(/seite.*lädt nicht|website.*problem|fehler.*website|technisch.*problem/))
+    return 'Website-Problem? Versuch zuerst die Seite neu zu laden (F5). Hilft das nicht, kontaktiere uns: printox26@outlook.com';
+  if (q.match(/mobile|handy.*website|smartphone.*website|app/))
+    return 'Unsere Website ist vollständig mobiloptimiert! Eine separate App gibt es nicht – die Website funktioniert aber perfekt im Handy-Browser.';
+  if (q.match(/browser|chrome|safari|firefox|edge/))
+    return 'Die Website funktioniert mit allen modernen Browsern: Chrome, Safari, Firefox, Edge. Stelle sicher dass dein Browser aktuell ist.';
+
+  // ── Chatbot selbst ───────────────────────────────────────────────────────
+  if (q.match(/wer bist du|was bist du|was kannst du|wie funktionierst du|bist du ki/))
+    return 'Ich bin der Printox-Assistent – ein einfacher Chatbot der dir Fragen rund um Printox, den 3D-Druck-Service und die Website beantwortet!';
+  if (q.match(/hilfe|help|was fragen|welche fragen|beispiele/))
+    return 'Du kannst mich fragen zu: Lieferzeiten · Preisen · Materialien · Bestellprozess · Upload · Kontakt · Shop · Öffnungszeiten · Zahlung · und vielem mehr!';
+
+  // ── Preise / Kosten ───────────────────────────────────────────────────────
+  if (q.match(/preis|was kostet|wie teuer|kosten|chf|günstig|teuer|preisliste/))
+    return 'Shop-Preise: Würfelhalter CHF 14.90 · Handyständer CHF 19.90 · Keychain CHF 8.50 · Organizer CHF 24.90. Für individuelle Drucke: Preis auf Anfrage via Upload.';
+  if (q.match(/wie.*preis.*berechnet|preis.*kalkulier|woraus.*preis|was bestimmt.*preis/))
+    return 'Der Preis hängt ab von: Materialverbrauch, Druckzeit, Nachbearbeitung und Versand. Für individuelle Teile erstellst du eine Anfrage und wir machen dir ein Angebot.';
+  if (q.match(/mengenrabatt|rabatt.*menge|viel bestellen|grösser.*bestellung/))
+    return 'Mengenrabatt: Ja, bei grösseren Aufträgen geben wir Rabatt! Kontaktiere uns direkt für ein massgeschneidertes Angebot.';
+  if (q.match(/gratis.*versand|kostenloser versand|ab wann gratis/))
+    return 'Gratis Versand ab CHF 100 Bestellwert! Selbstabholung ist immer kostenlos, egal wie klein die Bestellung.';
+
+  // ── Sonstiges / Smalltalk ─────────────────────────────────────────────────
+  if (q.match(/wie geht|wie gehts|alles gut|wie läuft/))
+    return 'Mir geht es bestens, danke! Ich bin bereit deine Fragen zu beantworten. Was möchtest du wissen?';
+  if (q.match(/funny|witzig|witz|joke|humor/))
+    return 'Warum druckt der 3D-Drucker so langsam? – Weil er jeden Schicht für sich selbst geniesst! Aber im Ernst: Unser Bambu P2S ist einer der schnellsten!';
+  if (q.match(/bitte|please/))
+    return 'Gerne! Stell mir einfach deine Frage – ich helfe so gut ich kann!';
+
+  // ── Standard ──────────────────────────────────────────────────────────────
+  return 'Gute Frage! Für Details kontaktiere uns: E-Mail printox26@outlook.com · Telefon 077 496 28 38. Wir helfen dir schnell und unkompliziert weiter!';
 }
 
 function sendChat() {
