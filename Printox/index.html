@@ -882,6 +882,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       <span>Sichere Zahlung</span>
       <span>Swiss made · seit 2026</span>
     </div>
+    <div id="home-news" style="display:none;margin-bottom:2.5rem"></div>
     <div class="ex-sec-head"><h2>Beliebte Produkte</h2><a onclick="showPage('shop')">Alle ansehen →</a></div>
     <div class="ex-prod-grid" id="home-products"></div>
   </div>
@@ -893,7 +894,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       <div class="feat-card"><h3>Schnelle Lieferung</h3><p>Innerhalb von 7–9 Werktagen geliefert.</p></div>
       <div class="feat-card"><h3>Hochpräzision</h3><p>Druckauflösung bis zu 0.1 mm für exakte Ergebnisse.</p></div>
       <div class="feat-card"><h3>Alle Materialien</h3><p>PLA, PETG, ABS, TPU und weitere auf Anfrage.</p></div>
-      <div class="feat-card"><h3>Persönlicher Support</h3><p>Beratung direkt per Telefon oder E-Mail.</p></div>
+      <div class="feat-card"><h3>Persönlicher Support</h3><p>Beratung direkt per E-Mail.</p></div>
     </div>
   </div>
   <!-- JUNGES UNTERNEHMEN -->
@@ -906,14 +907,35 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
     </div>
   </div>
 
+  <!-- BEWERTUNGEN -->
+  <div style="padding:4rem 2rem" id="reviews-section">
+    <div style="max-width:1100px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:2rem">
+        <div class="sec-label">Kundenstimmen</div>
+        <div class="sec-title" style="margin-bottom:.75rem">Das sagen unsere Kunden</div>
+        <div id="avg-rating-display" style="color:var(--gray-500);font-size:.95rem;margin-bottom:1.5rem"></div>
+        <button onclick="openReviewModal()" class="btn-fill" style="display:inline-flex;align-items:center;gap:.5rem">⭐ Bewertung abgeben</button>
+      </div>
+      <div id="reviews-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem"></div>
+    </div>
+  </div>
+
   <footer>
     <div class="ft-inner">
       <div>
         <div class="ft-logo"><svg width="30" height="30"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div>
         <p id="ft-desc">3D-Druck-Service aus der Schweiz.</p>
+        <div style="margin-top:1.1rem;max-width:280px">
+          <p style="color:rgba(255,255,255,.55);font-size:.8rem;font-weight:600;margin:0 0 .5rem">Newsletter abonnieren</p>
+          <div style="display:flex;gap:.4rem">
+            <input type="email" id="nl-email" placeholder="Deine E-Mail" style="flex:1;min-width:0;padding:.55rem .7rem;border-radius:6px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#fff;font-size:.82rem;font-family:Inter,sans-serif">
+            <button onclick="subscribeNewsletter()" style="padding:.55rem .9rem;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap">Anmelden</button>
+          </div>
+          <p id="nl-msg" style="font-size:.75rem;margin:.45rem 0 0;display:none"></p>
+        </div>
       </div>
       <div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('about')">Über uns</a><a onclick="showPage('contact')">Kontakt</a><a onclick="showPage('privacy')">Datenschutz</a><a onclick="showPage('agb')">AGB</a><a onclick="showPage('impressum')">Impressum</a></div>
-      <div class="ft-col"><h4>Kontakt</h4><p id="ft-email">printox26@outlook.com</p><p id="ft-phone">077 496 28 38</p><p style="color:rgba(255,255,255,.4);font-size:.8rem">Aargau, Schweiz</p></div>
+      <div class="ft-col"><h4>Kontakt</h4><p id="ft-email">printox26@outlook.com</p><p style="color:rgba(255,255,255,.4);font-size:.8rem">Aargau, Schweiz</p></div>
     </div>
     <div class="ft-bot">
       <span id="ft-copy">© 2026 Printox · Schweiz</span>
@@ -955,7 +977,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
     </div>
     <div class="dg-grid" id="products-grid"></div>
   </div>
-  <footer><div class="ft-inner" style="max-width:1200px"><div><div class="ft-logo"><svg width="28" height="28"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div></div><div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('about')">Über uns</a><a onclick="showPage('contact')">Kontakt</a><a onclick="showPage('privacy')">Datenschutz</a><a onclick="showPage('agb')">AGB</a><a onclick="showPage('impressum')">Impressum</a></div><div class="ft-col"><h4>Kontakt</h4><p>printox26@outlook.com</p><p>077 496 28 38</p></div></div><div class="ft-bot" style="max-width:1200px;margin:1.5rem auto 0;border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span>Made in 🇨🇭</span></div></footer>
+  <footer><div class="ft-inner" style="max-width:1200px"><div><div class="ft-logo"><svg width="28" height="28"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div></div><div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('about')">Über uns</a><a onclick="showPage('contact')">Kontakt</a><a onclick="showPage('privacy')">Datenschutz</a><a onclick="showPage('agb')">AGB</a><a onclick="showPage('impressum')">Impressum</a></div><div class="ft-col"><h4>Kontakt</h4><p>printox26@outlook.com</p></div></div><div class="ft-bot" style="max-width:1200px;margin:1.5rem auto 0;border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span>Made in 🇨🇭</span></div></footer>
 </div>
 
 <!-- CART -->
@@ -1024,7 +1046,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
           <div class="fg"><label>Name *</label><input type="text" id="o-name" required placeholder="Ihr vollständiger Name"></div>
           <div class="fg"><label>E-Mail *</label><input type="email" id="o-email" required placeholder="ihre@email.ch"></div>
         </div>
-        <div class="fg"><label>Telefon</label><input type="tel" id="o-phone" placeholder="z.B. 077 496 28 38"></div>
+        <div class="fg"><label>Telefon</label><input type="tel" id="o-phone" placeholder="Ihre Telefonnummer"></div>
         <div class="fg"><label>Strasse & Hausnummer</label><input type="text" id="o-street" placeholder="Musterstrasse 12"></div>
         <div class="form-row">
           <div class="fg"><label>PLZ</label><input type="text" id="o-plz" placeholder="8000" maxlength="6"></div>
@@ -1115,15 +1137,6 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
         <h4>📧 E-Mail</h4>
         <p>printox26@outlook.com</p>
       </div>
-      <div class="con-card" style="cursor:pointer" onclick="window.location.href='tel:+41774962838'">
-        <h4>📱 Telefon</h4>
-        <p>077 496 28 38</p>
-      </div>
-      <div class="con-card" style="cursor:pointer" onclick="window.open('https://wa.me/41774962838','_blank')">
-        <h4>💬 WhatsApp</h4>
-        <p style="margin-bottom:.75rem">Schnell & unkompliziert schreiben</p>
-        <span style="display:inline-flex;align-items:center;gap:.4rem;background:#25d366;color:#fff;padding:.45rem 1rem;border-radius:7px;font-size:.85rem;font-weight:600">WhatsApp öffnen ↗</span>
-      </div>
       <div class="con-card">
         <h4>🕐 Öffnungszeiten</h4>
         <p>Mi: 17:00–19:00<br>Fr: 17:00–20:00<br>Sa–So: 16:00–20:00</p>
@@ -1149,7 +1162,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       </div>
     </div>
   </div>
-  <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox · 077 496 28 38</span><span>Made in 🇨🇭</span></div></footer>
+  <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span>Made in 🇨🇭</span></div></footer>
 </div>
 
 <!-- ADMIN -->
@@ -1173,6 +1186,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       <button class="a-tab" onclick="aTab('users')">Benutzer</button>
       <button class="a-tab" onclick="aTab('team')">Team</button>
       <button class="a-tab" onclick="aTab('reviews')">Bewertungen</button>
+      <button class="a-tab" onclick="aTab('news')">News</button>
       <button class="a-tab" onclick="aTab('texte')">Texte</button>
     </div>
 
@@ -1216,6 +1230,13 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       <div id="team-admin-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem"></div>
     </div>
 
+    <div class="a-sec" id="a-news">
+      <div style="margin-bottom:1.25rem">
+        <button class="adm-btn" onclick="addNewsItem()">+ News hinzufügen</button>
+      </div>
+      <div id="news-admin-list"></div>
+    </div>
+
     <div class="a-sec" id="a-texte"></div>
 
   </div>
@@ -1233,8 +1254,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist:<br>
       <strong>Printox – Remo Bögli</strong><br>
       Kanton Aargau, Schweiz<br>
-      E-Mail: printox26@outlook.com<br>
-      Telefon: 077 496 28 38</p>
+      E-Mail: printox26@outlook.com</p>
 
       <h3 style="color:var(--navy);font-size:1.1rem;margin:1.5rem 0 .5rem;padding-top:.5rem;border-top:1px solid var(--gray-l)">2. Erhobene Daten</h3>
       <p>Wir erheben folgende personenbezogene Daten:</p>
@@ -1402,7 +1422,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       </div>
     </div>
   </div>
-  <footer><div class="ft-inner" style="max-width:860px"><div><div class="ft-logo"><svg width="28" height="28"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div></div><div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('about')">Über uns</a><a onclick="showPage('contact')">Kontakt</a></div><div class="ft-col"><h4>Kontakt</h4><p>printox26@outlook.com</p><p>077 496 28 38</p></div></div><div class="ft-bot" style="max-width:860px;margin:1.5rem auto 0;border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span>Made in 🇨🇭</span></div></footer>
+  <footer><div class="ft-inner" style="max-width:860px"><div><div class="ft-logo"><svg width="28" height="28"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div></div><div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('about')">Über uns</a><a onclick="showPage('contact')">Kontakt</a></div><div class="ft-col"><h4>Kontakt</h4><p>printox26@outlook.com</p></div></div><div class="ft-bot" style="max-width:860px;margin:1.5rem auto 0;border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span>Made in 🇨🇭</span></div></footer>
 </div>
 
 <!-- AGB -->
@@ -1415,8 +1435,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       <h3 style="color:var(--navy);font-size:1.05rem;margin:0 0 .5rem">1. Anbieter</h3>
       <p>Printox – Remo Bögli<br>
       Kanton Aargau, Schweiz<br>
-      E-Mail: printox26@outlook.com<br>
-      Telefon: 077 496 28 38</p>
+      E-Mail: printox26@outlook.com</p>
 
       <h3 style="color:var(--navy);font-size:1.05rem;margin:1.5rem 0 .5rem;border-top:1px solid var(--gray-l);padding-top:1rem">2. Geltungsbereich</h3>
       <p>Diese AGB gelten für alle Bestellungen, die über die Website printox.ch oder direkt beim Anbieter aufgegeben werden. Mit der Bestellung akzeptieren Sie diese Bedingungen.</p>
@@ -1484,8 +1503,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       Kanton Aargau, Schweiz</p>
 
       <h3 style="color:var(--navy);font-size:1.05rem;margin:1.5rem 0 .5rem;border-top:1px solid var(--gray-l);padding-top:1rem">Kontakt</h3>
-      <p>📧 E-Mail: <a href="mailto:printox26@outlook.com" style="color:var(--blue)">printox26@outlook.com</a><br>
-      📱 Telefon: 077 496 28 38</p>
+      <p>📧 E-Mail: <a href="mailto:printox26@outlook.com" style="color:var(--blue)">printox26@outlook.com</a></p>
 
       <h3 style="color:var(--navy);font-size:1.05rem;margin:1.5rem 0 .5rem;border-top:1px solid var(--gray-l);padding-top:1rem">Unternehmensform</h3>
       <p>Einzelunternehmen (nicht im Handelsregister eingetragen)<br>
@@ -2367,6 +2385,42 @@ async function sendOrderConfirmation(order) {
   }
 }
 
+async function subscribeNewsletter() {
+  const input = document.getElementById('nl-email');
+  const msg = document.getElementById('nl-msg');
+  const email = input.value.trim();
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if (!emailOk) {
+    msg.textContent = 'Bitte gültige E-Mail-Adresse eingeben.';
+    msg.style.color = '#f87171';
+    msg.style.display = 'block';
+    return;
+  }
+  try {
+    const { error } = await db.from('newsletter').insert({ email: email });
+    if (error) {
+      if (error.code === '23505') {
+        msg.textContent = 'Diese E-Mail ist bereits angemeldet.';
+        msg.style.color = '#fbbf24';
+      } else {
+        msg.textContent = 'Etwas ist schiefgelaufen. Bitte später erneut versuchen.';
+        msg.style.color = '#f87171';
+      }
+      msg.style.display = 'block';
+      return;
+    }
+    input.value = '';
+    msg.textContent = 'Danke! Du bist jetzt angemeldet.';
+    msg.style.color = '#4ade80';
+    msg.style.display = 'block';
+  } catch(e) {
+    console.error('Newsletter Fehler:', e);
+    msg.textContent = 'Etwas ist schiefgelaufen. Bitte später erneut versuchen.';
+    msg.style.color = '#f87171';
+    msg.style.display = 'block';
+  }
+}
+
 async function saveOrderToSupabase(order) {
   try {
     const { error } = await db.from('orders').insert({
@@ -2719,7 +2773,10 @@ function renderUsersList() {
       + '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">'
       + '<div><strong style="color:#fff">'+u.name+'</strong>'+getRoleBadge(u.role||'user')
       + '<br><span style="font-size:.85rem;color:rgba(255,255,255,.55)">'+u.email+'</span></div>'
+      + '<div style="display:flex;gap:.5rem">'
       + '<button onclick="adminResetPw('+i+')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:.4rem .9rem;border-radius:7px;font-size:.8rem;cursor:pointer;font-family:Inter,sans-serif">🔑 Passwort ändern</button>'
+      + ((u.role||'user')==='admin' ? '' : '<button onclick="deleteUser('+i+')" style="background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.4);color:#f87171;padding:.4rem .9rem;border-radius:7px;font-size:.8rem;cursor:pointer;font-family:Inter,sans-serif">🗑 Löschen</button>')
+      + '</div>'
       + '</div>'
       + '<div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">'
       + '<span style="color:rgba(255,255,255,.45);font-size:.78rem;font-weight:700">ROLLE:</span>'
@@ -2760,6 +2817,23 @@ async function changeRole(idx, role) {
   try {
     await db.from('users').update({role, is_admin: role==='admin'}).eq('email', u.email);
   } catch(e) { console.error('Role update error:', e); }
+}
+
+async function deleteUser(idx) {
+  const u = users[idx]; if(!u) return;
+  if ((u.role||'user')==='admin') { toast('Admin-Konten können nicht gelöscht werden.'); return; }
+  if (currentUser && currentUser.email === u.email) { toast('Du kannst dein eigenes Konto nicht löschen.'); return; }
+  if (!confirm('Konto von "'+u.name+'" ('+u.email+') wirklich unwiderruflich löschen?')) return;
+  try {
+    const { error } = await db.from('users').delete().eq('email', u.email);
+    if (error) throw error;
+    users.splice(idx, 1);
+    renderUsersList();
+    toast('✓ Konto von '+u.name+' gelöscht.');
+  } catch(e) {
+    console.error('User delete error:', e);
+    toast('Fehler beim Löschen des Kontos.');
+  }
 }
 
 function adminResetPw(idx) {
@@ -2820,6 +2894,86 @@ function aTab(t) {
   if (t === 'texte') renderTexteTab();
   if (t === 'team') renderTeamAdmin();
   if (t === 'reviews') loadAndRenderAdminReviews();
+  if (t === 'news') loadAndRenderAdminNews();
+}
+
+let newsItems = [];
+
+async function loadNews() {
+  try {
+    const { data, error } = await db.from('news').select('*').order('created_at', {ascending: false});
+    if (error) throw error;
+    newsItems = data || [];
+    renderHomeNews();
+  } catch(e) { console.error('News laden Fehler:', e); }
+}
+
+function renderHomeNews() {
+  const el = document.getElementById('home-news');
+  if (!el) return;
+  if (!newsItems.length) { el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  const list = newsItems.slice(0, 3);
+  el.innerHTML = list.map(function(n) {
+    const d = n.created_at ? new Date(n.created_at).toLocaleDateString('de-CH', {day:'2-digit', month:'2-digit', year:'numeric'}) : '';
+    return '<div style="background:#fff;border:1px solid var(--gray-l);border-radius:var(--r-md);padding:1.5rem;margin-bottom:1rem">'
+      + '<div style="font-size:.78rem;color:var(--gray);margin-bottom:.4rem">' + d + '</div>'
+      + '<h3 style="font-size:1.1rem;font-weight:700;color:var(--navy);margin:0 0 .5rem">' + esc(n.title) + '</h3>'
+      + '<p style="color:var(--gray);font-size:.92rem;line-height:1.6;margin:0">' + esc(n.content) + '</p>'
+      + '</div>';
+  }).join('');
+}
+
+async function loadAndRenderAdminNews() {
+  const el = document.getElementById('news-admin-list');
+  if (el) el.innerHTML = '<div style="text-align:center;padding:2rem;color:rgba(255,255,255,.4)">Wird geladen...</div>';
+  try {
+    const { data, error } = await db.from('news').select('*').order('created_at', {ascending: false});
+    if (error) throw error;
+    newsItems = data || [];
+    if (!newsItems.length) { el.innerHTML = '<div style="text-align:center;padding:2rem;color:rgba(255,255,255,.4)">Noch keine News vorhanden.</div>'; return; }
+    el.innerHTML = newsItems.map(function(n) {
+      const d = n.created_at ? new Date(n.created_at).toLocaleDateString('de-CH') : '';
+      return '<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:1.25rem;margin-bottom:1rem">'
+        + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem">'
+        + '<div style="flex:1"><div style="font-weight:700;color:#fff;margin-bottom:.3rem">' + esc(n.title) + '</div>'
+        + '<div style="color:rgba(255,255,255,.55);font-size:.88rem;line-height:1.5">' + esc(n.content) + '</div>'
+        + '<div style="color:rgba(255,255,255,.3);font-size:.75rem;margin-top:.5rem">' + d + '</div></div>'
+        + '<button onclick="deleteNewsItem(\'' + n.id + '\')" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:.85rem">Löschen</button>'
+        + '</div></div>';
+    }).join('');
+  } catch(e) { console.error('News laden Fehler:', e); }
+}
+
+async function addNewsItem() {
+  const title = prompt('Titel der News:');
+  if (!title) return;
+  const content = prompt('Inhalt der News:');
+  if (!content) return;
+  try {
+    const { error } = await db.from('news').insert({ title: title, content: content });
+    if (error) throw error;
+    toast('News hinzugefügt');
+    loadAndRenderAdminNews();
+    loadNews();
+  } catch(e) {
+    console.error('News hinzufügen Fehler:', e);
+    toast('Fehler beim Hinzufügen');
+  }
+}
+
+async function deleteNewsItem(id) {
+  if (!confirm('News wirklich löschen?')) return;
+  try {
+    const { error } = await db.from('news').delete().eq('id', id);
+    if (error) throw error;
+    toast('News gelöscht');
+    loadAndRenderAdminNews();
+    loadNews();
+  } catch(e) {
+    console.error('News löschen Fehler:', e);
+    toast('Fehler beim Löschen');
+  }
 }
 
 async function loadAndRenderAdminReviews() {
@@ -3588,7 +3742,7 @@ let sc = {
     {title:'Schnelle Lieferung',text:'Innerhalb von 7–9 Werktagen geliefert.'},
     {title:'Hochpräzision',text:'Druckauflösung bis zu 0.1 mm für exakte Ergebnisse.'},
     {title:'Alle Materialien',text:'PLA, PETG, ABS, TPU und weitere auf Anfrage.'},
-    {title:'Persönlicher Support',text:'Beratung direkt per Telefon oder E-Mail.'},
+    {title:'Persönlicher Support',text:'Beratung direkt per E-Mail.'},
   ],
   contact:{email:'printox26@outlook.com',phone:'077 496 28 38',hours:'Mi: 17:00–19:00\nFr: 17:00–20:00\nSa–So: 16:00–20:00',ship:'Schweizweit per Post'},
   footer:{desc:'3D-Druck-Service aus der Schweiz.'}
@@ -3618,13 +3772,10 @@ function applyScToPage() {
     const p  = cards[i].querySelector('p');  if (p)  p.textContent  = f.text;
   });
   const ftEmail = document.getElementById('ft-email'); if (ftEmail) ftEmail.textContent = sc.contact.email;
-  const ftPhone = document.getElementById('ft-phone'); if (ftPhone) ftPhone.textContent = sc.contact.phone;
   const ftDesc  = document.getElementById('ft-desc');  if (ftDesc)  ftDesc.textContent  = sc.footer.desc;
   const conCards = document.querySelectorAll('#page-contact .con-card p');
   if (conCards[0]) conCards[0].textContent = sc.contact.email;
-  if (conCards[1]) conCards[1].textContent = sc.contact.phone;
-  if (conCards[2]) conCards[2].innerHTML   = sc.contact.hours.replace(/\n/g,'<br>');
-  if (conCards[3]) conCards[3].textContent = sc.contact.ship;
+  if (conCards[1]) conCards[1].innerHTML   = sc.contact.hours.replace(/\n/g,'<br>');
 }
 
 function teUpdate(field, value) {
@@ -3657,10 +3808,8 @@ function renderTexteTab() {
   });
   h += '</div>';
   h += '<div class="te-group"><div class="te-group-title">Kontakt</div>';
-  h += '<div class="te-row"><div class="te-field"><label class="te-lbl">E-Mail</label><input class="te-in" type="email" value="'+esc(sc.contact.email)+'" oninput="teUpdate(\'contact-email\',this.value)"></div>';
-  h += '<div class="te-field"><label class="te-lbl">Telefon</label><input class="te-in" type="text" value="'+esc(sc.contact.phone)+'" oninput="teUpdate(\'contact-phone\',this.value)"></div></div>';
-  h += '<div class="te-row"><div class="te-field"><label class="te-lbl">Öffnungszeiten</label><textarea class="te-in" rows="3" oninput="teUpdate(\'contact-hours\',this.value)">'+esc(sc.contact.hours)+'</textarea></div>';
-  h += '<div class="te-field"><label class="te-lbl">Lieferinfo</label><input class="te-in" type="text" value="'+esc(sc.contact.ship)+'" oninput="teUpdate(\'contact-ship\',this.value)"></div></div></div>';
+  h += '<div class="te-row"><div class="te-field"><label class="te-lbl">E-Mail</label><input class="te-in" type="email" value="'+esc(sc.contact.email)+'" oninput="teUpdate(\'contact-email\',this.value)"></div></div>';
+  h += '<div class="te-row"><div class="te-field"><label class="te-lbl">Öffnungszeiten</label><textarea class="te-in" rows="3" oninput="teUpdate(\'contact-hours\',this.value)">'+esc(sc.contact.hours)+'</textarea></div></div></div>';
   h += '<div class="te-group"><div class="te-group-title">Footer</div>';
   h += '<div class="te-field"><label class="te-lbl">Beschreibung</label><input class="te-in" type="text" value="'+esc(sc.footer.desc)+'" oninput="teUpdate(\'footer-desc\',this.value)"></div></div>';
   el.innerHTML = h;
@@ -3930,7 +4079,7 @@ function getBotReply(msg) {
   if (q.match(/wie bestell|bestellung aufgeb|wie funktioniert.*bestell|ablauf/))
     return 'So bestellst du: 1) Produkt wählen oder Datei hochladen 2) Farbe & Material wählen 3) Lieferart wählen 4) Bezahlen → Fertig! Wir melden uns innerhalb von 24h.';
   if (q.match(/bestellung.*stornieren|abbrechen|storno|order.*cancel/))
-    return 'Bestellung stornieren: Schreib uns so schnell wie möglich an printox26@outlook.com oder ruf an: 077 496 28 38. Wir versuchen alles was noch nicht gedruckt ist zu stornieren.';
+    return 'Bestellung stornieren: Schreib uns so schnell wie möglich an printox26@outlook.com. Wir versuchen alles was noch nicht gedruckt ist zu stornieren.';
   if (q.match(/bestellung.*status|status.*bestellung|wo.*mein.*paket|tracking/))
     return 'Den Status deiner Bestellung siehst du in deinem Profil unter "Bestellungen". Sobald dein Paket verschickt wird, erhältst du eine E-Mail mit Tracking-Infos.';
   if (q.match(/bestellung.*bearbeiten|bestellung.*ändern|nachträglich.*ändern/))
@@ -3940,7 +4089,7 @@ function getBotReply(msg) {
   if (q.match(/mindest.*bestell|minimum|minimum.*menge|kleinste.*bestellung/))
     return 'Es gibt keine Mindestbestellmenge! Du kannst auch nur ein einzelnes Stück bestellen. Für Kleinserien oder Sammelbestellungen melde dich gerne direkt bei uns.';
   if (q.match(/menge|stückzahl|mehrere|viele|serie|kleinserie|bulk/))
-    return 'Kleinserie oder Sammelbestellung? Kein Problem! Kontaktiere uns direkt für ein Mengenangebot: printox26@outlook.com oder 077 496 28 38.';
+    return 'Kleinserie oder Sammelbestellung? Kein Problem! Kontaktiere uns direkt für ein Mengenangebot: printox26@outlook.com.';
   if (q.match(/bearbeitungszeit|wann.*anfang|wie lang.*bis.*anfang|produktionsdauer/))
     return 'Nach Zahlungseingang starten wir in der Regel innerhalb von 1–2 Werktagen mit dem Druck. Die gesamte Lieferzeit beträgt 7–9 Werktage.';
   if (q.match(/rechnung|quittung|beleg|invoice|kassenbon/))
@@ -3976,7 +4125,7 @@ function getBotReply(msg) {
   if (q.match(/liefer.*deutschland|liefer.*österreich|liefer.*eu|ins ausland|international/))
     return 'Wir liefern momentan nur innerhalb der Schweiz. Bestellungen ins Ausland sind aktuell nicht möglich.';
   if (q.match(/paket.*verlor|verloren|nicht angekommen|wo ist mein/))
-    return 'Paket nicht angekommen? Kontaktiere uns sofort: printox26@outlook.com oder 077 496 28 38. Mit der Trackingnummer klären wir das gemeinsam mit der Post.';
+    return 'Paket nicht angekommen? Kontaktiere uns sofort: printox26@outlook.com. Mit der Trackingnummer klären wir das gemeinsam mit der Post.';
   if (q.match(/beschädigt|kaputt.*geliefert|defekt.*geliefert|schaden/))
     return 'Paket beschädigt angekommen? Mach sofort Fotos und schreib uns: printox26@outlook.com. Wir kümmern uns um Ersatz oder Erstattung!';
 
@@ -4134,13 +4283,13 @@ function getBotReply(msg) {
 
   // ── Kontakt ───────────────────────────────────────────────────────────────
   if (q.match(/kontakt|wie erreiche|wie melde|erreich|kontaktier/))
-    return 'Kontakt: E-Mail printox26@outlook.com · Telefon 077 496 28 38. Wir antworten in der Regel innerhalb von 24 Stunden!';
+    return 'Kontakt: Am besten per E-Mail an printox26@outlook.com. Wir antworten in der Regel innerhalb von 24 Stunden!';
   if (q.match(/email|e-mail|mail.*adresse|emailadresse/))
     return 'Unsere E-Mail-Adresse ist printox26@outlook.com. Für Bestellanfragen, Fragen und Reklamationen!';
   if (q.match(/telefon|anruf|telefonisch|nummer|077/))
-    return 'Telefon: 077 496 28 38. Erreichbar zu unseren Abholzeiten (Mi/Fr/Sa/So) und nach Vereinbarung.';
+    return 'Am schnellsten erreichst du uns per E-Mail: printox26@outlook.com. Wir melden uns in der Regel innerhalb von 24 Stunden.';
   if (q.match(/wie lang.*antwort|wann.*antwort|response.*time|antwortzeit/))
-    return 'Wir antworten in der Regel innerhalb von 24 Stunden, meist aber deutlich schneller! Bei dringenden Anliegen direkt anrufen: 077 496 28 38.';
+    return 'Wir antworten in der Regel innerhalb von 24 Stunden, meist aber deutlich schneller! Schreib uns einfach an printox26@outlook.com.';
   if (q.match(/social media|instagram|facebook|tiktok|youtube/))
     return 'Social-Media-Kanäle sind aktuell in Aufbau. Folg uns bald auf Instagram und TikTok – wir zeigen dann Druckvorgänge, neue Produkte und mehr!';
 
@@ -4176,8 +4325,68 @@ function getBotReply(msg) {
   if (q.match(/bitte|please/))
     return 'Gerne! Stell mir einfach deine Frage – ich helfe so gut ich kann!';
 
+  // ── Design & Modellierungs-Tipps ──────────────────────────────────────────
+  if (q.match(/wandstärke.*empfehl|wie dick.*modellier|minimale wandstärke/))
+    return 'Empfohlene Mindest-Wandstärke: 1.2mm für PLA, 1.5mm für PETG/ABS. Dünnere Wände können beim Druck brechen oder Löcher haben.';
+  if (q.match(/toleranz|passgenau|steckverbindung|einpassen/))
+    return 'Für Steckverbindungen empfehlen wir 0.2–0.3mm Spiel zwischen den Teilen. Sag uns die genauen Masse und wir passen den Druck an.';
+  if (q.match(/bewegliche teile|scharnier|gelenk|beweglich.*drucken/))
+    return 'Bewegliche Teile (Scharniere, Gelenke) sind möglich, brauchen aber genug Spiel (mind. 0.3–0.5mm) zwischen den Komponenten damit sie nach dem Druck nicht verklebt sind.';
+  if (q.match(/gewinde|schraube.*einsetzen|threaded insert|einschraub/))
+    return 'Gewindeeinsätze (Heat-Set Inserts) können nachträglich eingeschmolzen werden für stabile Schraubverbindungen. Auf Anfrage möglich.';
+  if (q.match(/magnete.*einsetzen|magnet.*einbau/))
+    return 'Magnete können während des Drucks eingebettet werden – ideal für Verschlüsse oder Halterungen. Bitte Position und Grösse im Upload-Formular angeben.';
+  if (q.match(/skalier|grösser.*drucken|kleiner.*drucken|masstab/))
+    return 'Modelle können in jedem Massstab gedruckt werden, solange sie ins Druckvolumen (256×256×256mm) passen. Gewünschte Grösse einfach angeben.';
+  if (q.match(/mehrteilig|zusammensetzen|teile.*verkleben|kleben/))
+    return 'Grössere Objekte drucken wir in mehreren Teilen und stellen dir Anleitung zum Zusammenkleben zur Verfügung (Sekundenkleber oder Kunststoffkleber empfohlen).';
+  if (q.match(/druckrichtung|orientierung|wie.*ausgerichtet/))
+    return 'Wir wählen die optimale Druckausrichtung für Stabilität und Oberflächenqualität automatisch – falls du Wünsche hast, gerne im Upload angeben.';
+
+  // ── Vergleich & Beratung ──────────────────────────────────────────────────
+  if (q.match(/pla oder petg|petg oder pla|unterschied pla petg/))
+    return 'PLA: günstiger, einfacher, aber spröder. PETG: etwas teurer, robuster und feuchtigkeitsbeständiger. Für Deko → PLA, für Gebrauchsgegenstände → PETG.';
+  if (q.match(/abs oder petg|petg oder abs/))
+    return 'PETG ist einfacher zu drucken und schlagfester bei Raumtemperatur. ABS ist hitzebeständiger, aber empfindlicher beim Druck (braucht geschlossenes Gehäuse – haben wir).';
+  if (q.match(/welches.*für.*aussen|outdoor.*material|draussen.*verwenden/))
+    return 'Für den Aussenbereich empfehlen wir ASA (UV-beständig) oder PETG. PLA wird bei Sonneneinstrahlung mit der Zeit spröde.';
+  if (q.match(/welches.*für.*handy|handyhülle.*material/))
+    return 'Für Handyhüllen empfehlen wir TPU – flexibel und stossdämpfend, schützt dein Gerät bei Stürzen.';
+  if (q.match(/am günstigsten|billigste.*material|preiswertestes/))
+    return 'PLA ist unser günstigstes Material. Ideal für Deko, Prototypen und alles ohne hohe mechanische Belastung.';
+  if (q.match(/am stabilsten|robustestes|stärkste.*material/))
+    return 'Für maximale Stabilität empfehlen wir PETG oder ABS mit hohem Infill (60-100%). Bei extremen Anforderungen: Nylon auf Anfrage.';
+
+  // ── Support / Beratung ────────────────────────────────────────────────────
+  if (q.match(/kostenlose.*beratung|beratung.*gratis|unverbindlich.*anfrage/))
+    return 'Die Anfrage über Upload ist komplett unverbindlich und kostenlos! Du erhältst ein Angebot bevor überhaupt etwas gedruckt wird.';
+  if (q.match(/bin.*anfänger|kenne mich nicht aus|erste.*mal.*3d.*druck|neu.*hier/))
+    return 'Kein Problem, kein Vorwissen nötig! Schick uns einfach dein Modell oder deine Idee – wir beraten dich zu Material, Preis und Machbarkeit.';
+  if (q.match(/geht.*nicht|nicht möglich|zu kompliziert|schwierig.*drucken/))
+    return 'Fast alles ist druckbar! Sollte etwas technisch schwierig sein, schlagen wir eine Alternative vor (z.B. mehrteilig drucken oder anderes Material).';
+  if (q.match(/wie lange.*antwort.*angebot|wann.*angebot|angebot.*wie schnell/))
+    return 'Nach dem Upload erhältst du in der Regel innerhalb von 24 Stunden ein individuelles Angebot per E-Mail.';
+
+  // ── Rechnungen / Newsletter / Sonstiges Admin ─────────────────────────────
+  if (q.match(/newsletter|abonnieren|updates erhalten/))
+    return 'Ja, du kannst dich für unseren Newsletter anmelden! Einfach ganz unten im Footer deine E-Mail-Adresse eintragen und auf "Anmelden" klicken.';
+  if (q.match(/geschenkgutschein|gutschein.*kaufen|voucher/))
+    return 'Geschenkgutscheine gibt es aktuell nicht im Shop, sind aber auf Anfrage individuell möglich – schreib uns einfach!';
+  if (q.match(/mehrwertsteuer|mwst|vat.*schweiz/))
+    return 'Alle angegebenen Preise verstehen sich inklusive Mehrwertsteuer, sofern nichts anderes angegeben ist.';
+  if (q.match(/rechnung.*firma|rechnung.*auf.*firma|geschäftskunde.*rechnung/))
+    return 'Rechnungen auf Firmenname sind möglich – gib die Firmendaten einfach bei der Bestellung oder per E-Mail an.';
+
+  // ── Team / Werte ──────────────────────────────────────────────────────────
+  if (q.match(/wie viele.*mitarbeiter|team.*grösse|wer arbeitet/))
+    return 'Printox wird aktuell von Remo Bögli geführt – ein kleines, aber engagiertes Ein-Personen-Unternehmen mit grossem Qualitätsanspruch.';
+  if (q.match(/werde.*mitarbeiter|job|bewerbung|arbeiten.*bei.*euch/))
+    return 'Aktuell suchen wir kein Personal, aber schreib uns gerne bei Interesse – printox26@outlook.com';
+  if (q.match(/partner werden|zusammenarbeit|kooperation|reseller werden/))
+    return 'Interesse an einer Partnerschaft oder Kooperation? Schreib uns direkt: printox26@outlook.com – wir sind offen für spannende Ideen!';
+
   // ── Standard ──────────────────────────────────────────────────────────────
-  return 'Gute Frage! Für Details kontaktiere uns: E-Mail printox26@outlook.com · Telefon 077 496 28 38. Wir helfen dir schnell und unkompliziert weiter!';
+  return 'Gute Frage! Für Details kontaktiere uns per E-Mail: printox26@outlook.com. Wir helfen dir schnell und unkompliziert weiter!';
 }
 
 function sendChat() {
@@ -4456,6 +4665,7 @@ handleStripeReturn();
 loadReviews();
 loadProductsFromSupabase();
 loadTeam();
+loadNews();
 </script>
 </body>
 </html>
