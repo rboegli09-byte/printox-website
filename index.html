@@ -1788,9 +1788,9 @@ function renderNav() {
     const disc = getUserDiscount();
     let html = '<div class="user-menu" id="user-menu">';
     if (disc > 0) html += '<span class="disc-badge">' + Math.round(disc*100) + '% Rabatt</span>';
-    html += '<button class="user-av" onclick="toggleUserMenu(event)" aria-label="Mein Konto">' + ini + '</button>';
+    html += '<button class="user-av" onclick="toggleUserMenu(event)" aria-label="Mein Konto">' + esc(ini) + '</button>';
     html += '<div class="user-dropdown" id="user-dropdown">';
-    html += '<div class="ud-header"><div class="ud-name">' + currentUser.name + '</div><div class="ud-email">' + currentUser.email + '</div></div>';
+    html += '<div class="ud-header"><div class="ud-name">' + esc(currentUser.name) + '</div><div class="ud-email">' + esc(currentUser.email) + '</div></div>';
     html += '<button class="ud-item" onclick="closeUserMenu();showPage(\'profile\');renderProfile()">👤 Mein Profil &amp; Bestellungen</button>';
     if (currentUser.isAdmin) html += '<button class="ud-item" onclick="closeUserMenu();showPage(\'admin\')">⚡ Dashboard</button>';
     html += '<div class="ud-divider"></div>';
@@ -1821,20 +1821,27 @@ async function doLogin(e) {
   const em = document.getElementById('l-email').value.trim().toLowerCase();
   const pw = document.getElementById('l-pass').value;
   
-  // Try Supabase first
+  // Try Supabase first: Benutzer per E-Mail holen, Passwort-Hash lokal vergleichen
+  const hashed = await hashPassword(pw, em);
   try {
-    const { data, error } = await db.from('users').select('*').eq('email', em).eq('password', pw).single();
-    if (data) {
+    const { data, error } = await db.from('users').select('*').eq('email', em).single();
+    if (data && (data.password === hashed || data.password === pw)) {
+      // Legacy-Klartext-Passwort? Beim Login automatisch auf Hash umstellen
+      if (data.password === pw && !isHashed(data.password)) {
+        db.from('users').update({password: hashed}).eq('email', em).then(() => console.log('Password migrated to hash'));
+        data.password = hashed;
+      }
       currentUser = {id: data.id, name: data.name, email: data.email, password: data.password, isAdmin: data.is_admin, role: data.role, discount: data.discount||0};
       // Also add to local users array if not there
       if (!users.find(u => u.email === em)) users.push(currentUser);
       renderNav(); toast('Willkommen, ' + data.name + '! 👋');
       showPage(data.is_admin ? 'admin' : 'home'); return;
     }
+    if (data) { toast('E-Mail oder Passwort falsch.','e'); return; }
   } catch(err) { console.log('Supabase login error:', err); }
-  
+
   // Fallback to local users (check both hashed and plain)
-  const hashedForLocal = await hashPassword(pw, em);
+  const hashedForLocal = hashed;
   const u = users.find(u => u.email.toLowerCase() === em && (u.password === hashedForLocal || u.password === pw));
   if (!u) { toast('E-Mail oder Passwort falsch.','e'); return; }
   currentUser = u; renderNav();
@@ -1861,7 +1868,7 @@ async function doRegister(e) {
     
     if (error) throw error;
     
-    const nu = {id: data.id, name, email:em, password:pw, isAdmin:false, role:'user'};
+    const nu = {id: data.id, name, email:em, password:hashedPw, isAdmin:false, role:'user'};
     users.push(nu); currentUser = nu; renderNav();
     toast('Konto erstellt! Willkommen, ' + name + '!');
     showPage('home'); return;
@@ -1935,7 +1942,7 @@ async function fpSendCode() {
   btn.disabled = false;
 }
 
-function fpReset() {
+async function fpReset() {
   const code = document.getElementById('fp-code').value.trim();
   const p1 = document.getElementById('fp-p1').value;
   const p2 = document.getElementById('fp-p2').value;
@@ -1948,10 +1955,11 @@ function fpReset() {
   if (!p1 || p1.length < 6) { err.textContent = 'Passwort mind. 6 Zeichen.'; err.style.display = 'block'; return; }
   if (p1 !== p2) { err.textContent = 'Passwörter stimmen nicht überein.'; err.style.display = 'block'; return; }
 
-  // Update password
+  // Update password (immer gehasht speichern, nie Klartext)
+  const hashedNew = await hashPassword(p1, pendingReset.email);
   const u = users.find(x => x.email.toLowerCase() === pendingReset.email);
-  if (u) u.password = p1;
-  db.from('users').update({password: p1}).eq('email', pendingReset.email).then(() => console.log('Password updated'));
+  if (u) u.password = hashedNew;
+  db.from('users').update({password: hashedNew}).eq('email', pendingReset.email).then(() => console.log('Password updated'));
   pendingReset = null;
 
   document.getElementById('fp-step2').style.display = 'none';
@@ -2473,21 +2481,21 @@ function renderOrdersList() {
     const stLbl = o.status==='new'?'Neu':o.status==='processing'?'In Bearbeitung':'Fertig';
     const fileLink = o.fileUrl ? o.fileUrl : (o.fileData || null);
     const fs = o.type==='upload'
-      ? (fileLink && o.fileName ? '<a class="dl-btn" href="'+fileLink+'" target="_blank" download="'+o.fileName+'">⬇ '+o.fileName+'</a>' : '<span class="no-file">📎 Keine Datei</span>')
+      ? (fileLink && o.fileName ? '<a class="dl-btn" href="'+esc(fileLink)+'" target="_blank" download="'+esc(o.fileName)+'">⬇ '+esc(o.fileName)+'</a>' : '<span class="no-file">📎 Keine Datei</span>')
       : '';
     const sid = o.supabaseId || '';
     out += '<div class="o-card"><div class="o-head">'
-      +'<div><div class="o-id">'+o.id+' – '+o.name+'</div>'
-      +'<div class="o-meta">'+o.email+' · '+o.date+' · '+(o.type==='upload'?'📁 Upload':'🛒 Shop')+'</div></div>'
+      +'<div><div class="o-id">'+esc(o.id)+' – '+esc(o.name)+'</div>'
+      +'<div class="o-meta">'+esc(o.email)+' · '+esc(o.date)+' · '+(o.type==='upload'?'📁 Upload':'🛒 Shop')+'</div></div>'
       +'<div style="display:flex;align-items:center;gap:.6rem">'
       +'<span class="o-status '+stCls+'">'+stLbl+'</span>'
-      +'<select onchange="updStatus(\''+o.id+'\',this.value,\''+sid+'\')"><option value="new"'+(o.status==='new'?' selected':'')+'>Neu</option><option value="processing"'+(o.status==='processing'?' selected':'')+'>Bearbeitung</option><option value="done"'+(o.status==='done'?' selected':'')+'>Fertig</option></select>'
+      +'<select onchange="updStatus(\''+esc(o.id)+'\',this.value,\''+esc(sid)+'\')"><option value="new"'+(o.status==='new'?' selected':'')+'>Neu</option><option value="processing"'+(o.status==='processing'?' selected':'')+'>Bearbeitung</option><option value="done"'+(o.status==='done'?' selected':'')+'>Fertig</option></select>'
       +'</div></div>';
     if (o.type==='upload') {
-      out += '<div class="o-detail">Material: <strong>'+(o.material||'—')+'</strong> · Farbe: <strong>'+(o.color||'—')+'</strong> · Anzahl: <strong>'+(o.qty||1)+' Stk.</strong>'+(o.phone?'<br>📱 '+o.phone:'')+(o.address?'<br>📍 '+o.address:'')+(o.desc?'<br>💬 '+o.desc:'')+'<br>'+fs+'</div>';
+      out += '<div class="o-detail">Material: <strong>'+esc(o.material||'—')+'</strong> · Farbe: <strong>'+esc(o.color||'—')+'</strong> · Anzahl: <strong>'+(o.qty||1)+' Stk.</strong>'+(o.phone?'<br>📱 '+esc(o.phone):'')+(o.address?'<br>📍 '+esc(o.address):'')+(o.desc?'<br>💬 '+esc(o.desc):'')+'<br>'+fs+'</div>';
     }
     if (o.type==='shop' && o.items) {
-      out += '<div class="o-detail">'+o.items.map(function(i){return i.name+' ×'+i.qty;}).join(', ')+' · CHF '+(o.total||0).toFixed(2)+' · '+(o.payment||'—')+(o.discount?' · 🎁 '+o.discount+' Rabatt':'')+(o.address?'<br>📍 '+o.address:'')+'</div>';
+      out += '<div class="o-detail">'+o.items.map(function(i){return esc(i.name)+' ×'+(i.qty|0);}).join(', ')+' · CHF '+(o.total||0).toFixed(2)+' · '+esc(o.payment||'—')+(o.discount?' · 🎁 '+esc(o.discount)+' Rabatt':'')+(o.address?'<br>📍 '+esc(o.address):'')+'</div>';
     }
     out += '</div>';
   });
@@ -2692,25 +2700,6 @@ function _renderAdminStats(nNew, nProc, nDone) {
 
 function renderAdmin() {
   _renderAdminStats();
-
-  if (false) document.getElementById('orders-list').innerHTML = orders.length ? orders.map(o => {
-    const fs = o.type==='upload'
-      ? (o.fileData&&o.fileName
-          ? '<a class="dl-btn" href="'+o.fileData+'" download="'+o.fileName+'">⬇ '+o.fileName+'</a>'
-          : '<span class="no-file">📎 Keine Datei</span>')
-      : '';
-    const stCls = o.status==='new'?'st-new':o.status==='processing'?'st-proc':'st-done';
-    const stLbl = o.status==='new'?'Neu':o.status==='processing'?'In Bearbeitung':'Fertig';
-    return '<div class="o-card"><div class="o-head">'
-      +'<div><div class="o-id">'+o.id+' – '+o.name+'</div><div class="o-meta">'+o.email+' · '+o.date+' · '+(o.type==='upload'?'📁 Upload':'🛒 Shop')+'</div></div>'
-      +'<div style="display:flex;align-items:center;gap:.6rem"><span class="o-status '+stCls+'">'+stLbl+'</span>'
-      +'<select onchange="updStatus(\''+o.id+'\',this.value)"><option value="new"'+(o.status==='new'?' selected':'')+'>Neu</option><option value="processing"'+(o.status==='processing'?' selected':'')+'>Bearbeitung</option><option value="done"'+(o.status==='done'?' selected':'')+'>Fertig</option></select></div>'
-      +'</div>'
-      +(o.type==='upload'?'<div class="o-detail">Material: <strong>'+o.material+'</strong> · Farbe: <strong>'+(o.color||'—')+'</strong> · Anzahl: <strong>'+(o.qty||1)+' Stk.</strong>'+(o.phone?'<br>📱 '+o.phone:'')+(o.address?'<br>📍 '+o.address:'')+(o.desc?'<br>💬 '+o.desc:'')+'<br>'+fs+'</div>':'')
-      +(o.type==='shop'&&o.items?'<div class="o-detail">'+o.items.map(i=>i.name+' ×'+i.qty).join(', ')+' · CHF '+(o.total||0).toFixed(2)+' · '+(o.payment||'—')+(o.discount?' · 🎁 '+o.discount+' Rabatt':'')+(o.address?'<br>📍 '+o.address:'')+'</div>':'')
-      +'</div>';
-  }).join('') : '<p style="color:rgba(255,255,255,.5);text-align:center;padding:3rem">Noch keine Bestellungen.</p>';
-
   renderShop();
   renderAdminProdGrid();
   renderOrdersList();
@@ -2771,8 +2760,8 @@ function renderUsersList() {
     });
     html += '<div class="o-card" id="user-card-'+i+'" style="display:flex;flex-direction:column;gap:.75rem">'
       + '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">'
-      + '<div><strong style="color:#fff">'+u.name+'</strong>'+getRoleBadge(u.role||'user')
-      + '<br><span style="font-size:.85rem;color:rgba(255,255,255,.55)">'+u.email+'</span></div>'
+      + '<div><strong style="color:#fff">'+esc(u.name)+'</strong>'+getRoleBadge(u.role||'user')
+      + '<br><span style="font-size:.85rem;color:rgba(255,255,255,.55)">'+esc(u.email)+'</span></div>'
       + '<div style="display:flex;gap:.5rem">'
       + '<button onclick="adminResetPw('+i+')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:.4rem .9rem;border-radius:7px;font-size:.8rem;cursor:pointer;font-family:Inter,sans-serif">🔑 Passwort ändern</button>'
       + ((u.role||'user')==='admin' ? '' : '<button onclick="deleteUser('+i+')" style="background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.4);color:#f87171;padding:.4rem .9rem;border-radius:7px;font-size:.8rem;cursor:pointer;font-family:Inter,sans-serif">🗑 Löschen</button>')
@@ -3005,13 +2994,13 @@ function renderAdminReviews() {
     return '<div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:1.25rem;margin-bottom:.85rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap">'
       + '<div style="flex:1;min-width:0">'
       + '<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem;flex-wrap:wrap">'
-      + '<span style="font-weight:700;color:#fff;font-size:.95rem">' + r.name + '</span>'
+      + '<span style="font-weight:700;color:#fff;font-size:.95rem">' + esc(r.name) + '</span>'
       + '<span style="color:#f59e0b;font-size:1rem;letter-spacing:1px">' + stars + '</span>'
-      + '<span style="color:rgba(255,255,255,.35);font-size:.78rem">' + (r.date || '') + '</span>'
+      + '<span style="color:rgba(255,255,255,.35);font-size:.78rem">' + esc(r.date || '') + '</span>'
       + '</div>'
-      + '<p style="color:rgba(255,255,255,.65);font-size:.875rem;line-height:1.6;margin:0">' + r.comment + '</p>'
+      + '<p style="color:rgba(255,255,255,.65);font-size:.875rem;line-height:1.6;margin:0">' + esc(r.comment) + '</p>'
       + '</div>'
-      + '<button onclick="deleteReviewAdmin(\'' + r.id + '\')" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.35);color:#f87171;padding:.45rem 1rem;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;white-space:nowrap;transition:all .15s;flex-shrink:0" onmouseover="this.style.background=\'rgba(239,68,68,.28)\'" onmouseout="this.style.background=\'rgba(239,68,68,.15)\'">🗑️ Löschen</button>'
+      + '<button onclick="deleteReviewAdmin(\'' + esc(r.id) + '\')" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.35);color:#f87171;padding:.45rem 1rem;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;white-space:nowrap;transition:all .15s;flex-shrink:0" onmouseover="this.style.background=\'rgba(239,68,68,.28)\'" onmouseout="this.style.background=\'rgba(239,68,68,.15)\'">🗑️ Löschen</button>'
       + '</div>';
   }).join('');
 }
@@ -3089,7 +3078,7 @@ function renderTeamPublic() {
   if (!team.length) { grid.innerHTML = ''; return; }
   grid.innerHTML = team.map(function(m){
     const photo = m.photo
-      ? '<img src="'+m.photo+'" alt="'+teamEscAttr(m.name)+'" style="width:100%;height:100%;object-fit:cover">'
+      ? '<img src="'+teamEscAttr(m.photo)+'" alt="'+teamEscAttr(m.name)+'" style="width:100%;height:100%;object-fit:cover">'
       : '<span style="font-size:2.5rem">👤</span>';
     return '<div style="background:#fff;border:1px solid var(--gray-l);border-radius:16px;padding:2rem;box-shadow:0 1px 4px rgba(13,27,46,0.06)">'
       + '<div style="width:110px;height:110px;border-radius:50%;overflow:hidden;margin:0 auto 1.25rem;border:3px solid var(--gray-l);background:#f0f3f8;display:flex;align-items:center;justify-content:center">'+photo+'</div>'
@@ -3852,9 +3841,9 @@ async function renderProfile() {
   if (!page) return;
   const ini = currentUser.name.split(' ').map(x => x[0]).join('').toUpperCase().slice(0,2);
   page.innerHTML = '<div class="prof-wrap">'
-    + '<div class="prof-head"><div class="prof-av-big">'+ini+'</div>'
-    + '<div class="prof-info"><div class="prof-name">'+currentUser.name+'</div>'
-    + '<div class="prof-meta">'+currentUser.email+'</div></div></div>'
+    + '<div class="prof-head"><div class="prof-av-big">'+esc(ini)+'</div>'
+    + '<div class="prof-info"><div class="prof-name">'+esc(currentUser.name)+'</div>'
+    + '<div class="prof-meta">'+esc(currentUser.email)+'</div></div></div>'
     + '<div class="prof-tabs">'
     + '<button class="prof-tab active" id="ptab-orders" onclick="profileTab(\'orders\',this)">📦 Bestellungen</button>'
     + '<button class="prof-tab" id="ptab-account" onclick="profileTab(\'account\',this)">👤 Konto</button>'
@@ -3925,14 +3914,14 @@ function profileTab(tab, btn) {
 function _renderOrderCard(o, statusLabel, statusColor) {
   const col = statusColor[o.status] || '#64748b';
   const lbl = statusLabel[o.status] || o.status;
-  const items = o.type==='shop' && o.items ? o.items.map(i=>i.name+' ×'+i.qty).join(', ') : (o.fileName || 'Upload-Anfrage');
+  const items = o.type==='shop' && o.items ? o.items.map(i=>esc(i.name)+' ×'+(i.qty|0)).join(', ') : esc(o.fileName || 'Upload-Anfrage');
   return '<div class="prof-order" style="border-left:4px solid '+col+'">'
     + '<div class="prof-order-head">'
-    + '<div><span class="prof-order-id">'+o.id+'</span><span class="prof-order-date">'+o.date+'</span></div>'
-    + '<span class="prof-status" style="background:'+col+'">'+lbl+'</span>'
+    + '<div><span class="prof-order-id">'+esc(o.id)+'</span><span class="prof-order-date">'+esc(o.date)+'</span></div>'
+    + '<span class="prof-status" style="background:'+col+'">'+esc(lbl)+'</span>'
     + '</div>'
     + '<div class="prof-order-items">'+items+'</div>'
-    + (o.total ? '<div class="prof-order-total">CHF '+o.total.toFixed(2)+(o.payment?' · '+o.payment:'')+'</div>' : '')
+    + (o.total ? '<div class="prof-order-total">CHF '+o.total.toFixed(2)+(o.payment?' · '+esc(o.payment):'')+'</div>' : '')
     + (o.status==='processing' ? '<div class="prof-order-info" style="background:#eff6ff;color:#1e40af">🔄 Ihre Bestellung wird gerade bearbeitet.</div>' : '')
     + (o.status==='done' ? '<div class="prof-order-info" style="background:#f0fdf4;color:#15803d">✅ Fertig — wird bald geliefert!</div>' : '')
     + '</div>';
@@ -4593,14 +4582,14 @@ function renderReviews() {
     const stars = '★'.repeat(r.stars) + '☆'.repeat(5-r.stars);
     return '<div style="background:#fff;border:1px solid var(--gray-l);border-radius:14px;padding:1.5rem;box-shadow:0 2px 8px rgba(13,27,46,.06);position:relative">'
       + '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem">'
-      + '<div><strong style="color:var(--navy);font-size:.95rem">'+r.name+'</strong>'
+      + '<div><strong style="color:var(--navy);font-size:.95rem">'+esc(r.name)+'</strong>'
       + '<div style="color:#f59e0b;font-size:1.1rem;margin-top:.1rem">'+stars+'</div></div>'
       + '<div style="display:flex;align-items:center;gap:.6rem">'
-      + '<span style="color:var(--gray);font-size:.78rem">'+r.date+'</span>'
-      + (isA ? '<button onclick="deleteReview(\''+r.id+'\')" title="Rezension löschen" style="background:none;border:1px solid #fecaca;color:#ef4444;border-radius:6px;padding:3px 8px;font-size:.75rem;cursor:pointer;transition:all .15s" onmouseover="this.style.background=\'#fef2f2\'" onmouseout="this.style.background=\'none\'">🗑️ Löschen</button>' : '')
+      + '<span style="color:var(--gray);font-size:.78rem">'+esc(r.date)+'</span>'
+      + (isA ? '<button onclick="deleteReview(\''+esc(r.id)+'\')" title="Rezension löschen" style="background:none;border:1px solid #fecaca;color:#ef4444;border-radius:6px;padding:3px 8px;font-size:.75rem;cursor:pointer;transition:all .15s" onmouseover="this.style.background=\'#fef2f2\'" onmouseout="this.style.background=\'none\'">🗑️ Löschen</button>' : '')
       + '</div>'
       + '</div>'
-      + '<p style="color:#475569;font-size:.875rem;line-height:1.6;margin:0">'+r.comment+'</p>'
+      + '<p style="color:#475569;font-size:.875rem;line-height:1.6;margin:0">'+esc(r.comment)+'</p>'
       + '</div>';
   }).join('');
 }
