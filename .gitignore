@@ -1,0 +1,20 @@
+# GEHEIMNISSE & BACKEND - NIE committen!
+printox-daten.md
+printox-deploy/
+server.js
+package.json
+
+# Geschaeftsdaten (privat)
+Auftraege/
+Aufträge/
+Produkte/
+Shop_Modelle/
+Insta/
+
+# Lokales
+.claude/
+example.html
+Neuer Ordner/
+node_modules/
+Temp/
+*.log

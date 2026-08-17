@@ -19,7 +19,8 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%2309142a'/%3E%3Cpolygon points='20,4 34,12 34,28 20,36 6,28 6,12' fill='none' stroke='rgba(255,255,255,.5)' stroke-width='1.8'/%3E%3Cpolygon points='20,10 30,16 30,24 20,30 10,24 10,16' fill='rgba(255,255,255,.12)' stroke='rgba(255,255,255,.8)' stroke-width='1.6'/%3E%3Cpolygon points='20,15.5 25.5,18.8 25.5,21.2 20,24.5 14.5,21.2 14.5,18.8' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
 <meta name="theme-color" content="#09142a">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -754,7 +755,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
       <input placeholder="Produkt suchen…" id="topbar-search" type="text" name="srch-q" autocomplete="off" autocapitalize="off" spellcheck="false" readonly oninput="doTopSearch(this.value)" onfocus="this.removeAttribute('readonly')" onclick="this.removeAttribute('readonly')">
     </div>
-    <button class="ex-cart" onclick="showPage('cart')" aria-label="Warenkorb">🛒<span class="ex-cart-badge" id="cart-badge">0</span></button>
+    <button class="ex-cart" onclick="showPage('cart')" aria-label="Warenkorb"><svg style="width:19px;height:19px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h2.5l2.4 12.2a1.5 1.5 0 0 0 1.5 1.3h8.8a1.5 1.5 0 0 0 1.5-1.2L21 7H5.6"/></svg><span class="ex-cart-badge" id="cart-badge">0</span></button>
     <div id="nav-user" class="ex-user">
       <button class="nav-action" onclick="showPage('login')">Anmelden</button>
     </div>
@@ -1410,10 +1411,10 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
         </button>
 
         <div class="pdp-trust">
-          <div class="pdp-trust-item">🇨🇭 Swiss Made</div>
-          <div class="pdp-trust-item">📦 7–9 Werktage</div>
-          <div class="pdp-trust-item">🔒 Sichere Zahlung</div>
-          <div class="pdp-trust-item">↩️ Zufriedenheitsgarantie</div>
+          <div class="pdp-trust-item"><svg class="svgic" style="width:13px;height:13px;vertical-align:-2px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c" stroke="none"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff" stroke="none"/></svg> Swiss Made</div>
+          <div class="pdp-trust-item"><svg class="svgic" style="width:13px;height:13px;vertical-align:-2px" viewBox="0 0 24 24"><path d="M21 8 12 3 3 8v8l9 5 9-5V8z"/><path d="m3 8 9 5 9-5"/><path d="M12 13v8"/></svg> 7–9 Werktage</div>
+          <div class="pdp-trust-item"><svg class="svgic" style="width:13px;height:13px;vertical-align:-2px" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> Sichere Zahlung</div>
+          <div class="pdp-trust-item"><svg class="svgic" style="width:13px;height:13px;vertical-align:-2px" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 1-9 9"/><path d="M3 5v4h4"/><path d="m9 12 2 2 4-4"/></svg> Zufriedenheitsgarantie</div>
         </div>
 
         <div class="pdp-desc" id="pdm-desc"></div>
@@ -1831,10 +1832,10 @@ function renderNav() {
     html += '<button class="user-av" onclick="toggleUserMenu(event)" aria-label="Mein Konto">' + esc(ini) + '</button>';
     html += '<div class="user-dropdown" id="user-dropdown">';
     html += '<div class="ud-header"><div class="ud-name">' + esc(currentUser.name) + '</div><div class="ud-email">' + esc(currentUser.email) + '</div></div>';
-    html += '<button class="ud-item" onclick="closeUserMenu();showPage(\'profile\');renderProfile()">👤 Mein Profil &amp; Bestellungen</button>';
-    if (currentUser.isAdmin) html += '<button class="ud-item" onclick="closeUserMenu();showPage(\'admin\')">⚡ Dashboard</button>';
+    html += '<button class="ud-item" onclick="closeUserMenu();showPage(\'profile\');renderProfile()"><svg class="svgic" style="width:15px;height:15px" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg> Mein Profil &amp; Bestellungen</button>';
+    if (currentUser.isAdmin) html += '<button class="ud-item" onclick="closeUserMenu();showPage(\'admin\')"><svg class="svgic" style="width:15px;height:15px" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg> Dashboard</button>';
     html += '<div class="ud-divider"></div>';
-    html += '<button class="ud-item ud-logout" onclick="doLogout()">↩ Abmelden</button>';
+    html += '<button class="ud-item ud-logout" onclick="doLogout()"><svg class="svgic" style="width:15px;height:15px" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg> Abmelden</button>';
     html += '</div></div>';
     nu.innerHTML = html;
     if (ab) ab.style.display = currentUser.isAdmin ? 'flex' : 'none';
@@ -2239,7 +2240,7 @@ function renderCart() {
   const ci = document.getElementById('cart-items');
   const cs = document.getElementById('cart-summary');
   if (!cart.length) {
-    ci.innerHTML = '<div class="empty-st"><div class="ei">🛒</div><p>Warenkorb ist leer.</p><br><br><button class="btn-fill" onclick="showPage(\'shop\')">Zum Shop</button></div>';
+    ci.innerHTML = '<div class="empty-st"><div class="ei"><svg style="width:56px;height:56px;stroke:#cbd5e1;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h2.5l2.4 12.2a1.5 1.5 0 0 0 1.5 1.3h8.8a1.5 1.5 0 0 0 1.5-1.2L21 7H5.6"/></svg></div><p>Warenkorb ist leer.</p><br><br><button class="btn-fill" onclick="showPage(\'shop\')">Zum Shop</button></div>';
     cs.innerHTML = ''; return;
   }
   ci.innerHTML = cart.map(it => {
@@ -3126,7 +3127,7 @@ function renderTeamPublic() {
   grid.innerHTML = team.map(function(m){
     const photo = m.photo
       ? '<img src="'+teamEscAttr(m.photo)+'" alt="'+teamEscAttr(m.name)+'" style="width:100%;height:100%;object-fit:cover">'
-      : '<span style="font-size:2.5rem">👤</span>';
+      : '<svg style="width:44px;height:44px;stroke:#94a3b8;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg>';
     return '<div style="background:#fff;border:1px solid var(--gray-l);border-radius:16px;padding:2rem;box-shadow:0 1px 4px rgba(13,27,46,0.06)">'
       + '<div style="width:110px;height:110px;border-radius:50%;overflow:hidden;margin:0 auto 1.25rem;border:3px solid var(--gray-l);background:#f0f3f8;display:flex;align-items:center;justify-content:center">'+photo+'</div>'
       + '<div style="text-align:center;margin-bottom:1rem">'
@@ -3892,8 +3893,8 @@ async function renderProfile() {
     + '<div class="prof-info"><div class="prof-name">'+esc(currentUser.name)+'</div>'
     + '<div class="prof-meta">'+esc(currentUser.email)+'</div></div></div>'
     + '<div class="prof-tabs">'
-    + '<button class="prof-tab active" id="ptab-orders" onclick="profileTab(\'orders\',this)">📦 Bestellungen</button>'
-    + '<button class="prof-tab" id="ptab-account" onclick="profileTab(\'account\',this)">👤 Konto</button>'
+    + '<button class="prof-tab active" id="ptab-orders" onclick="profileTab(\'orders\',this)">Bestellungen</button>'
+    + '<button class="prof-tab" id="ptab-account" onclick="profileTab(\'account\',this)">Konto</button>'
     + '</div>'
     + '<div id="prof-content"><div style="text-align:center;padding:3rem;color:var(--gray)"><span class="spinner" style="border-color:rgba(0,0,0,.2);border-top-color:var(--blue)"></span> Laden...</div></div>'
     + '</div>';
@@ -3969,8 +3970,8 @@ function _renderOrderCard(o, statusLabel, statusColor) {
     + '</div>'
     + '<div class="prof-order-items">'+items+'</div>'
     + (o.total ? '<div class="prof-order-total">CHF '+o.total.toFixed(2)+(o.payment?' · '+esc(o.payment):'')+'</div>' : '')
-    + (o.status==='processing' ? '<div class="prof-order-info" style="background:#eff6ff;color:#1e40af">🔄 Ihre Bestellung wird gerade bearbeitet.</div>' : '')
-    + (o.status==='done' ? '<div class="prof-order-info" style="background:#f0fdf4;color:#15803d">✅ Fertig — wird bald geliefert!</div>' : '')
+    + (o.status==='processing' ? '<div class="prof-order-info" style="background:#eff6ff;color:#1e40af">Ihre Bestellung wird gerade bearbeitet.</div>' : '')
+    + (o.status==='done' ? '<div class="prof-order-info" style="background:#f0fdf4;color:#15803d">Fertig – wird bald geliefert!</div>' : '')
     + '</div>';
 }
 function renderMyOrders() { renderProfile(); }
