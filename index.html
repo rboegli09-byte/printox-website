@@ -668,10 +668,36 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
 .ex-btn-light{background:#fff;color:#15161b;font-weight:600;font-size:13.5px;padding:12px 22px;border-radius:10px;display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;transition:.18s;font-family:inherit}
 .ex-btn-light:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(0,0,0,.25)}
 .ex-hero-link{color:rgba(255,255,255,.85);font-size:13px;border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:2px;cursor:pointer}
-.ex-vase{position:absolute;right:46px;top:50%;transform:translateY(-50%);width:130px;height:158px}
-.ex-vase .sh{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:104px;height:22px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.5),transparent 70%);filter:blur(4px)}
-.ex-vase .obj{position:absolute;bottom:20px;left:20px;width:90px;height:118px;border-radius:17px 17px 32px 32px;background:linear-gradient(98deg,#f4f6fa 0%,#c7cfdd 36%,#8d99af 72%,#6b7990 100%);box-shadow:inset -6px 0 12px rgba(0,0,0,.18),inset 10px 0 13px rgba(255,255,255,.42)}
-.ex-vase .hl{position:absolute;top:34px;left:38px;width:22px;height:58px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.6),transparent);filter:blur(1px)}
+/* ── 3D-HERO: rotierendes Hexagon-Prisma (reines CSS-3D) ── */
+.ex-hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(148,180,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(148,180,255,.05) 1px,transparent 1px);background-size:34px 34px;-webkit-mask-image:radial-gradient(120% 110% at 72% 30%,#000 25%,transparent 72%);mask-image:radial-gradient(120% 110% at 72% 30%,#000 25%,transparent 72%);pointer-events:none}
+.px3d{position:absolute;right:52px;top:50%;transform:translateY(-50%);width:170px;height:200px;perspective:750px;z-index:1;pointer-events:none}
+.px3d::before{content:'';position:absolute;left:50%;top:50%;width:150px;height:150px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.28) 0%,transparent 65%);filter:blur(6px)}
+.px3d-float{position:relative;width:100%;height:100%;animation:px3dFloat 5.5s ease-in-out infinite}
+.px3d-prism{position:absolute;left:50%;top:50%;width:74px;height:126px;margin:-70px 0 0 -37px;transform-style:preserve-3d;animation:px3dSpin 15s linear infinite}
+.px3d-prism i{position:absolute;inset:0;background:linear-gradient(180deg,rgba(120,178,255,.20),rgba(37,99,235,.06) 55%,rgba(10,22,42,.42));border:1px solid rgba(118,169,250,.42);box-shadow:inset 0 0 22px rgba(59,130,246,.20);backface-visibility:visible}
+.px3d-prism i:nth-child(1){transform:rotateY(0deg) translateZ(64px)}
+.px3d-prism i:nth-child(2){transform:rotateY(60deg) translateZ(64px)}
+.px3d-prism i:nth-child(3){transform:rotateY(120deg) translateZ(64px)}
+.px3d-prism i:nth-child(4){transform:rotateY(180deg) translateZ(64px)}
+.px3d-prism i:nth-child(5){transform:rotateY(240deg) translateZ(64px)}
+.px3d-prism i:nth-child(6){transform:rotateY(300deg) translateZ(64px)}
+.px3d-shadow{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:118px;height:20px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.5),transparent 70%);filter:blur(5px);animation:px3dShadow 5.5s ease-in-out infinite}
+@keyframes px3dSpin{from{transform:rotateX(-16deg) rotateY(0deg)}to{transform:rotateX(-16deg) rotateY(360deg)}}
+@keyframes px3dFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
+@keyframes px3dShadow{0%,100%{opacity:.85;transform:translateX(-50%) scale(1)}50%{opacity:.5;transform:translateX(-50%) scale(.86)}}
+@media(max-width:760px){.px3d{display:none}}
+@media(prefers-reduced-motion:reduce){.px3d-float,.px3d-prism,.px3d-shadow{animation:none}.px3d-prism{transform:rotateX(-16deg) rotateY(28deg)}}
+/* ── Glanz-Sweep auf Produktbildern ── */
+.dg-card-img{position:relative;overflow:hidden}
+.dg-card-img::after{content:'';position:absolute;top:0;left:-85%;width:55%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.32),transparent);transform:skewX(-18deg);transition:left .55s ease;pointer-events:none;z-index:2}
+.dg-card:hover .dg-card-img::after{left:135%}
+/* ── Dashboard-Tiefe ── */
+.stat-card{position:relative;overflow:hidden;transition:transform .2s ease,box-shadow .25s ease}
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.35)}
+.stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(96,165,250,.65),transparent);opacity:0;transition:opacity .25s}
+.stat-card:hover::after{opacity:1}
+/* ── Taktile Buttons ── */
+.btn-fill:active,.ex-btn-light:active,.btn-checkout:active,.btn-sub:active,.dg-btn-cart:active,.btn-auth:active,.nav-action:active{transform:translateY(0) scale(.97)}
 .ex-trust{display:flex;flex-wrap:wrap;gap:10px 26px;padding:18px 6px 22px;border-bottom:1px solid #eae8e3;margin-bottom:8px}
 .ex-trust span{font-size:12.5px;color:#5b5c63;display:flex;align-items:center;gap:7px;font-weight:500}
 .ex-trust .eic{color:var(--blue);font-size:1rem}
@@ -720,7 +746,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
   .ex-search{display:none}
   .ex-hero-in{padding:28px 22px;max-width:none}
   .ex-hero h1{font-size:26px}
-  .ex-vase{display:none}
+  .px3d{display:none}
 }
 </style>
 </head>
@@ -897,7 +923,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
           <span class="ex-hero-link" onclick="document.getElementById('how-it-works').scrollIntoView({behavior:'smooth'})">So funktioniert's</span>
         </div>
       </div>
-      <div class="ex-vase"><div class="sh"></div><div class="obj"></div><div class="hl"></div></div>
+      <div class="px3d" aria-hidden="true"><div class="px3d-float"><div class="px3d-prism"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="px3d-shadow"></div></div></div>
     </section>
     <div class="ex-trust">
       <span><svg class="svgic" style="width:14px;height:14px;stroke:#059669" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>7–9 Werktage</span>
@@ -4695,6 +4721,29 @@ loadNews();
     });
   }, { threshold: 0.15 });
   document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+})();
+
+// 3D-Tilt auf Karten (nur Maus-Geräte, respektiert prefers-reduced-motion)
+(function() {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const SEL = '.dg-card,.feat-card,.ex-card,.step,.con-card';
+  document.addEventListener('pointermove', function(e) {
+    const c = e.target.closest && e.target.closest(SEL);
+    if (!c) return;
+    const r = c.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    c.style.transition = 'box-shadow .25s ease';
+    c.style.transform = 'perspective(800px) rotateX(' + (-y * 5).toFixed(2) + 'deg) rotateY(' + (x * 7).toFixed(2) + 'deg) translateY(-4px)';
+  });
+  document.addEventListener('pointerout', function(e) {
+    const c = e.target.closest && e.target.closest(SEL);
+    if (!c) return;
+    if (e.relatedTarget && c.contains(e.relatedTarget)) return;
+    c.style.transition = 'transform .35s ease, box-shadow .3s ease';
+    c.style.transform = '';
+  });
 })();
 </script>
 </body>
