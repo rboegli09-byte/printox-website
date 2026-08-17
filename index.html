@@ -19,6 +19,8 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%2309142a'/%3E%3Cpolygon points='20,4 34,12 34,28 20,36 6,28 6,12' fill='none' stroke='rgba(255,255,255,.5)' stroke-width='1.8'/%3E%3Cpolygon points='20,10 30,16 30,24 20,30 10,24 10,16' fill='rgba(255,255,255,.12)' stroke='rgba(255,255,255,.8)' stroke-width='1.6'/%3E%3Cpolygon points='20,15.5 25.5,18.8 25.5,21.2 20,24.5 14.5,21.2 14.5,18.8' fill='%23fff'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#09142a">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -62,6 +64,26 @@
   --r-2xl:24px;
 }
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--navy);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+::selection{background:rgba(37,99,235,.16);color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
+.svgic{width:1em;height:1em;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+/* Sanfte Einblendung beim Scrollen */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}}
+/* ── SO FUNKTIONIERT'S ── */
+.steps-wrap{padding:4.5rem 2rem;background:var(--surface);border-top:1px solid var(--gray-100);border-bottom:1px solid var(--gray-100)}
+.steps-in{max-width:1100px;margin:0 auto}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.5rem}
+.step{position:relative;padding:1.75rem;background:var(--gray-50);border-radius:var(--r-xl);border:1px solid var(--gray-100);transition:transform .25s,box-shadow .25s}
+.step:hover{transform:translateY(-4px);box-shadow:var(--sh-md)}
+.step-num{width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;font-size:.875rem;display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem}
+.step h3{font-size:.975rem;font-weight:700;color:var(--navy);margin-bottom:.4rem;letter-spacing:-.01em}
+.step p{color:var(--gray-500);font-size:.875rem;line-height:1.65}
+.feat-icon svg{width:24px;height:24px;stroke:var(--blue);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.con-ic{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;background:var(--blue-light);border-radius:var(--r-md);margin-bottom:.85rem}
+.con-ic svg{width:20px;height:20px;stroke:var(--blue);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
 
 /* ── NAV ── */
 nav{background:rgba(255,255,255,.96);width:100%;height:64px;padding:0 24px;display:flex;flex-direction:row;align-items:center;gap:1.4rem;position:sticky;top:0;z-index:500;border-bottom:1px solid #eae8e3;backdrop-filter:saturate(1.1)}
@@ -870,31 +892,45 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
         <h1>Deine Idee,<br>dein Druck.</h1>
         <p>Modell hochladen, Angebot erhalten, fertig. Vom Prototyp bis zur Kleinserie.</p>
         <div class="ex-hero-cta">
-          <button class="ex-btn-light" onclick="showPage('upload')">⬆ Modell hochladen</button>
-          <span class="ex-hero-link" onclick="showPage('shop')">So funktioniert's</span>
+          <button class="ex-btn-light" onclick="showPage('upload')"><svg class="svgic" style="width:15px;height:15px;vertical-align:-2px;margin-right:6px" viewBox="0 0 24 24"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>Modell hochladen</button>
+          <span class="ex-hero-link" onclick="document.getElementById('how-it-works').scrollIntoView({behavior:'smooth'})">So funktioniert's</span>
         </div>
       </div>
       <div class="ex-vase"><div class="sh"></div><div class="obj"></div><div class="hl"></div></div>
     </section>
     <div class="ex-trust">
-      <span>7–9 Werktage</span>
-      <span>0.1 mm Präzision</span>
-      <span>Sichere Zahlung</span>
-      <span>Swiss made · seit 2026</span>
+      <span><svg class="svgic" style="width:14px;height:14px;stroke:#059669" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>7–9 Werktage</span>
+      <span><svg class="svgic" style="width:14px;height:14px;stroke:#059669" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>0.1 mm Präzision</span>
+      <span><svg class="svgic" style="width:14px;height:14px;stroke:#059669" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>Sichere Zahlung</span>
+      <span><svg class="svgic" style="width:14px;height:14px;stroke:#059669" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>Swiss made · seit 2026</span>
     </div>
     <div id="home-news" style="display:none;margin-bottom:2.5rem"></div>
     <div class="ex-sec-head"><h2>Beliebte Produkte</h2><a onclick="showPage('shop')">Alle ansehen →</a></div>
     <div class="ex-prod-grid" id="home-products"></div>
   </div>
-  <div class="features-wrap" style="padding-top:0">
+  <!-- SO FUNKTIONIERT'S -->
+  <div class="steps-wrap" id="how-it-works">
+    <div class="steps-in">
+      <div class="sec-label">Ablauf</div>
+      <div class="sec-title">So funktioniert's</div>
+      <div class="sec-sub">Von der Idee zum fertigen Objekt – in vier einfachen Schritten.</div>
+      <div class="steps-grid">
+        <div class="step reveal"><div class="step-num">1</div><h3>Modell hochladen</h3><p>STL-, OBJ-, 3MF- oder STEP-Datei über das Upload-Formular einreichen – kostenlos und unverbindlich.</p></div>
+        <div class="step reveal"><div class="step-num">2</div><h3>Angebot erhalten</h3><p>Innerhalb von 24 Stunden erhältst du ein individuelles Angebot per E-Mail.</p></div>
+        <div class="step reveal"><div class="step-num">3</div><h3>Produktion</h3><p>Nach deiner Freigabe drucken wir dein Objekt mit bis zu 0.1 mm Präzision.</p></div>
+        <div class="step reveal"><div class="step-num">4</div><h3>Lieferung</h3><p>Versand per Post in die ganze Schweiz – oder kostenlose Selbstabholung.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="features-wrap" style="padding-top:5rem">
     <div class="sec-label">Warum Printox?</div>
     <div class="sec-title">Qualität aus der Schweiz</div>
     <div class="sec-sub">3D-Druck für Privat und Gewerbe</div>
     <div class="feat-grid">
-      <div class="feat-card"><h3>Schnelle Lieferung</h3><p>Innerhalb von 7–9 Werktagen geliefert.</p></div>
-      <div class="feat-card"><h3>Hochpräzision</h3><p>Druckauflösung bis zu 0.1 mm für exakte Ergebnisse.</p></div>
-      <div class="feat-card"><h3>Alle Materialien</h3><p>PLA, PETG, ABS, TPU und weitere auf Anfrage.</p></div>
-      <div class="feat-card"><h3>Persönlicher Support</h3><p>Beratung direkt per E-Mail.</p></div>
+      <div class="feat-card reveal"><span class="feat-icon"><svg viewBox="0 0 24 24"><path d="M1 3h13v13H1z" fill="none"/><path d="M14 8h4l3 4v4h-7"/><circle cx="6" cy="18.5" r="2"/><circle cx="17" cy="18.5" r="2"/><path d="M1 3h13v13H1z"/></svg></span><h3>Schnelle Lieferung</h3><p>Innerhalb von 7–9 Werktagen geliefert.</p></div>
+      <div class="feat-card reveal"><span class="feat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span><h3>Hochpräzision</h3><p>Druckauflösung bis zu 0.1 mm für exakte Ergebnisse.</p></div>
+      <div class="feat-card reveal"><span class="feat-icon"><svg viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 12l10 5 10-5"/><path d="M2 17l10 5 10-5"/></svg></span><h3>Alle Materialien</h3><p>PLA, PETG, ABS, TPU und weitere auf Anfrage.</p></div>
+      <div class="feat-card reveal"><span class="feat-icon"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.3-.7L3 21l1.8-5.7a8.4 8.4 0 1 1 16.2-3.8z"/></svg></span><h3>Persönlicher Support</h3><p>Beratung direkt per E-Mail.</p></div>
     </div>
   </div>
   <!-- JUNGES UNTERNEHMEN -->
@@ -914,7 +950,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
         <div class="sec-label">Kundenstimmen</div>
         <div class="sec-title" style="margin-bottom:.75rem">Das sagen unsere Kunden</div>
         <div id="avg-rating-display" style="color:var(--gray-500);font-size:.95rem;margin-bottom:1.5rem"></div>
-        <button onclick="openReviewModal()" class="btn-fill" style="display:inline-flex;align-items:center;gap:.5rem">⭐ Bewertung abgeben</button>
+        <button onclick="openReviewModal()" class="btn-fill" style="display:inline-flex;align-items:center;gap:.5rem"><svg style="width:16px;height:16px;fill:#fff" viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2l-6.1 3.4 1.4-6.8L2.2 9.1l6.9-.8L12 2z"/></svg> Bewertung abgeben</button>
       </div>
       <div id="reviews-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem"></div>
     </div>
@@ -944,8 +980,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
         <span style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:3px 8px;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.55)">TWINT</span>
         <span style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:3px 8px;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.55)">VISA</span>
         <span style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:3px 8px;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.55)">MC</span>
-        <span style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:3px 8px;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.55)">PayPal</span>
-        <span style="margin-left:.25rem">🇨🇭</span>
+        <span style="margin-left:.25rem;display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.45);font-size:.75rem;font-weight:600"><svg style="width:13px;height:13px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg>Swiss Made</span>
       </div>
     </div>
   </footer>
@@ -977,7 +1012,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
     </div>
     <div class="dg-grid" id="products-grid"></div>
   </div>
-  <footer><div class="ft-inner" style="max-width:1200px"><div><div class="ft-logo"><svg width="28" height="28"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div></div><div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('about')">Über uns</a><a onclick="showPage('contact')">Kontakt</a><a onclick="showPage('privacy')">Datenschutz</a><a onclick="showPage('agb')">AGB</a><a onclick="showPage('impressum')">Impressum</a></div><div class="ft-col"><h4>Kontakt</h4><p>info@printox.ch</p></div></div><div class="ft-bot" style="max-width:1200px;margin:1.5rem auto 0;border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span>Made in 🇨🇭</span></div></footer>
+  <footer><div class="ft-inner" style="max-width:1200px"><div><div class="ft-logo"><svg width="28" height="28"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div></div><div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('about')">Über uns</a><a onclick="showPage('contact')">Kontakt</a><a onclick="showPage('privacy')">Datenschutz</a><a onclick="showPage('agb')">AGB</a><a onclick="showPage('impressum')">Impressum</a></div><div class="ft-col"><h4>Kontakt</h4><p>info@printox.ch</p></div></div><div class="ft-bot" style="max-width:1200px;margin:1.5rem auto 0;border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span style="display:inline-flex;align-items:center;gap:6px"><svg style="width:13px;height:13px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg>Swiss Made</span></div></footer>
 </div>
 
 <!-- CART -->
@@ -988,13 +1023,13 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
     <div id="cart-items"></div>
     <div id="cart-summary"></div>
   </div>
-  <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span>Made in 🇨🇭</span></div></footer>
+  <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span style="display:inline-flex;align-items:center;gap:6px"><svg style="width:13px;height:13px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg>Swiss Made</span></div></footer>
 </div>
 
 <!-- SHOP LOCKED -->
 <div class="page" id="page-shop-locked">
   <div style="min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 1.5rem;text-align:center">
-    <div style="font-size:3rem;margin-bottom:1.5rem;opacity:.35">🛠</div>
+    <div style="width:72px;height:72px;border-radius:20px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem"><svg style="width:32px;height:32px;stroke:var(--blue);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M14.7 6.3a4.5 4.5 0 0 0-6 6L3 18l3 3 5.7-5.7a4.5 4.5 0 0 0 6-6L14 13l-3-3 3.7-3.7z"/></svg></div>
     <div style="font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--navy);opacity:.55;margin-bottom:.75rem">Shop</div>
     <h1 style="font-size:2rem;font-weight:800;color:var(--navy);margin:0 0 1rem">Wir bauen den Shop aus</h1>
     <p style="max-width:480px;color:#64748b;font-size:1rem;line-height:1.65;margin:0 0 2rem">Unser Shop befindet sich momentan im Aufbau. Wir arbeiten daran, euch bald ein vollständiges Sortiment anbieten zu können. In der Zwischenzeit könnt ihr euer eigenes Modell hochladen und direkt bestellen.</p>
@@ -1088,7 +1123,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       </div>
     </form>
   </div>
-  <footer><div class="ft-bot" style="max-width:780px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span>Made in 🇨🇭</span></div></footer>
+  <footer><div class="ft-bot" style="max-width:780px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span style="display:inline-flex;align-items:center;gap:6px"><svg style="width:13px;height:13px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg>Swiss Made</span></div></footer>
 </div>
 
 <!-- LOGIN -->
@@ -1134,15 +1169,18 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
     <!-- Info Cards -->
     <div class="con-grid">
       <div class="con-card" style="cursor:pointer" onclick="window.location.href='mailto:info@printox.ch'">
-        <h4>📧 E-Mail</h4>
+        <span class="con-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg></span>
+        <h4>E-Mail</h4>
         <p>info@printox.ch</p>
       </div>
       <div class="con-card">
-        <h4>🕐 Öffnungszeiten</h4>
+        <span class="con-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
+        <h4>Öffnungszeiten</h4>
         <p>Mi: 17:00–19:00<br>Fr: 17:00–20:00<br>Sa–So: 16:00–20:00</p>
       </div>
       <div class="con-card">
-        <h4>📍 Standort</h4>
+        <span class="con-ic"><svg viewBox="0 0 24 24"><path d="M12 21s7-5.1 7-11a7 7 0 1 0-14 0c0 5.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
+        <h4>Standort</h4>
         <p>Kanton Aargau, Schweiz<br>Abholadresse nach Bestellung</p>
       </div>
     </div>
@@ -1155,14 +1193,14 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       <div class="fg"><label>Betreff</label><input type="text" id="c-subject" placeholder="z.B. Anfrage 3D-Druck" value="Kontaktanfrage Printox"></div>
       <div class="fg"><label>Ihre Nachricht</label><textarea id="c-msg" placeholder="Beschreiben Sie Ihr Anliegen..."></textarea></div>
       <button class="btn-sub" onclick="openContactMail()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:.5rem">
-        📧 E-Mail öffnen
+        <svg class="svgic" style="width:16px;height:16px" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg> E-Mail öffnen
       </button>
       <div style="text-align:center;margin-top:.875rem;font-size:.8rem;color:var(--gray-400)">
         Öffnet Ihren E-Mail-Client · Keine Daten werden direkt von der Website übermittelt
       </div>
     </div>
   </div>
-  <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span>Made in 🇨🇭</span></div></footer>
+  <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span style="display:inline-flex;align-items:center;gap:6px"><svg style="width:13px;height:13px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg>Swiss Made</span></div></footer>
 </div>
 
 <!-- ADMIN -->
@@ -1240,7 +1278,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
     <div class="a-sec" id="a-texte"></div>
 
   </div>
-  <footer><div class="ft-bot" style="max-width:1200px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox Admin · Remo Bögli</span><span>Made in 🇨🇭</span></div></footer>
+  <footer><div class="ft-bot" style="max-width:1200px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox Admin · Remo Bögli</span><span style="display:inline-flex;align-items:center;gap:6px"><svg style="width:13px;height:13px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg>Swiss Made</span></div></footer>
 </div>
 
 
@@ -1306,7 +1344,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       <a href="mailto:info@printox.ch" style="color:var(--blue)">info@printox.ch</a></p>
     </div>
   </div>
-  <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span>Made in 🇨🇭</span></div></footer>
+  <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span style="display:inline-flex;align-items:center;gap:6px"><svg style="width:13px;height:13px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg>Swiss Made</span></div></footer>
 </div>
 
 
@@ -1382,7 +1420,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       </div>
     </div>
   </div>
-  <footer><div class="ft-bot" style="max-width:1200px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span>Made in 🇨🇭</span></div></footer>
+  <footer><div class="ft-bot" style="max-width:1200px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span style="display:inline-flex;align-items:center;gap:6px"><svg style="width:13px;height:13px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg>Swiss Made</span></div></footer>
 </div>
 
 <!-- ÜBER UNS -->
@@ -1424,7 +1462,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       </div>
     </div>
   </div>
-  <footer><div class="ft-inner" style="max-width:860px"><div><div class="ft-logo"><svg width="28" height="28"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div></div><div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('about')">Über uns</a><a onclick="showPage('contact')">Kontakt</a></div><div class="ft-col"><h4>Kontakt</h4><p>info@printox.ch</p></div></div><div class="ft-bot" style="max-width:860px;margin:1.5rem auto 0;border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span>Made in 🇨🇭</span></div></footer>
+  <footer><div class="ft-inner" style="max-width:860px"><div><div class="ft-logo"><svg width="28" height="28"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div></div><div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('about')">Über uns</a><a onclick="showPage('contact')">Kontakt</a></div><div class="ft-col"><h4>Kontakt</h4><p>info@printox.ch</p></div></div><div class="ft-bot" style="max-width:860px;margin:1.5rem auto 0;border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span style="display:inline-flex;align-items:center;gap:6px"><svg style="width:13px;height:13px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg>Swiss Made</span></div></footer>
 </div>
 
 <!-- AGB -->
@@ -1488,7 +1526,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       </div>
     </div>
   </div>
-  <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span>Made in 🇨🇭</span></div></footer>
+  <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span style="display:inline-flex;align-items:center;gap:6px"><svg style="width:13px;height:13px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg>Swiss Made</span></div></footer>
 </div>
 
 
@@ -1525,7 +1563,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       </div>
     </div>
   </div>
-  <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span>Made in 🇨🇭</span></div></footer>
+  <footer><div class="ft-bot" style="max-width:860px;margin:0 auto;padding:1.5rem 2rem;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.4)"><span>© 2026 Printox</span><span style="display:inline-flex;align-items:center;gap:6px"><svg style="width:13px;height:13px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg>Swiss Made</span></div></footer>
 </div>
 
 <!-- REVIEW MODAL -->
@@ -1547,7 +1585,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
     <div id="rv-err" style="color:var(--error);font-size:.85rem;margin-bottom:.5rem;display:none"></div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="document.getElementById('review-modal').style.display='none'">Abbrechen</button>
-      <button class="btn-save" onclick="submitReview()">⭐ Bewertung abschicken</button>
+      <button class="btn-save" onclick="submitReview()">Bewertung abschicken</button>
     </div>
   </div>
 </div>
@@ -1631,7 +1669,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       <div id="fp-err" class="fp-err"></div>
       <div class="modal-btns" style="margin-top:.5rem">
         <button class="btn-cancel" onclick="document.getElementById('forgot-modal').style.display='none'">Abbrechen</button>
-        <button class="btn-save" id="fp-send-btn" onclick="fpSendCode()">📧 Code senden</button>
+        <button class="btn-save" id="fp-send-btn" onclick="fpSendCode()">Code senden</button>
       </div>
     </div>
 
@@ -1940,7 +1978,7 @@ async function fpSendCode() {
     err.textContent = 'Fehler beim Senden. Bitte versuchen Sie es erneut.';
     err.style.display = 'block';
   }
-  btn.innerHTML = '📧 Code senden';
+  btn.innerHTML = 'Code senden';
   btn.disabled = false;
 }
 
@@ -4445,7 +4483,7 @@ async function submitReview() {
 
   const { data, error } = await db.from('reviews').insert([{ name, stars: selectedStar, comment }]).select();
 
-  btn.textContent = '⭐ Bewertung abschicken';
+  btn.textContent = 'Bewertung abschicken';
   btn.disabled = false;
 
   if (error) {
@@ -4664,6 +4702,20 @@ loadReviews();
 loadProductsFromSupabase();
 loadTeam();
 loadNews();
+
+// Sanfte Einblendung beim Scrollen (respektiert prefers-reduced-motion via CSS)
+(function() {
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+    return;
+  }
+  const obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+})();
 </script>
 </body>
 </html>
