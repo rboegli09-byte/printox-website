@@ -1720,7 +1720,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
 
 <script>
 // ═══ STATE ═══════════════════════════════════════════════════════════════════
-let users = [{id:1,name:'Remo Bögli',email:'info@printox.ch',password:'printox2024',isAdmin:true,role:'admin'}];
+let users = [];
 let currentUser = null;
 let cart = [];
 let products = [
@@ -2011,19 +2011,6 @@ async function fpReset() {
 // Store product images by id for gallery access
 const _prodImgCache = {};
 
-function pImgHTML(p) {
-  const imgs = p.images && p.images.length > 0 ? p.images : (p.image ? [p.image] : []);
-  _prodImgCache[p.id] = imgs;
-  const hasMultiple = imgs.length > 1;
-  if (imgs.length > 0) {
-    return '<div class="product-img" style="position:relative;cursor:pointer" onclick="openGallery(_prodImgCache['+p.id+'])">'
-      + '<img src="'+imgs[0]+'" alt="'+p.name+'" style="width:100%;height:100%;object-fit:cover">'
-      + (hasMultiple ? '<div style="position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,.6);color:#fff;font-size:.7rem;padding:.15rem .4rem;border-radius:8px">+'+imgs.length+' 📷</div>' : '')
-      + '</div>';
-  }
-  return '<div class="product-img" onclick="openProductDetail('+p.id+')" style="cursor:pointer"><span class="ef">'+(p.icon||'🖨️')+'</span></div>';
-}
-
 function renderShop() {
   const isA = currentUser && currentUser.isAdmin;
   const q = (document.getElementById('shop-search')?.value||'').toLowerCase().trim();
@@ -2048,8 +2035,8 @@ function renderShop() {
     const isNew = p.created_at && (now - new Date(p.created_at).getTime()) < 7*24*60*60*1000;
     const imgs = p.images && p.images.length ? p.images : (p.image ? [p.image] : []);
     const imgHtml = imgs.length
-      ? '<img src="'+imgs[0]+'" alt="'+(p.name||'')+'" loading="lazy">'
-      : '<span class="ef">'+(p.icon||'🖨️')+'</span>';
+      ? '<img src="'+esc(imgs[0])+'" alt="'+esc(p.name||'')+'" loading="lazy">'
+      : '<span class="ef">'+esc(p.icon||'🖨️')+'</span>';
     const priceHtml = p.discount > 0
       ? '<span class="dg-price-old">CHF '+p.price.toFixed(2)+'</span><span class="dg-price red">CHF '+(p.price*(1-p.discount/100)).toFixed(2)+'</span>'
       : '<span class="dg-price">CHF '+p.price.toFixed(2)+'</span>';
@@ -2063,7 +2050,7 @@ function renderShop() {
       + (p.discount>0 ? '<span class="dg-badge-sale">-'+p.discount+'%</span>' : '')
       + '</div>'
       + '<div class="dg-card-body">'
-      + '<div class="dg-prod-name">'+p.name+'</div>'
+      + '<div class="dg-prod-name">'+esc(p.name)+'</div>'
       + '<div class="dg-delivery">● Auf Lager · 7–9 Werktage</div>'
       + '<div class="dg-price-row">'+priceHtml+'</div>'
       + optsHtml
@@ -2073,7 +2060,7 @@ function renderShop() {
       + (isA ? '<div class="dg-admin-btns"><button class="btn-edit-sm" onclick="event.stopPropagation();openProdModal('+p.id+')">✏️</button><button class="btn-del-sm" onclick="event.stopPropagation();delProd('+p.id+')">🗑️</button></div>' : '')
       + '</div></div>';
   }).join('')
-  : '<div class="dg-empty"><div class="ei">🔍</div><p>'+(q?'Keine Produkte für «'+q+'».':'Noch keine Produkte.')+'</p></div>';
+  : '<div class="dg-empty"><div class="ei">🔍</div><p>'+(q?'Keine Produkte für «'+esc(q)+'».':'Noch keine Produkte.')+'</p></div>';
 
   const g = document.getElementById('products-grid');
   const ag = document.getElementById('admin-prod-grid');
@@ -2097,37 +2084,19 @@ function renderHomeProducts() {
   }
   const list = products.slice(0, 3);
   if (!list.length) { el.innerHTML = '<div class="empty-st" style="grid-column:1/-1"><div class="ei">🖨️</div><p>Produkte folgen in Kürze.</p></div>'; return; }
-  const media = function(p){ const imgs = p.images && p.images.length ? p.images : (p.image ? [p.image] : []); return imgs.length ? '<img src="'+imgs[0]+'" alt="'+(p.name||'')+'">' : '<span class="ic">'+(p.icon||'🖨️')+'</span>'; };
+  const media = function(p){ const imgs = p.images && p.images.length ? p.images : (p.image ? [p.image] : []); return imgs.length ? '<img src="'+esc(imgs[0])+'" alt="'+esc(p.name||'')+'">' : '<span class="ic">'+esc(p.icon||'🖨️')+'</span>'; };
   const px = function(p){ return (p.discount>0 ? p.price*(1-p.discount/100) : p.price).toFixed(2); };
   const addB = function(p){ return '<button class="ex-add" onclick="event.stopPropagation();addToCartWithOptions('+p.id+')" aria-label="In den Warenkorb">+</button>'; };
   const big = list[0];
   let out = '<div class="ex-card ex-card-big" onclick="openProductDetail('+big.id+')"><div class="ex-img">'+media(big)+'</div>'
-    + '<div class="ex-card-body"><div class="ex-name">'+big.name+'</div><div class="ex-price-row"><span class="ex-price">CHF '+px(big)+'</span>'+addB(big)+'</div></div></div>';
+    + '<div class="ex-card-body"><div class="ex-name">'+esc(big.name)+'</div><div class="ex-price-row"><span class="ex-price">CHF '+px(big)+'</span>'+addB(big)+'</div></div></div>';
   let col = '<div class="ex-prod-col">';
   list.slice(1).forEach(function(p){
     col += '<div class="ex-card ex-card-row" onclick="openProductDetail('+p.id+')"><div class="ex-img">'+media(p)+'</div>'
-      + '<div class="ex-card-body"><div class="ex-name">'+p.name+'</div><div class="ex-price-row"><span class="ex-price">CHF '+px(p)+'</span>'+addB(p)+'</div></div></div>';
+      + '<div class="ex-card-body"><div class="ex-name">'+esc(p.name)+'</div><div class="ex-price-row"><span class="ex-price">CHF '+px(p)+'</span>'+addB(p)+'</div></div></div>';
   });
   col += '</div>';
   el.innerHTML = out + col;
-}
-function _renderHomeProductsOld() {
-  const el = document.getElementById('home-products-old');
-  if (!el) return;
-  const list = products.slice(0, 4);
-  el.innerHTML = list.map(function(p) {
-    const price = p.discount > 0 ? (p.price * (1 - p.discount / 100)) : p.price;
-    const priceHtml = p.discount > 0
-      ? '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem"><span style="text-decoration:line-through;color:var(--gray-400);font-size:.875rem">CHF ' + p.price.toFixed(2) + '</span><span style="color:var(--error);font-weight:800;font-size:1.2rem">CHF ' + price.toFixed(2) + '</span></div>'
-      : '<div class="product-price">CHF ' + p.price.toFixed(2) + '</div>';
-    return '<div class="product-card"><div style="position:relative">' + pImgHTML(p) + '</div>'
-      + '<div class="product-body">'
-      + '<div class="product-name" onclick="openProductDetail(' + p.id + ')" style="cursor:pointer;color:var(--blue)">' + p.name + '</div>'
-      + '<div class="product-desc">' + (p.desc || '') + '</div>'
-      + priceHtml
-      + '<div class="product-actions"><button class="btn-cart" onclick="addToCartWithOptions(' + p.id + ')">In Warenkorb</button></div>'
-      + '</div></div>';
-  }).join('');
 }
 
 
@@ -2245,10 +2214,10 @@ function renderCart() {
   }
   ci.innerHTML = cart.map(it => {
     const iH = it.image
-      ? '<div class="ci-icon"><img src="' + it.image + '" alt="' + it.name + '"></div>'
-      : '<div class="ci-icon">' + (it.icon||'🖨️') + '</div>';
+      ? '<div class="ci-icon"><img src="' + esc(it.image) + '" alt="' + esc(it.name) + '"></div>'
+      : '<div class="ci-icon">' + esc(it.icon||'🖨️') + '</div>';
     return '<div class="cart-item">' + iH
-      + '<div style="flex:1"><div class="ci-name">' + it.name + '</div><div class="ci-price">CHF ' + it.price.toFixed(2) + ' / Stück</div></div>'
+      + '<div style="flex:1"><div class="ci-name">' + esc(it.name) + '</div><div class="ci-price">CHF ' + it.price.toFixed(2) + ' / Stück</div></div>'
       + '<div class="qty-ctrl"><button class="qty-btn" onclick="adjQ(' + it.id + ',-1)">−</button><span style="min-width:20px;text-align:center;font-weight:700">' + it.qty + '</span><button class="qty-btn" onclick="adjQ(' + it.id + ',1)">+</button></div>'
       + '<div style="font-weight:800;min-width:76px;text-align:right;font-size:1rem">CHF ' + (it.price*it.qty).toFixed(2) + '</div>'
       + '<button class="ci-rem" onclick="remCart(' + it.id + ')">✕</button></div>';
@@ -3280,10 +3249,10 @@ function openProductDetail(id) {
   if (hasSpecs) {
     specs.style.display = 'block';
     grid.innerHTML = [
-      p.len ? '<div style="color:var(--gray);font-size:.82rem">Länge</div><div style="font-weight:600;font-size:.82rem">'+p.len+' mm</div>' : '',
-      p.wid ? '<div style="color:var(--gray);font-size:.82rem">Breite</div><div style="font-weight:600;font-size:.82rem">'+p.wid+' mm</div>' : '',
-      p.hei ? '<div style="color:var(--gray);font-size:.82rem">Höhe</div><div style="font-weight:600;font-size:.82rem">'+p.hei+' mm</div>' : '',
-      p.kg  ? '<div style="color:var(--gray);font-size:.82rem">Gewicht</div><div style="font-weight:600;font-size:.82rem">'+p.kg+' kg</div>' : '',
+      p.len ? '<div style="color:var(--gray);font-size:.82rem">Länge</div><div style="font-weight:600;font-size:.82rem">'+esc(p.len)+' mm</div>' : '',
+      p.wid ? '<div style="color:var(--gray);font-size:.82rem">Breite</div><div style="font-weight:600;font-size:.82rem">'+esc(p.wid)+' mm</div>' : '',
+      p.hei ? '<div style="color:var(--gray);font-size:.82rem">Höhe</div><div style="font-weight:600;font-size:.82rem">'+esc(p.hei)+' mm</div>' : '',
+      p.kg  ? '<div style="color:var(--gray);font-size:.82rem">Gewicht</div><div style="font-weight:600;font-size:.82rem">'+esc(p.kg)+' kg</div>' : '',
     ].join('');
   } else {
     specs.style.display = 'none';
@@ -3328,9 +3297,14 @@ function openProductDetail(id) {
   const colorCont = document.getElementById('pdm-colors');
   window._pdmColor = null;
   if (p.colors && p.colors.length) {
-    colorCont.innerHTML = p.colors.map(function(c) {
-      return '<button onclick="pdmSelectColor(this,\''+c+'\')" style="padding:.35rem .8rem;border:1.5px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:.85rem;font-weight:500">'+c+'</button>';
-    }).join('');
+    colorCont.innerHTML = '';
+    p.colors.forEach(function(c) {
+      const b = document.createElement('button');
+      b.textContent = c;
+      b.style.cssText = 'padding:.35rem .8rem;border:1.5px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:.85rem;font-weight:500';
+      b.addEventListener('click', function() { pdmSelectColor(b, c); });
+      colorCont.appendChild(b);
+    });
     colorWrap.style.display = 'block';
   } else {
     colorCont.innerHTML = '';
@@ -3342,9 +3316,14 @@ function openProductDetail(id) {
   const filCont = document.getElementById('pdm-filaments');
   window._pdmFilament = null;
   if (p.filaments && p.filaments.length) {
-    filCont.innerHTML = p.filaments.map(function(f) {
-      return '<button onclick="pdmSelectFilament(this,\''+f+'\')" style="padding:.35rem .8rem;border:1.5px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:.85rem;font-weight:500">'+f+'</button>';
-    }).join('');
+    filCont.innerHTML = '';
+    p.filaments.forEach(function(f) {
+      const b = document.createElement('button');
+      b.textContent = f;
+      b.style.cssText = 'padding:.35rem .8rem;border:1.5px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:.85rem;font-weight:500';
+      b.addEventListener('click', function() { pdmSelectFilament(b, f); });
+      filCont.appendChild(b);
+    });
     filWrap.style.display = 'block';
   } else {
     filCont.innerHTML = '';
