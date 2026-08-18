@@ -683,8 +683,33 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
 .ex-btn-light{background:#fff;color:#15161b;font-weight:600;font-size:13.5px;padding:12px 22px;border-radius:10px;display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;transition:.18s;font-family:inherit}
 .ex-btn-light:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(0,0,0,.25)}
 .ex-hero-link{color:rgba(255,255,255,.85);font-size:13px;border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:2px;cursor:pointer}
-/* ── 3D-HERO: rotierendes Hexagon-Prisma (reines CSS-3D) ── */
-.ex-hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(148,180,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(148,180,255,.05) 1px,transparent 1px);background-size:34px 34px;-webkit-mask-image:radial-gradient(120% 110% at 72% 30%,#000 25%,transparent 72%);mask-image:radial-gradient(120% 110% at 72% 30%,#000 25%,transparent 72%);pointer-events:none}
+/* ── 3D-HERO: mausreaktive Bühne mit rotierendem Hexagon-Prisma ── */
+nav{background:rgba(255,255,255,.74);backdrop-filter:blur(14px) saturate(1.5);-webkit-backdrop-filter:blur(14px) saturate(1.5)}
+.ex-hero{min-height:300px}
+.ex-hero::before{content:'';position:absolute;inset:-30px;background-image:linear-gradient(rgba(148,180,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(148,180,255,.05) 1px,transparent 1px);background-size:34px 34px;-webkit-mask-image:radial-gradient(120% 110% at 72% 30%,#000 25%,transparent 72%);mask-image:radial-gradient(120% 110% at 72% 30%,#000 25%,transparent 72%);pointer-events:none;transform:translate3d(var(--mpx,0px),var(--mpy,0px),0);transition:transform .3s ease-out}
+.px3d-mouse{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateY(var(--mx,0deg)) rotateX(var(--my,0deg));transition:transform .35s ease-out}
+.px3d-float{transform-style:preserve-3d}
+.px3d-core{position:absolute;left:50%;top:50%;width:30px;height:66px;margin:-40px 0 0 -15px;transform-style:preserve-3d;animation:px3dSpinRev 9s linear infinite}
+.px3d-core i{position:absolute;inset:0;background:linear-gradient(180deg,rgba(167,139,250,.30),rgba(59,130,246,.12));border:1px solid rgba(167,139,250,.45);box-shadow:0 0 14px rgba(124,58,237,.22)}
+.px3d-core i:nth-child(1){transform:rotateY(0deg) translateZ(26px)}
+.px3d-core i:nth-child(2){transform:rotateY(60deg) translateZ(26px)}
+.px3d-core i:nth-child(3){transform:rotateY(120deg) translateZ(26px)}
+.px3d-core i:nth-child(4){transform:rotateY(180deg) translateZ(26px)}
+.px3d-core i:nth-child(5){transform:rotateY(240deg) translateZ(26px)}
+.px3d-core i:nth-child(6){transform:rotateY(300deg) translateZ(26px)}
+@keyframes px3dSpinRev{from{transform:rotateX(-16deg) rotateY(360deg)}to{transform:rotateX(-16deg) rotateY(0deg)}}
+/* ── ZAHLEN-BAND ── */
+.stats-band{background:linear-gradient(135deg,#09142a 0%,#0d1e38 100%);border-radius:20px;max-width:1100px;margin:0 auto;padding:2.75rem 2rem;position:relative;overflow:hidden;box-shadow:0 24px 60px rgba(9,20,42,.28)}
+.stats-band::before{content:'';position:absolute;inset:0;background:radial-gradient(60% 120% at 20% 0%,rgba(37,99,235,.22),transparent 60%),radial-gradient(50% 100% at 90% 100%,rgba(124,58,237,.16),transparent 60%);pointer-events:none}
+.stats-band-in{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1.75rem;text-align:center;position:relative}
+.sb-num{font-size:clamp(2rem,4.5vw,2.9rem);font-weight:800;letter-spacing:-.03em;background:linear-gradient(92deg,#60a5fa,#a78bfa);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1;font-variant-numeric:tabular-nums}
+.sb-lbl{color:rgba(255,255,255,.55);font-size:.82rem;font-weight:600;margin-top:.3rem;letter-spacing:.02em}
+/* ── MATERIAL-LAUFBAND ── */
+.marquee{overflow:hidden;padding:2.1rem 0;border-top:1px solid var(--gray-100);border-bottom:1px solid var(--gray-100);background:var(--surface)}
+.marquee-track{display:flex;gap:3rem;width:max-content;animation:marq 32s linear infinite;font-size:1.3rem;font-weight:800;letter-spacing:.16em;color:#d3dbe6;text-transform:uppercase;align-items:center;white-space:nowrap}
+.marquee-track em{font-style:normal;color:#b9c8e8;font-size:.9rem}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.marquee-track{animation:none}.px3d-core{animation:none}.px3d-mouse{transition:none}}
 .px3d{position:absolute;right:52px;top:50%;transform:translateY(-50%) translate3d(0,var(--plxy,0px),0);width:170px;height:200px;perspective:750px;z-index:1;pointer-events:none}
 .px3d::before{content:'';position:absolute;left:50%;top:50%;width:150px;height:150px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.28) 0%,transparent 65%);filter:blur(6px)}
 .px3d-float{position:relative;width:100%;height:100%;animation:px3dFloat 5.5s ease-in-out infinite}
@@ -939,7 +964,7 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
           <span class="ex-hero-link" onclick="document.getElementById('how-it-works').scrollIntoView({behavior:'smooth'})">So funktioniert's</span>
         </div>
       </div>
-      <div class="px3d" aria-hidden="true"><div class="px3d-float"><div class="px3d-prism"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="px3d-shadow"></div></div></div>
+      <div class="px3d" aria-hidden="true"><div class="px3d-float"><div class="px3d-mouse"><div class="px3d-prism"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="px3d-core"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="px3d-shadow"></div></div></div>
     </section>
     <div class="ex-trust">
       <span><svg class="svgic" style="width:14px;height:14px;stroke:#059669" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>7–9 Werktage</span>
@@ -964,6 +989,14 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
         <div class="step reveal"><div class="step-num">3</div><h3>Produktion</h3><p>Nach deiner Freigabe drucken wir dein Objekt mit bis zu 0.1 mm Präzision.</p></div>
         <div class="step reveal"><div class="step-num">4</div><h3>Lieferung</h3><p>Versand per Post in die ganze Schweiz – oder kostenlose Selbstabholung.</p></div>
       </div>
+      <div class="stats-band reveal" style="margin-top:3.5rem">
+        <div class="stats-band-in">
+          <div class="sb-item"><div class="sb-num" data-count="0.1" data-dec="1">0</div><div class="sb-lbl">mm Präzision</div></div>
+          <div class="sb-item"><div class="sb-num" data-count="256">0</div><div class="sb-lbl">mm Bauraum pro Achse</div></div>
+          <div class="sb-item"><div class="sb-num" data-count="24">0</div><div class="sb-lbl">h bis zum Angebot</div></div>
+          <div class="sb-item"><div class="sb-num" data-count="100">0</div><div class="sb-lbl">% Swiss Made</div></div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="features-wrap" style="padding-top:5rem">
@@ -986,6 +1019,14 @@ nav.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45
       <div class="sec-title" style="margin-bottom:1rem">Qualität, auf die Sie sich verlassen können</div>
       <p style="color:var(--gray-500);font-size:1rem;line-height:1.8;margin-bottom:1.75rem">Printox steht für erstklassigen 3D-Druck aus der Schweiz. Wir arbeiten mit Präzision, modernster Technik und einem hohen Qualitätsanspruch. Jeder Auftrag wird mit grösster Sorgfalt umgesetzt – professionell, zuverlässig und exakt nach Ihren Vorstellungen. Ihr Ergebnis ist unser Massstab.</p>
       <button onclick="showPage('contact')" style="background:none;border:1.5px solid var(--gray-300);color:var(--navy);padding:.7rem 1.75rem;border-radius:var(--r-md);font-family:Inter,sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .18s" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--gray-300)';this.style.color='var(--navy)'">Kontakt aufnehmen</button>
+    </div>
+  </div>
+
+  <!-- MATERIAL-LAUFBAND -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>PLA</span><em>⬡</em><span>PETG</span><em>⬡</em><span>ABS</span><em>⬡</em><span>TPU</span><em>⬡</em><span>ASA</span><em>⬡</em><span>Nylon</span><em>⬡</em><span>Prototypen</span><em>⬡</em><span>Kleinserien</span><em>⬡</em><span>Ersatzteile</span><em>⬡</em>
+      <span>PLA</span><em>⬡</em><span>PETG</span><em>⬡</em><span>ABS</span><em>⬡</em><span>TPU</span><em>⬡</em><span>ASA</span><em>⬡</em><span>Nylon</span><em>⬡</em><span>Prototypen</span><em>⬡</em><span>Kleinserien</span><em>⬡</em><span>Ersatzteile</span><em>⬡</em>
     </div>
   </div>
 
@@ -4743,11 +4784,13 @@ loadNews();
   document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
 })();
 
-// Scroll-Engine: Fortschrittsbalken, 3D-Parallax (Prisma + Tiefen-Objekte)
+// Scroll-Engine: Fortschrittsbalken, 3D-Parallax, Hero-Scrubbing
 (function() {
   const bar = document.getElementById('scroll-progress');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const px3d = document.querySelector('.px3d');
+  const hero = document.querySelector('.ex-hero');
+  const heroIn = document.querySelector('.ex-hero-in');
   const plxEls = Array.prototype.slice.call(document.querySelectorAll('[data-plx]'));
   let ticking = false;
   function frame() {
@@ -4758,6 +4801,14 @@ loadNews();
     if (bar) bar.style.width = (max > 0 ? (y / max * 100) : 0) + '%';
     if (reduce) return;
     if (px3d) px3d.style.setProperty('--plxy', (y * 0.3).toFixed(1) + 'px');
+    if (hero && heroIn) {
+      const hr = hero.getBoundingClientRect();
+      if (hr.bottom > -60) {
+        const p = Math.min(Math.max(-hr.top / (hr.height || 1), 0), 1);
+        heroIn.style.opacity = String(1 - p * 0.85);
+        heroIn.style.transform = 'translateY(' + (p * 36).toFixed(1) + 'px)';
+      }
+    }
     plxEls.forEach(function(el) {
       const parent = el.offsetParent;
       if (!parent) return;
@@ -4774,6 +4825,50 @@ loadNews();
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll, { passive: true });
   onScroll();
+})();
+
+// Mausreaktive Hero-Bühne (Prisma & Raster folgen dem Zeiger)
+(function() {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const hero = document.querySelector('.ex-hero');
+  if (!hero) return;
+  hero.addEventListener('pointermove', function(e) {
+    const r = hero.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    hero.style.setProperty('--mx', (x * 16).toFixed(2) + 'deg');
+    hero.style.setProperty('--my', (-y * 12).toFixed(2) + 'deg');
+    hero.style.setProperty('--mpx', (x * 16).toFixed(1) + 'px');
+    hero.style.setProperty('--mpy', (y * 12).toFixed(1) + 'px');
+  });
+  hero.addEventListener('pointerleave', function() {
+    ['--mx','--my','--mpx','--mpy'].forEach(function(v){ hero.style.removeProperty(v); });
+  });
+})();
+
+// Zahlen-Band: Werte zählen hoch, sobald sichtbar
+(function() {
+  const nums = document.querySelectorAll('.sb-num');
+  if (!nums.length) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function animate(el) {
+    const target = parseFloat(el.dataset.count);
+    const dec = parseInt(el.dataset.dec || '0', 10);
+    if (reduce || !('requestAnimationFrame' in window)) { el.textContent = target.toFixed(dec); return; }
+    const t0 = performance.now(), dur = 1300;
+    (function tick(t) {
+      const p = Math.min((t - t0) / dur, 1);
+      const e = 1 - Math.pow(1 - p, 3);
+      el.textContent = (target * e).toFixed(dec);
+      if (p < 1) requestAnimationFrame(tick);
+    })(t0);
+  }
+  if (!('IntersectionObserver' in window)) { nums.forEach(animate); return; }
+  const io = new IntersectionObserver(function(es) {
+    es.forEach(function(e) { if (e.isIntersecting) { animate(e.target); io.unobserve(e.target); } });
+  }, { threshold: 0.4 });
+  nums.forEach(function(n) { io.observe(n); });
 })();
 
 // 3D-Tilt auf Karten (nur Maus-Geräte, respektiert prefers-reduced-motion)
