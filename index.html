@@ -1276,15 +1276,19 @@ nav{background:rgba(255,255,255,.74);backdrop-filter:blur(14px) saturate(1.5);-w
     <!-- Nachricht schreiben -->
     <div style="background:var(--surface);border-radius:var(--r-xl);padding:2rem;box-shadow:var(--sh-md),0 0 0 1px rgba(9,20,42,.04)">
       <div style="font-size:1.1rem;font-weight:800;color:var(--navy);margin-bottom:.4rem;letter-spacing:-.01em">Nachricht schreiben</div>
-      <div style="font-size:.875rem;color:var(--gray-500);margin-bottom:1.5rem">Füllen Sie die Felder aus – beim Klick auf "E-Mail öffnen" startet automatisch Ihr E-Mail-Programm (Outlook, Mail, Gmail, etc.).</div>
-      <div class="fg"><label>Ihr Name</label><input type="text" id="c-name" placeholder="Remo Bögli"></div>
+      <div style="font-size:.875rem;color:var(--gray-500);margin-bottom:1.5rem">Füllen Sie die Felder aus – Ihre Nachricht wird direkt an uns gesendet. Antwort in der Regel innerhalb von 24 Stunden.</div>
+      <div class="form-row">
+        <div class="fg"><label>Ihr Name *</label><input type="text" id="c-name" placeholder="Max Muster"></div>
+        <div class="fg"><label>Ihre E-Mail *</label><input type="email" id="c-email" placeholder="max@beispiel.ch"></div>
+      </div>
       <div class="fg"><label>Betreff</label><input type="text" id="c-subject" placeholder="z.B. Anfrage 3D-Druck" value="Kontaktanfrage Printox"></div>
-      <div class="fg"><label>Ihre Nachricht</label><textarea id="c-msg" placeholder="Beschreiben Sie Ihr Anliegen..."></textarea></div>
-      <button class="btn-sub" onclick="openContactMail()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:.5rem">
-        <svg class="svgic" style="width:16px;height:16px" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg> E-Mail öffnen
+      <div class="fg"><label>Ihre Nachricht *</label><textarea id="c-msg" placeholder="Beschreiben Sie Ihr Anliegen..."></textarea></div>
+      <div id="c-status" style="display:none;padding:.8rem 1rem;border-radius:10px;font-size:.875rem;margin-bottom:1rem"></div>
+      <button class="btn-sub" id="c-send-btn" onclick="sendContactMessage()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:.5rem">
+        <svg class="svgic" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="m22 2-11 11"/><path d="M22 2 15 22l-4-9-9-4L22 2z"/></svg> Nachricht senden
       </button>
       <div style="text-align:center;margin-top:.875rem;font-size:.8rem;color:var(--gray-400)">
-        Öffnet Ihren E-Mail-Client · Keine Daten werden direkt von der Website übermittelt
+        Direktversand über die Website · Wir antworten an Ihre E-Mail-Adresse
       </div>
     </div>
   </div>
@@ -4723,15 +4727,56 @@ async function deleteReview(id) {
 }
 
 // ═══ KONTAKT – mailto: ═══════════════════════════════════════════════════════
-function openContactMail() {
+async function sendContactMessage() {
   const name    = (document.getElementById('c-name')?.value.trim()) || '';
+  const email   = (document.getElementById('c-email')?.value.trim()) || '';
   const subject = (document.getElementById('c-subject')?.value.trim()) || 'Kontaktanfrage Printox';
   const msg     = (document.getElementById('c-msg')?.value.trim()) || '';
-  const body    = (name ? 'Von: ' + name + '\n\n' : '') + msg;
-  const mailto  = 'mailto:info@printox.ch'
-    + '?subject=' + encodeURIComponent(subject)
-    + '&body='    + encodeURIComponent(body);
-  window.location.href = mailto;
+  const status  = document.getElementById('c-status');
+  const btn     = document.getElementById('c-send-btn');
+  status.style.display = 'none';
+
+  if (!name) { showContactStatus('Bitte gib deinen Namen ein.', 'e'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showContactStatus('Bitte gib eine gültige E-Mail-Adresse ein.', 'e'); return; }
+  if (!msg) { showContactStatus('Bitte schreibe eine Nachricht.', 'e'); return; }
+
+  btn.disabled = true;
+  const oldLabel = btn.innerHTML;
+  btn.innerHTML = '<span class="spinner"></span>Wird gesendet...';
+
+  try {
+    await emailjs.send('service_u2ip6kn', 'template_contact', {
+      from_name: name,
+      reply_to: email,
+      subject: subject,
+      message: msg
+    });
+    document.getElementById('c-name').value = '';
+    document.getElementById('c-email').value = '';
+    document.getElementById('c-msg').value = '';
+    showContactStatus('Danke! Deine Nachricht wurde versendet. Wir melden uns innerhalb von 24 Stunden.', 's');
+    toast('Nachricht gesendet ✓');
+  } catch(e) {
+    console.error('Kontakt-Mail Fehler:', e);
+    // Fallback: E-Mail-Programm öffnen, damit die Nachricht nicht verloren geht
+    showContactStatus('Direktversand momentan nicht möglich. Wir öffnen stattdessen dein E-Mail-Programm.', 'e');
+    const body = 'Von: ' + name + ' (' + email + ')\n\n' + msg;
+    setTimeout(function() {
+      window.location.href = 'mailto:info@printox.ch?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    }, 1200);
+  }
+  btn.disabled = false;
+  btn.innerHTML = oldLabel;
+}
+
+function showContactStatus(text, type) {
+  const status = document.getElementById('c-status');
+  if (!status) return;
+  status.textContent = text;
+  status.style.display = 'block';
+  status.style.background = type === 's' ? '#f0fdf4' : '#fef2f2';
+  status.style.color = type === 's' ? '#15803d' : '#b91c1c';
+  status.style.border = '1px solid ' + (type === 's' ? '#bbf7d0' : '#fecaca');
 }
 
 // ═══ SCROLL TO TOP ════════════════════════════════════════════════════════════
