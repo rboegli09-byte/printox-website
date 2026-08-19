@@ -95,6 +95,7 @@ html{scroll-behavior:smooth}
 #jtrack{position:relative;z-index:2}
 .jsec{min-height:72vh;display:flex;align-items:center;justify-content:center;padding:72px 5vw;position:relative}
 #jsec-0{min-height:calc(100dvh - 64px);padding:24px 5vw 72px}
+#jsec-5{padding-bottom:130px}
 .jhero{max-width:560px;position:relative;z-index:2;margin-right:auto;padding-left:3vw}
 .jhero .ex-eyebrow{color:var(--blue)}
 .jhero h1{font-size:clamp(38px,5vw,60px);font-weight:800;letter-spacing:-1.6px;line-height:1.06;margin:14px 0 16px;color:var(--navy)}
@@ -104,7 +105,7 @@ html{scroll-behavior:smooth}
 .jhero .ex-hero-link{color:var(--gray-600);border-bottom-color:var(--gray-300)}
 .jtrust{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:26px}
 .jtrust span{font-size:12.5px;color:var(--gray-500);display:flex;align-items:center;gap:7px;font-weight:500}
-.jpanel{position:relative;z-index:2;max-width:1020px;width:100%;background:rgba(255,255,255,.86);border:1px solid var(--gray-200);border-radius:22px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 18px 50px rgba(9,20,42,.10);padding:clamp(1.4rem,3vw,2.75rem)}
+.jpanel{position:relative;z-index:2;max-width:1020px;width:100%;background:#fff;border:1px solid var(--gray-200);border-radius:22px;box-shadow:0 18px 50px rgba(9,20,42,.10);padding:clamp(1.4rem,3vw,2.75rem)}
 .jpanel-end{text-align:center;max-width:860px}
 .jfoot{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:1.75rem;text-align:left;padding-top:1.75rem;border-top:1px solid var(--gray-100)}
 .jfoot-col h4{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);margin:0 0 .7rem}
@@ -118,7 +119,7 @@ html{scroll-behavior:smooth}
 .jdot.active i{color:var(--blue)}
 .jdot.active em{color:var(--gray-600)}
 .jline{width:26px;height:1px;background:var(--gray-200)}
-#jhint{position:fixed;bottom:74px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;color:var(--gray-500);font-size:12.5px;z-index:5;animation:jhintPulse 2.2s ease-in-out infinite;transition:opacity .5s;pointer-events:none}
+#jhint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;color:var(--gray-500);font-size:12.5px;z-index:5;animation:jhintPulse 2.2s ease-in-out infinite;transition:opacity .5s;pointer-events:none}
 @keyframes jhintPulse{0%,100%{opacity:.5}50%{opacity:1}}
 @media(max-width:760px){
   .jsec{padding:48px 4vw}
@@ -900,6 +901,7 @@ nav{background:rgba(255,255,255,.74);backdrop-filter:blur(14px) saturate(1.5);-w
         </div>
       </div>
       <div class="px3d" aria-hidden="true"><div class="px3d-float"><div class="px3d-mouse"><div class="px3d-prism"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="px3d-core"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="px3d-shadow"></div></div></div>
+      <div id="jhint"><svg class="svgic" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M12 4v16"/><path d="m6 14 6 6 6-6"/></svg> Scrollen, um durch die Welt zu reisen</div>
     </section>
 
     <!-- STATION 2: ABLAUF -->
@@ -978,7 +980,7 @@ nav{background:rgba(255,255,255,.74);backdrop-filter:blur(14px) saturate(1.5);-w
         </div>
         <div class="jfoot">
           <div class="jfoot-col">
-            <div class="ft-logo" style="margin-bottom:.5rem"><svg width="26" height="26"><use href="#hex-icon"/></svg><span class="ft-logo-text" style="font-size:.95rem">PRINTOX</span></div>
+            <img src="logo.png" alt="Printox" style="height:26px;width:auto;display:block;margin-bottom:.6rem">
             <p id="ft-desc" style="color:var(--gray-500);font-size:.85rem;margin:0 0 .9rem">3D-Druck-Service aus der Schweiz.</p>
             <p style="color:var(--gray-500);font-size:.78rem;font-weight:600;margin:0 0 .45rem">Newsletter abonnieren</p>
             <div style="display:flex;gap:.4rem;max-width:280px">
@@ -1021,7 +1023,6 @@ nav{background:rgba(255,255,255,.74);backdrop-filter:blur(14px) saturate(1.5);-w
     <span class="jline"></span>
     <button class="jdot" onclick="jumpJourney(5)"><i>06</i><em>Kontakt</em></button>
   </div>
-  <div id="jhint"><svg class="svgic" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M12 4v16"/><path d="m6 14 6 6 6-6"/></svg> Scrollen, um durch die Welt zu reisen</div>
 </div>
 </div>
 
@@ -4968,9 +4969,6 @@ window.jumpJourney = function(i) {
   ring.rotation.x = Math.PI / 2;
   ring.position.y = -1.6;
   g5.add(ring);
-  const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.95, 5.2, 24, 1, true), new THREE.MeshBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.10, side: THREE.DoubleSide, depthWrite: false }));
-  beam.position.y = 0.9;
-  g5.add(beam);
   const core = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 1.1, 6, 1), stdMat(LIGHTBLUE, { emissiveIntensity: 0.3 }));
   core.position.y = -0.9;
   g5.add(core);
@@ -4982,9 +4980,8 @@ window.jumpJourney = function(i) {
   pieces.push({ group: g5, update: function(act, t) {
     ring.rotation.z = t * 0.0008;
     ring.material.emissiveIntensity = 0.5 + act * (0.6 + 0.35 * Math.sin(t * 0.0025));
-    beam.material.opacity = 0.05 + act * 0.12;
     core.rotation.y = t * 0.0006;
-    beaconLight.intensity = 4 + act * 10;
+    beaconLight.intensity = 2 + act * 5;
   }});
 
   // ── Fortschritt aus normaler Scroll-Position (kein Eingriff ins Scrollen) ──
