@@ -89,52 +89,45 @@ html{scroll-behavior:smooth}
 ::-webkit-scrollbar-track{background:#eef1f5}
 ::-webkit-scrollbar-thumb{background:#aebccd;border-radius:8px;border:2px solid #eef1f5}
 ::-webkit-scrollbar-thumb:hover{background:var(--blue)}
-/* ════ 3D-JOURNEY (vertikales Scrollen, Kamera fährt seitlich durch die Welt) ════ */
-#journey{position:relative;background:radial-gradient(130% 60% at 30% 0%,#16233c 0%,#0b1526 45%,#0a1120 100%)}
+/* ════ 3D-JOURNEY (hell): vertikal scrollen, Kamera fährt seitlich ════ */
+#journey{position:relative;background:linear-gradient(180deg,#f7f9fc 0%,#eef2f8 55%,#f4f7fb 100%)}
 #world3d{position:fixed;top:64px;left:0;width:100vw;height:calc(100dvh - 64px);pointer-events:none;z-index:0}
 #jtrack{position:relative;z-index:2}
-.jsec{min-height:calc(100dvh - 64px);display:flex;align-items:center;justify-content:center;padding:48px 5vw 72px;position:relative}
-.jhero{max-width:560px;color:#fff;position:relative;z-index:2;margin-right:auto;padding-left:3vw}
-.jhero h1{font-size:clamp(38px,5vw,60px);font-weight:800;letter-spacing:-1.6px;line-height:1.06;margin:14px 0 16px;color:#fff}
-.jhero p{font-size:16px;color:rgba(234,240,250,.62);line-height:1.65;margin-bottom:26px;max-width:400px}
+.jsec{min-height:72vh;display:flex;align-items:center;justify-content:center;padding:72px 5vw;position:relative}
+#jsec-0{min-height:calc(100dvh - 64px);padding:24px 5vw 72px}
+.jhero{max-width:560px;position:relative;z-index:2;margin-right:auto;padding-left:3vw}
+.jhero .ex-eyebrow{color:var(--blue)}
+.jhero h1{font-size:clamp(38px,5vw,60px);font-weight:800;letter-spacing:-1.6px;line-height:1.06;margin:14px 0 16px;color:var(--navy)}
+.jhero p{font-size:16px;color:var(--gray-500);line-height:1.65;margin-bottom:26px;max-width:400px}
+.jhero .ex-btn-light{background:var(--navy);color:#fff;box-shadow:var(--sh-md)}
+.jhero .ex-btn-light:hover{background:var(--blue)}
+.jhero .ex-hero-link{color:var(--gray-600);border-bottom-color:var(--gray-300)}
 .jtrust{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:26px}
-.jtrust span{font-size:12.5px;color:rgba(234,240,250,.55);display:flex;align-items:center;gap:7px;font-weight:500}
-.jpanel{position:relative;z-index:2;max-width:1020px;width:100%;background:rgba(13,24,44,.58);border:1px solid rgba(126,166,255,.15);border-radius:22px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 30px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06);padding:clamp(1.4rem,3vw,2.75rem);color:#eaf0fa}
-.jpanel .sec-label{color:#7ea8ff}
-.jpanel .sec-title{color:#fff}
-.jpanel .sec-sub{color:rgba(234,240,250,.55)}
-.jpanel .ex-sec-head h2{color:#fff}
-.jpanel .step{background:rgba(255,255,255,.04);border-color:rgba(126,166,255,.14)}
-.jpanel .step h3{color:#fff}
-.jpanel .step p{color:rgba(234,240,250,.6)}
-.jpanel .feat-card{background:rgba(255,255,255,.04);box-shadow:none;border:1px solid rgba(126,166,255,.14)}
-.jpanel .feat-card h3{color:#fff}
-.jpanel .feat-card p{color:rgba(234,240,250,.6)}
-.jpanel .feat-icon{background:rgba(59,130,246,.16)}
-.jpanel .feat-icon svg{stroke:#7ea8ff}
+.jtrust span{font-size:12.5px;color:var(--gray-500);display:flex;align-items:center;gap:7px;font-weight:500}
+.jpanel{position:relative;z-index:2;max-width:1020px;width:100%;background:rgba(255,255,255,.86);border:1px solid var(--gray-200);border-radius:22px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 18px 50px rgba(9,20,42,.10);padding:clamp(1.4rem,3vw,2.75rem)}
 .jpanel-end{text-align:center;max-width:860px}
-.jfoot{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:1.75rem;text-align:left;padding-top:1.75rem;border-top:1px solid rgba(255,255,255,.08)}
-.jfoot-col h4{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(234,240,250,.45);margin:0 0 .7rem}
-.jfoot-col a{display:block;color:rgba(234,240,250,.6);font-size:.85rem;margin-bottom:.4rem;cursor:pointer;text-decoration:none}
-.jfoot-col a:hover{color:#fff}
-.jbadge{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:2px 7px;font-size:.68rem;font-weight:700;color:rgba(255,255,255,.55)}
-#jnav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:5;background:rgba(10,17,32,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(126,166,255,.12);border-radius:14px;padding:6px 14px}
+.jfoot{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:1.75rem;text-align:left;padding-top:1.75rem;border-top:1px solid var(--gray-100)}
+.jfoot-col h4{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);margin:0 0 .7rem}
+.jfoot-col a{display:block;color:var(--gray-500);font-size:.85rem;margin-bottom:.4rem;cursor:pointer;text-decoration:none}
+.jfoot-col a:hover{color:var(--blue)}
+.jbadge{background:var(--gray-100);border:1px solid var(--gray-200);border-radius:5px;padding:2px 7px;font-size:.68rem;font-weight:700;color:var(--gray-500)}
+#jnav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:5;background:rgba(255,255,255,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--gray-200);border-radius:14px;padding:6px 14px;box-shadow:var(--sh-md)}
 .jdot{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 2px;font-family:Inter,sans-serif}
-.jdot i{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:rgba(234,240,250,.4);transition:color .25s}
-.jdot em{font-style:normal;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:rgba(234,240,250,.28);transition:color .25s}
-.jdot.active i{color:#7ea8ff}
-.jdot.active em{color:rgba(234,240,250,.7)}
-.jline{width:26px;height:1px;background:rgba(234,240,250,.15)}
-#jhint{position:fixed;bottom:74px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;color:rgba(234,240,250,.45);font-size:12.5px;z-index:5;animation:jhintPulse 2.2s ease-in-out infinite;transition:opacity .5s;pointer-events:none}
-@keyframes jhintPulse{0%,100%{opacity:.45}50%{opacity:.9}}
+.jdot i{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--gray-400);transition:color .25s}
+.jdot em{font-style:normal;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--gray-300);transition:color .25s}
+.jdot.active i{color:var(--blue)}
+.jdot.active em{color:var(--gray-600)}
+.jline{width:26px;height:1px;background:var(--gray-200)}
+#jhint{position:fixed;bottom:74px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;color:var(--gray-500);font-size:12.5px;z-index:5;animation:jhintPulse 2.2s ease-in-out infinite;transition:opacity .5s;pointer-events:none}
+@keyframes jhintPulse{0%,100%{opacity:.5}50%{opacity:1}}
 @media(max-width:760px){
-  .jsec{padding:24px 4vw 72px}
+  .jsec{padding:48px 4vw}
   .jhero{padding-left:2vw;margin-right:0}
   .jdot em{display:none}
   .jline{width:14px}
   .jfoot{grid-template-columns:1fr;gap:1.25rem}
 }
-/* Fallback ohne WebGL: gleiche vertikale Seite, nur ohne 3D-Welt */
+/* Fallback ohne WebGL: gleiche Seite, nur ohne 3D-Welt */
 .journey-flat #world3d,.journey-flat #jnav,.journey-flat #jhint{display:none}
 /* ── SO FUNKTIONIERT'S ── */
 .steps-wrap{padding:4.5rem 2rem;background:var(--surface);border-top:1px solid var(--gray-100);border-bottom:1px solid var(--gray-100)}
@@ -897,13 +890,13 @@ nav{background:rgba(255,255,255,.74);backdrop-filter:blur(14px) saturate(1.5);-w
         <p>Modell hochladen, Angebot erhalten, fertig. Vom Prototyp bis zur Kleinserie – eine Reise durch unsere Welt beginnt hier.</p>
         <div class="ex-hero-cta">
           <button class="ex-btn-light" onclick="showPage('upload')"><svg class="svgic" style="width:15px;height:15px;vertical-align:-2px;margin-right:6px" viewBox="0 0 24 24"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>Modell hochladen</button>
-          <span class="ex-hero-link" onclick="jumpJourney(1)">Reise starten →</span>
+          <span class="ex-hero-link" onclick="jumpJourney(1)">Mehr entdecken ↓</span>
         </div>
         <div class="jtrust">
-          <span><svg class="svgic" style="width:14px;height:14px;stroke:#34d399" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>7–9 Werktage</span>
-          <span><svg class="svgic" style="width:14px;height:14px;stroke:#34d399" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>0.1 mm Präzision</span>
-          <span><svg class="svgic" style="width:14px;height:14px;stroke:#34d399" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>Sichere Zahlung</span>
-          <span><svg class="svgic" style="width:14px;height:14px;stroke:#34d399" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>Swiss made · seit 2026</span>
+          <span><svg class="svgic" style="width:14px;height:14px;stroke:#059669" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>7–9 Werktage</span>
+          <span><svg class="svgic" style="width:14px;height:14px;stroke:#059669" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>0.1 mm Präzision</span>
+          <span><svg class="svgic" style="width:14px;height:14px;stroke:#059669" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>Sichere Zahlung</span>
+          <span><svg class="svgic" style="width:14px;height:14px;stroke:#059669" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>Swiss made · seit 2026</span>
         </div>
       </div>
       <div class="px3d" aria-hidden="true"><div class="px3d-float"><div class="px3d-mouse"><div class="px3d-prism"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="px3d-core"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="px3d-shadow"></div></div></div>
@@ -941,7 +934,7 @@ nav{background:rgba(255,255,255,.74);backdrop-filter:blur(14px) saturate(1.5);-w
         <div class="ex-prod-grid" id="home-products"></div>
         <div style="text-align:center;margin-top:1.5rem">
           <button class="btn-fill" onclick="showPage('shop')">Zum Shop</button>
-          <button class="btn-fill" style="background:rgba(255,255,255,.1);box-shadow:none;margin-left:.5rem" onclick="showPage('upload')">Eigenes Modell drucken</button>
+          <button class="btn-fill" style="background:var(--gray-100);color:var(--navy);box-shadow:none;margin-left:.5rem" onclick="showPage('upload')">Eigenes Modell drucken</button>
         </div>
       </div>
     </section>
@@ -958,13 +951,7 @@ nav{background:rgba(255,255,255,.74);backdrop-filter:blur(14px) saturate(1.5);-w
           <div class="feat-card reveal"><span class="feat-icon"><svg viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 12l10 5 10-5"/><path d="M2 17l10 5 10-5"/></svg></span><h3>Alle Materialien</h3><p>PLA, PETG, ABS, TPU und weitere auf Anfrage.</p></div>
           <div class="feat-card reveal"><span class="feat-icon"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.3-.7L3 21l1.8-5.7a8.4 8.4 0 1 1 16.2-3.8z"/></svg></span><h3>Persönlicher Support</h3><p>Beratung direkt per E-Mail.</p></div>
         </div>
-        <p style="color:rgba(234,240,250,.6);font-size:.95rem;line-height:1.75;margin:1.75rem auto 0;max-width:680px;text-align:center">Printox steht für erstklassigen 3D-Druck aus der Schweiz. Jeder Auftrag wird mit grösster Sorgfalt umgesetzt – professionell, zuverlässig und exakt nach Ihren Vorstellungen. Ihr Ergebnis ist unser Massstab.</p>
-        <div class="marquee" aria-hidden="true" style="margin-top:1.75rem">
-          <div class="marquee-track">
-            <span>PLA</span><em>⬡</em><span>PETG</span><em>⬡</em><span>ABS</span><em>⬡</em><span>TPU</span><em>⬡</em><span>ASA</span><em>⬡</em><span>Nylon</span><em>⬡</em><span>Prototypen</span><em>⬡</em><span>Kleinserien</span><em>⬡</em><span>Ersatzteile</span><em>⬡</em>
-            <span>PLA</span><em>⬡</em><span>PETG</span><em>⬡</em><span>ABS</span><em>⬡</em><span>TPU</span><em>⬡</em><span>ASA</span><em>⬡</em><span>Nylon</span><em>⬡</em><span>Prototypen</span><em>⬡</em><span>Kleinserien</span><em>⬡</em><span>Ersatzteile</span><em>⬡</em>
-          </div>
-        </div>
+        <p style="color:var(--gray-500);font-size:.95rem;line-height:1.75;margin:1.75rem auto 0;max-width:680px;text-align:center">Printox steht für erstklassigen 3D-Druck aus der Schweiz. Jeder Auftrag wird mit grösster Sorgfalt umgesetzt – professionell, zuverlässig und exakt nach Ihren Vorstellungen. Ihr Ergebnis ist unser Massstab.</p>
       </div>
     </section>
 
@@ -973,7 +960,7 @@ nav{background:rgba(255,255,255,.74);backdrop-filter:blur(14px) saturate(1.5);-w
       <div class="jpanel">
         <div class="sec-label">Station 04 · Kundenstimmen</div>
         <div class="sec-title">Das sagen unsere Kunden</div>
-        <div id="avg-rating-display" style="color:rgba(234,240,250,.6);font-size:.95rem;margin-bottom:1.25rem"></div>
+        <div id="avg-rating-display" style="color:var(--gray-500);font-size:.95rem;margin-bottom:1.25rem"></div>
         <button onclick="openReviewModal()" class="btn-fill" style="display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1.75rem"><svg style="width:16px;height:16px;fill:#fff" viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2l-6.1 3.4 1.4-6.8L2.2 9.1l6.9-.8L12 2z"/></svg> Bewertung abgeben</button>
         <div id="reviews-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem"></div>
       </div>
@@ -984,18 +971,18 @@ nav{background:rgba(255,255,255,.74);backdrop-filter:blur(14px) saturate(1.5);-w
       <div class="jpanel jpanel-end">
         <div class="sec-label">Station 05 · Ziel erreicht</div>
         <div class="sec-title" style="font-size:clamp(1.8rem,3.4vw,2.6rem)">Bereit für deinen Druck?</div>
-        <p style="color:rgba(234,240,250,.65);font-size:1.02rem;line-height:1.7;max-width:520px;margin:0 auto 1.75rem">Lade jetzt dein Modell hoch und erhalte innerhalb von 24 Stunden dein persönliches Angebot – unverbindlich und kostenlos.</p>
+        <p style="color:var(--gray-500);font-size:1.02rem;line-height:1.7;max-width:520px;margin:0 auto 1.75rem">Lade jetzt dein Modell hoch und erhalte innerhalb von 24 Stunden dein persönliches Angebot – unverbindlich und kostenlos.</p>
         <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.25rem">
           <button class="btn-fill" onclick="showPage('upload')">Jetzt Modell hochladen</button>
-          <button class="btn-fill" style="background:rgba(255,255,255,.1);box-shadow:none" onclick="showPage('contact')">Kontakt aufnehmen</button>
+          <button class="btn-fill" style="background:var(--gray-100);color:var(--navy);box-shadow:none" onclick="showPage('contact')">Kontakt aufnehmen</button>
         </div>
         <div class="jfoot">
           <div class="jfoot-col">
             <div class="ft-logo" style="margin-bottom:.5rem"><svg width="26" height="26"><use href="#hex-icon"/></svg><span class="ft-logo-text" style="font-size:.95rem">PRINTOX</span></div>
-            <p id="ft-desc" style="color:rgba(234,240,250,.5);font-size:.85rem;margin:0 0 .9rem">3D-Druck-Service aus der Schweiz.</p>
-            <p style="color:rgba(255,255,255,.55);font-size:.78rem;font-weight:600;margin:0 0 .45rem">Newsletter abonnieren</p>
+            <p id="ft-desc" style="color:var(--gray-500);font-size:.85rem;margin:0 0 .9rem">3D-Druck-Service aus der Schweiz.</p>
+            <p style="color:var(--gray-500);font-size:.78rem;font-weight:600;margin:0 0 .45rem">Newsletter abonnieren</p>
             <div style="display:flex;gap:.4rem;max-width:280px">
-              <input type="email" id="nl-email" placeholder="Deine E-Mail" style="flex:1;min-width:0;padding:.55rem .7rem;border-radius:6px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#fff;font-size:.82rem;font-family:Inter,sans-serif">
+              <input type="email" id="nl-email" placeholder="Deine E-Mail" style="flex:1;min-width:0;padding:.55rem .7rem;border-radius:6px;border:1px solid var(--gray-300);background:#fff;color:var(--navy);font-size:.82rem;font-family:Inter,sans-serif">
               <button onclick="subscribeNewsletter()" style="padding:.55rem .9rem;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap">Anmelden</button>
             </div>
             <p id="nl-msg" style="font-size:.75rem;margin:.45rem 0 0;display:none"></p>
@@ -1006,15 +993,15 @@ nav{background:rgba(255,255,255,.74);backdrop-filter:blur(14px) saturate(1.5);-w
           </div>
           <div class="jfoot-col">
             <h4>Kontakt</h4>
-            <p id="ft-email" style="color:rgba(234,240,250,.6);font-size:.85rem;margin:0 0 .25rem">info@printox.ch</p>
-            <p style="color:rgba(234,240,250,.4);font-size:.8rem;margin:0 0 .9rem">Aargau, Schweiz</p>
+            <p id="ft-email" style="color:var(--gray-600);font-size:.85rem;margin:0 0 .25rem">info@printox.ch</p>
+            <p style="color:var(--gray-400);font-size:.8rem;margin:0 0 .9rem">Aargau, Schweiz</p>
             <div style="display:flex;align-items:center;gap:.45rem;flex-wrap:wrap">
               <span class="jbadge">TWINT</span><span class="jbadge">VISA</span><span class="jbadge">MC</span>
-              <span style="display:inline-flex;align-items:center;gap:5px;color:rgba(255,255,255,.45);font-size:.72rem;font-weight:600"><svg style="width:12px;height:12px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg>Swiss Made</span>
+              <span style="display:inline-flex;align-items:center;gap:5px;color:var(--gray-500);font-size:.72rem;font-weight:600"><svg style="width:12px;height:12px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg>Swiss Made</span>
             </div>
           </div>
         </div>
-        <div id="ft-copy" style="margin-top:1.75rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.08);color:rgba(234,240,250,.35);font-size:.78rem">© 2026 Printox · Schweiz</div>
+        <div id="ft-copy" style="margin-top:1.75rem;padding-top:1rem;border-top:1px solid var(--gray-100);color:var(--gray-400);font-size:.78rem">© 2026 Printox · Schweiz</div>
       </div>
     </section>
 
@@ -4821,27 +4808,27 @@ window.jumpJourney = function(i) {
 
   // ── Szene ──
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x0b1526, 8, 21);
+  scene.fog = new THREE.Fog(0xeef2f8, 9, 24);
   const camera = new THREE.PerspectiveCamera(42, 2, 0.1, 60);
   camera.position.set(0, 1.0, 9.2);
 
-  scene.add(new THREE.AmbientLight(0x8fa3c8, 0.55));
-  const sun = new THREE.DirectionalLight(0xffffff, 1.1);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.85);
   sun.position.set(6, 10, 7);
   scene.add(sun);
-  const keyLight = new THREE.PointLight(0x2563eb, 16, 26);
+  const keyLight = new THREE.PointLight(0x2563eb, 5, 20);
   keyLight.position.set(0, -1, 6);
   scene.add(keyLight);
 
   // Boden-Raster (die "Bauplatte" der Welt)
-  const grid = new THREE.GridHelper(160, 80, 0x2a4a7a, 0x18294a);
+  const grid = new THREE.GridHelper(160, 80, 0xaec5e8, 0xd3e0f2);
   grid.position.y = -2.3;
   grid.material.transparent = true;
-  grid.material.opacity = 0.30;
+  grid.material.opacity = 0.5;
   scene.add(grid);
 
   // Partikel über die ganze Welt verteilt
-  const pCount = coarse ? 90 : 260;
+  const pCount = coarse ? 50 : 130;
   const pGeo = new THREE.BufferGeometry();
   const pPos = new Float32Array(pCount * 3);
   for (let i = 0; i < pCount; i++) {
@@ -4850,7 +4837,7 @@ window.jumpJourney = function(i) {
     pPos[i*3+2] = (Math.random() - 0.5) * 7 - 1;
   }
   pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-  const pts = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x5b8cff, size: 0.04, transparent: true, opacity: 0.5 }));
+  const pts = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x7ea2e0, size: 0.04, transparent: true, opacity: 0.35 }));
   scene.add(pts);
 
   const NAVY = 0x223a5e, LIGHTBLUE = 0x93a7c4, GLOW = 0x3b82f6;
