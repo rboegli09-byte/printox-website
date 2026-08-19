@@ -89,6 +89,62 @@ html{scroll-behavior:smooth}
 ::-webkit-scrollbar-track{background:#eef1f5}
 ::-webkit-scrollbar-thumb{background:#aebccd;border-radius:8px;border:2px solid #eef1f5}
 ::-webkit-scrollbar-thumb:hover{background:var(--blue)}
+/* ════ 3D-JOURNEY (horizontale Welt) ════ */
+body.journey-lock{overflow:hidden}
+#journey{position:relative;height:calc(100dvh - 64px);min-height:520px;overflow:hidden;background:radial-gradient(130% 100% at 30% 0%,#16233c 0%,#0b1526 52%,#0a1120 100%)}
+#world3d{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+#jtrack{position:absolute;inset:0;display:flex;will-change:transform;z-index:2}
+.jsec{flex:0 0 100%;height:100%;display:flex;align-items:center;justify-content:center;padding:24px 5vw 96px;position:relative}
+.jhero{max-width:560px;color:#fff;position:relative;z-index:2;margin-right:auto;padding-left:3vw}
+.jhero h1{font-size:clamp(38px,5vw,60px);font-weight:800;letter-spacing:-1.6px;line-height:1.06;margin:14px 0 16px;color:#fff}
+.jhero p{font-size:16px;color:rgba(234,240,250,.62);line-height:1.65;margin-bottom:26px;max-width:400px}
+.jtrust{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:26px}
+.jtrust span{font-size:12.5px;color:rgba(234,240,250,.55);display:flex;align-items:center;gap:7px;font-weight:500}
+.jpanel{position:relative;z-index:2;max-width:1020px;width:100%;max-height:100%;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:rgba(13,24,44,.58);border:1px solid rgba(126,166,255,.15);border-radius:22px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 30px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06);padding:clamp(1.4rem,3vw,2.75rem);color:#eaf0fa;scrollbar-width:thin}
+.jpanel::-webkit-scrollbar{width:8px}
+.jpanel::-webkit-scrollbar-track{background:transparent}
+.jpanel::-webkit-scrollbar-thumb{background:rgba(126,166,255,.25);border:none;border-radius:6px}
+.jpanel .sec-label{color:#7ea8ff}
+.jpanel .sec-title{color:#fff}
+.jpanel .sec-sub{color:rgba(234,240,250,.55)}
+.jpanel .ex-sec-head h2{color:#fff}
+.jpanel .step{background:rgba(255,255,255,.04);border-color:rgba(126,166,255,.14)}
+.jpanel .step h3{color:#fff}
+.jpanel .step p{color:rgba(234,240,250,.6)}
+.jpanel .feat-card{background:rgba(255,255,255,.04);box-shadow:none;border:1px solid rgba(126,166,255,.14)}
+.jpanel .feat-card h3{color:#fff}
+.jpanel .feat-card p{color:rgba(234,240,250,.6)}
+.jpanel .feat-icon{background:rgba(59,130,246,.16)}
+.jpanel .feat-icon svg{stroke:#7ea8ff}
+.jpanel-end{text-align:center;max-width:860px}
+.jfoot{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:1.75rem;text-align:left;padding-top:1.75rem;border-top:1px solid rgba(255,255,255,.08)}
+.jfoot-col h4{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(234,240,250,.45);margin:0 0 .7rem}
+.jfoot-col a{display:block;color:rgba(234,240,250,.6);font-size:.85rem;margin-bottom:.4rem;cursor:pointer;text-decoration:none}
+.jfoot-col a:hover{color:#fff}
+.jbadge{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:2px 7px;font-size:.68rem;font-weight:700;color:rgba(255,255,255,.55)}
+#jnav{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:5}
+.jdot{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 2px;font-family:Inter,sans-serif}
+.jdot i{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:rgba(234,240,250,.4);transition:color .25s}
+.jdot em{font-style:normal;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:rgba(234,240,250,.28);transition:color .25s}
+.jdot.active i{color:#7ea8ff}
+.jdot.active em{color:rgba(234,240,250,.7)}
+.jline{width:26px;height:1px;background:rgba(234,240,250,.15)}
+#jhint{position:absolute;bottom:64px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;color:rgba(234,240,250,.45);font-size:12.5px;z-index:5;animation:jhintPulse 2.2s ease-in-out infinite;transition:opacity .5s;pointer-events:none}
+@keyframes jhintPulse{0%,100%{opacity:.45}50%{opacity:.9}}
+@media(max-width:760px){
+  .jsec{padding:16px 4vw 88px}
+  .jhero{padding-left:2vw;margin-right:0}
+  .jdot em{display:none}
+  .jline{width:14px}
+  .jfoot{grid-template-columns:1fr;gap:1.25rem}
+}
+/* Fallback ohne WebGL / bei reduzierter Bewegung: Stationen vertikal stapeln */
+body.journey-flat{overflow:auto}
+.journey-flat #journey{height:auto;overflow:visible}
+.journey-flat #jtrack{position:static;display:block;transform:none!important}
+.journey-flat .jsec{height:auto;min-height:55vh;padding:56px 5vw}
+.journey-flat #world3d,.journey-flat #jnav,.journey-flat #jhint{display:none}
+.journey-flat .jpanel{max-height:none;overflow:visible}
 /* ── SO FUNKTIONIERT'S ── */
 .steps-wrap{padding:4.5rem 2rem;background:var(--surface);border-top:1px solid var(--gray-100);border-bottom:1px solid var(--gray-100)}
 .steps-in{max-width:1100px;margin:0 auto}
@@ -837,245 +893,158 @@ nav{background:rgba(255,255,255,.74);backdrop-filter:blur(14px) saturate(1.5);-w
 
 <!-- HOME -->
 <div class="page active" id="page-home">
-  <div class="hero" style="display:none">
-    <div class="hero-glow"></div>
-    <div style="display:flex;align-items:center;justify-content:center;gap:4rem;flex-wrap:wrap;position:relative;z-index:1;max-width:1100px;margin:0 auto;width:100%;box-sizing:border-box">
-      <div class="hero-content" style="margin:0;text-align:left;max-width:520px">
-        <div style="font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:#9db2da;margin-bottom:1rem;font-weight:600">3D-Druck</div>
-        <h1 style="text-align:left">Deine Idee,<br><span>dein Druck.</span></h1>
-        <p style="text-align:left">Modell hochladen, Angebot erhalten, fertig. Vom Prototyp bis zur Kleinserie – 3D-Druck aus der Schweiz.</p>
-        <div class="hero-btns" style="justify-content:flex-start">
-          <button class="btn-fill" onclick="showPage('upload')">Modell hochladen</button>
-          <button class="btn-ghost" onclick="showPage('shop')">Zum Shop</button>
-        </div>
-        <div style="margin-top:1.5rem;display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap">
-          <div style="color:rgba(255,255,255,.5);font-size:.82rem">⭐ Schweizer Qualität · seit 2026</div>
-        </div>
-      </div>
-      <div style="flex-shrink:0;animation:float 4s ease-in-out infinite">
-        <svg viewBox="0 0 340 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:340px;filter:drop-shadow(0 20px 60px rgba(37,99,235,0.3))">
-  <defs>
-    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1e293b"/>
-      <stop offset="100%" style="stop-color:#0f172a"/>
-    </linearGradient>
-    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.15"/>
-      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:0.05"/>
-    </linearGradient>
-    <linearGradient id="printGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#2563eb"/>
-      <stop offset="100%" style="stop-color:#7c3aed"/>
-    </linearGradient>
-    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.6"/>
-      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0.6"/>
-    </linearGradient>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <filter id="glow2">
-      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
-      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-  </defs>
-  <!-- Main body -->
-  <rect x="30" y="60" width="280" height="320" rx="16" fill="url(#bodyGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-  <!-- Top panel -->
-  <rect x="30" y="60" width="280" height="55" rx="16" fill="#1e293b"/>
-  <rect x="30" y="95" width="280" height="20" fill="#1e293b"/>
-  <!-- Screen -->
-  <rect x="50" y="72" width="90" height="34" rx="6" fill="#0f172a" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-  <rect x="53" y="75" width="84" height="28" rx="4" fill="#0d1b2e"/>
-  <!-- Screen content -->
-  <text x="95" y="88" text-anchor="middle" font-family="monospace" font-size="7" fill="#3b82f6">PRINTOX</text>
-  <text x="95" y="97" text-anchor="middle" font-family="monospace" font-size="6" fill="#10b981">● DRUCKT...</text>
-  <!-- Top buttons -->
-  <circle cx="195" cy="87" r="8" fill="#1e293b" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-  <circle cx="195" cy="87" r="4" fill="#2563eb" filter="url(#glow)"/>
-  <circle cx="215" cy="87" r="8" fill="#1e293b" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-  <circle cx="215" cy="87" r="3" fill="#475569"/>
-  <circle cx="235" cy="87" r="8" fill="#1e293b" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-  <circle cx="235" cy="87" r="3" fill="#475569"/>
-  <!-- Filament spool -->
-  <circle cx="280" cy="82" r="18" fill="#1e293b" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-  <circle cx="280" cy="82" r="12" fill="#0f172a" stroke="rgba(37,99,235,0.3)" stroke-width="1"/>
-  <circle cx="280" cy="82" r="5" fill="#1e293b" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-  <!-- Filament lines on spool -->
-  <circle cx="280" cy="82" r="9" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="3 4" opacity="0.6"/>
-  <!-- Glass door -->
-  <rect x="42" y="122" width="256" height="220" rx="6" fill="url(#glassGrad)" stroke="rgba(37,99,235,0.25)" stroke-width="1.5"/>
-  <!-- Glass reflection -->
-  <rect x="48" y="128" width="60" height="200" rx="3" fill="rgba(255,255,255,0.02)"/>
-  <!-- Print bed -->
-  <rect x="65" y="270" width="210" height="8" rx="2" fill="#1e293b" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-  <rect x="65" y="274" width="210" height="2" fill="rgba(255,255,255,0.05)"/>
-  <!-- Grid on bed -->
-  <line x1="95" y1="270" x2="95" y2="278" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
-  <line x1="125" y1="270" x2="125" y2="278" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
-  <line x1="155" y1="270" x2="155" y2="278" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
-  <line x1="185" y1="270" x2="185" y2="278" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
-  <line x1="215" y1="270" x2="215" y2="278" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
-  <line x1="245" y1="270" x2="245" y2="278" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
-  <!-- X-axis rail -->
-  <rect x="55" y="155" width="230" height="6" rx="3" fill="#334155" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-  <!-- Print head -->
-  <rect x="140" y="148" width="60" height="20" rx="4" fill="#1e40af" stroke="rgba(59,130,246,0.4)" stroke-width="1" filter="url(#glow)"/>
-  <rect x="162" y="168" width="16" height="12" rx="2" fill="#2563eb"/>
-  <!-- Nozzle -->
-  <polygon points="166,180 174,180 171,192 169,192" fill="#3b82f6" filter="url(#glow)"/>
-  <!-- Print progress - object being printed -->
-  <rect x="135" y="230" width="70" height="40" rx="4" fill="rgba(37,99,235,0.2)" stroke="rgba(37,99,235,0.4)" stroke-width="1"/>
-  <rect x="140" y="248" width="60" height="22" rx="3" fill="rgba(37,99,235,0.3)"/>
-  <rect x="145" y="260" width="50" height="10" rx="2" fill="rgba(59,130,246,0.5)"/>
-  <rect x="150" y="265" width="40" height="5" rx="1" fill="rgba(99,158,246,0.6)" filter="url(#glow)"/>
-  <!-- Filament line from spool to head -->
-  <path d="M 280 100 Q 280 130 250 150 Q 220 165 200 158" stroke="rgba(37,99,235,0.5)" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
-  <!-- Blue printing light glow -->
-  <ellipse cx="170" cy="195" rx="25" ry="8" fill="rgba(37,99,235,0.15)" filter="url(#glow2)"/>
-  <!-- Bottom panel -->
-  <rect x="42" y="345" width="256" height="28" rx="6" fill="#1e293b" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-  <!-- Progress bar -->
-  <rect x="60" y="354" width="170" height="4" rx="2" fill="#0f172a"/>
-  <rect x="60" y="354" width="115" height="4" rx="2" fill="url(#printGrad)" filter="url(#glow)"/>
-  <text x="242" y="358" font-family="monospace" font-size="7" fill="#64748b">67%</text>
-  <!-- Feet -->
-  <rect x="55" y="375" width="35" height="10" rx="4" fill="#1e293b" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-  <rect x="250" y="375" width="35" height="10" rx="4" fill="#1e293b" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-  <!-- Ambient particles -->
-  <circle cx="320" cy="140" r="2" fill="#3b82f6" opacity="0.4" filter="url(#glow)"/>
-  <circle cx="315" cy="200" r="1.5" fill="#7c3aed" opacity="0.3"/>
-  <circle cx="325" cy="260" r="2.5" fill="#2563eb" opacity="0.3" filter="url(#glow)"/>
-  <circle cx="20" cy="180" r="2" fill="#3b82f6" opacity="0.3"/>
-  <circle cx="15" cy="240" r="1.5" fill="#7c3aed" opacity="0.25"/>
-  <!-- Corner accent lines -->
-  <line x1="30" y1="80" x2="30" y2="100" stroke="#2563eb" stroke-width="2" opacity="0.5"/>
-  <line x1="310" y1="80" x2="310" y2="100" stroke="#2563eb" stroke-width="2" opacity="0.5"/>
-</svg>
-      </div>
-    </div>
-  </div>
-  <div class="ex-content">
-    <section class="ex-hero">
-      <canvas id="hero3d" aria-hidden="true"></canvas>
-      <div class="ex-hero-in">
-        <div class="ex-eyebrow">3D-Druck</div>
+<div id="journey">
+  <canvas id="world3d" aria-hidden="true"></canvas>
+
+  <div id="jtrack">
+
+    <!-- STATION 1: START -->
+    <section class="jsec" id="jsec-0">
+      <div class="jhero">
+        <div class="ex-eyebrow">3D-Druck aus der Schweiz</div>
         <h1>Deine Idee,<br>dein Druck.</h1>
-        <p>Modell hochladen, Angebot erhalten, fertig. Vom Prototyp bis zur Kleinserie.</p>
+        <p>Modell hochladen, Angebot erhalten, fertig. Vom Prototyp bis zur Kleinserie – eine Reise durch unsere Welt beginnt hier.</p>
         <div class="ex-hero-cta">
           <button class="ex-btn-light" onclick="showPage('upload')"><svg class="svgic" style="width:15px;height:15px;vertical-align:-2px;margin-right:6px" viewBox="0 0 24 24"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>Modell hochladen</button>
-          <span class="ex-hero-link" onclick="document.getElementById('how-it-works').scrollIntoView({behavior:'smooth'})">So funktioniert's</span>
+          <span class="ex-hero-link" onclick="jumpJourney(1)">Reise starten →</span>
+        </div>
+        <div class="jtrust">
+          <span><svg class="svgic" style="width:14px;height:14px;stroke:#34d399" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>7–9 Werktage</span>
+          <span><svg class="svgic" style="width:14px;height:14px;stroke:#34d399" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>0.1 mm Präzision</span>
+          <span><svg class="svgic" style="width:14px;height:14px;stroke:#34d399" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>Sichere Zahlung</span>
+          <span><svg class="svgic" style="width:14px;height:14px;stroke:#34d399" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>Swiss made · seit 2026</span>
         </div>
       </div>
       <div class="px3d" aria-hidden="true"><div class="px3d-float"><div class="px3d-mouse"><div class="px3d-prism"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="px3d-core"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="px3d-shadow"></div></div></div>
     </section>
-    <div class="ex-trust">
-      <span><svg class="svgic" style="width:14px;height:14px;stroke:#059669" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>7–9 Werktage</span>
-      <span><svg class="svgic" style="width:14px;height:14px;stroke:#059669" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>0.1 mm Präzision</span>
-      <span><svg class="svgic" style="width:14px;height:14px;stroke:#059669" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>Sichere Zahlung</span>
-      <span><svg class="svgic" style="width:14px;height:14px;stroke:#059669" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg>Swiss made · seit 2026</span>
-    </div>
-    <div id="home-news" style="display:none;margin-bottom:2.5rem"></div>
-    <div class="ex-sec-head"><h2>Beliebte Produkte</h2><a onclick="showPage('shop')">Alle ansehen →</a></div>
-    <div class="ex-prod-grid" id="home-products"></div>
-  </div>
-  <!-- SO FUNKTIONIERT'S -->
-  <div class="steps-wrap" id="how-it-works">
-    <div class="plx-hex" data-plx="0.18" data-dir="-1" style="top:12%;left:6%;width:52px;height:58px;opacity:.4"><svg viewBox="0 0 40 44"><polygon points="20,2 38,12 38,32 20,42 2,32 2,12" fill="none" stroke="#c3d4f2" stroke-width="1.4"/></svg></div>
-    <div class="steps-in">
-      <div class="sec-label">Ablauf</div>
-      <div class="sec-title">So funktioniert's</div>
-      <div class="sec-sub">Von der Idee zum fertigen Objekt – in vier einfachen Schritten.</div>
-      <div class="steps-grid">
-        <div class="step reveal"><div class="step-num">1</div><h3>Modell hochladen</h3><p>STL-, OBJ-, 3MF- oder STEP-Datei über das Upload-Formular einreichen – kostenlos und unverbindlich.</p></div>
-        <div class="step reveal"><div class="step-num">2</div><h3>Angebot erhalten</h3><p>Innerhalb von 24 Stunden erhältst du ein individuelles Angebot per E-Mail.</p></div>
-        <div class="step reveal"><div class="step-num">3</div><h3>Produktion</h3><p>Nach deiner Freigabe drucken wir dein Objekt mit bis zu 0.1 mm Präzision.</p></div>
-        <div class="step reveal"><div class="step-num">4</div><h3>Lieferung</h3><p>Versand per Post in die ganze Schweiz – oder kostenlose Selbstabholung.</p></div>
-      </div>
-      <div class="stats-band reveal" style="margin-top:3.5rem">
-        <div class="stats-band-in">
-          <div class="sb-item"><div class="sb-num" data-count="0.1" data-dec="1">0</div><div class="sb-lbl">mm Präzision</div></div>
-          <div class="sb-item"><div class="sb-num" data-count="256">0</div><div class="sb-lbl">mm Bauraum pro Achse</div></div>
-          <div class="sb-item"><div class="sb-num" data-count="24">0</div><div class="sb-lbl">h bis zum Angebot</div></div>
-          <div class="sb-item"><div class="sb-num" data-count="100">0</div><div class="sb-lbl">% Swiss Made</div></div>
+
+    <!-- STATION 2: ABLAUF -->
+    <section class="jsec" id="jsec-1">
+      <div class="jpanel" id="how-it-works">
+        <div class="sec-label">Station 01 · Ablauf</div>
+        <div class="sec-title">So funktioniert's</div>
+        <div class="sec-sub">Von der Idee zum fertigen Objekt – in vier einfachen Schritten.</div>
+        <div class="steps-grid">
+          <div class="step reveal"><div class="step-num">1</div><h3>Modell hochladen</h3><p>STL-, OBJ-, 3MF- oder STEP-Datei über das Upload-Formular einreichen – kostenlos und unverbindlich.</p></div>
+          <div class="step reveal"><div class="step-num">2</div><h3>Angebot erhalten</h3><p>Innerhalb von 24 Stunden erhältst du ein individuelles Angebot per E-Mail.</p></div>
+          <div class="step reveal"><div class="step-num">3</div><h3>Produktion</h3><p>Nach deiner Freigabe drucken wir dein Objekt mit bis zu 0.1 mm Präzision.</p></div>
+          <div class="step reveal"><div class="step-num">4</div><h3>Lieferung</h3><p>Versand per Post in die ganze Schweiz – oder kostenlose Selbstabholung.</p></div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="features-wrap" style="padding-top:5rem">
-    <div class="plx-hex" data-plx="0.14" data-dir="1" style="top:8%;right:5%;width:64px;height:72px"><svg viewBox="0 0 40 44"><polygon points="20,2 38,12 38,32 20,42 2,32 2,12" fill="none" stroke="#bcd0f0" stroke-width="1.4"/></svg></div>
-    <div class="plx-hex" data-plx="0.22" data-dir="-1" style="bottom:4%;left:4%;width:40px;height:44px;opacity:.35"><svg viewBox="0 0 40 44"><polygon points="20,2 38,12 38,32 20,42 2,32 2,12" fill="none" stroke="#9fb8e8" stroke-width="1.6"/></svg></div>
-    <div class="sec-label">Warum Printox?</div>
-    <div class="sec-title">Qualität aus der Schweiz</div>
-    <div class="sec-sub">3D-Druck für Privat und Gewerbe</div>
-    <div class="feat-grid">
-      <div class="feat-card reveal"><span class="feat-icon"><svg viewBox="0 0 24 24"><path d="M1 3h13v13H1z" fill="none"/><path d="M14 8h4l3 4v4h-7"/><circle cx="6" cy="18.5" r="2"/><circle cx="17" cy="18.5" r="2"/><path d="M1 3h13v13H1z"/></svg></span><h3>Schnelle Lieferung</h3><p>Innerhalb von 7–9 Werktagen geliefert.</p></div>
-      <div class="feat-card reveal"><span class="feat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span><h3>Hochpräzision</h3><p>Druckauflösung bis zu 0.1 mm für exakte Ergebnisse.</p></div>
-      <div class="feat-card reveal"><span class="feat-icon"><svg viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 12l10 5 10-5"/><path d="M2 17l10 5 10-5"/></svg></span><h3>Alle Materialien</h3><p>PLA, PETG, ABS, TPU und weitere auf Anfrage.</p></div>
-      <div class="feat-card reveal"><span class="feat-icon"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.3-.7L3 21l1.8-5.7a8.4 8.4 0 1 1 16.2-3.8z"/></svg></span><h3>Persönlicher Support</h3><p>Beratung direkt per E-Mail.</p></div>
-    </div>
-  </div>
-  <!-- JUNGES UNTERNEHMEN -->
-  <div style="padding:4rem 2rem;background:#f8fafc">
-    <div class="reveal" style="max-width:760px;margin:0 auto;text-align:center">
-      <div class="sec-label">Über uns</div>
-      <div class="sec-title" style="margin-bottom:1rem">Qualität, auf die Sie sich verlassen können</div>
-      <p style="color:var(--gray-500);font-size:1rem;line-height:1.8;margin-bottom:1.75rem">Printox steht für erstklassigen 3D-Druck aus der Schweiz. Wir arbeiten mit Präzision, modernster Technik und einem hohen Qualitätsanspruch. Jeder Auftrag wird mit grösster Sorgfalt umgesetzt – professionell, zuverlässig und exakt nach Ihren Vorstellungen. Ihr Ergebnis ist unser Massstab.</p>
-      <button onclick="showPage('contact')" style="background:none;border:1.5px solid var(--gray-300);color:var(--navy);padding:.7rem 1.75rem;border-radius:var(--r-md);font-family:Inter,sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .18s" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--gray-300)';this.style.color='var(--navy)'">Kontakt aufnehmen</button>
-    </div>
-  </div>
-
-  <!-- MATERIAL-LAUFBAND -->
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee-track">
-      <span>PLA</span><em>⬡</em><span>PETG</span><em>⬡</em><span>ABS</span><em>⬡</em><span>TPU</span><em>⬡</em><span>ASA</span><em>⬡</em><span>Nylon</span><em>⬡</em><span>Prototypen</span><em>⬡</em><span>Kleinserien</span><em>⬡</em><span>Ersatzteile</span><em>⬡</em>
-      <span>PLA</span><em>⬡</em><span>PETG</span><em>⬡</em><span>ABS</span><em>⬡</em><span>TPU</span><em>⬡</em><span>ASA</span><em>⬡</em><span>Nylon</span><em>⬡</em><span>Prototypen</span><em>⬡</em><span>Kleinserien</span><em>⬡</em><span>Ersatzteile</span><em>⬡</em>
-    </div>
-  </div>
-
-  <!-- BEWERTUNGEN -->
-  <div style="padding:4rem 2rem" id="reviews-section">
-    <div class="plx-hex" data-plx="0.16" data-dir="1" style="top:6%;right:7%;width:46px;height:50px;opacity:.4"><svg viewBox="0 0 40 44"><polygon points="20,2 38,12 38,32 20,42 2,32 2,12" fill="none" stroke="#b8cdf0" stroke-width="1.5"/></svg></div>
-    <div style="max-width:1100px;margin:0 auto">
-      <div class="reveal" style="text-align:center;margin-bottom:2rem">
-        <div class="sec-label">Kundenstimmen</div>
-        <div class="sec-title" style="margin-bottom:.75rem">Das sagen unsere Kunden</div>
-        <div id="avg-rating-display" style="color:var(--gray-500);font-size:.95rem;margin-bottom:1.5rem"></div>
-        <button onclick="openReviewModal()" class="btn-fill" style="display:inline-flex;align-items:center;gap:.5rem"><svg style="width:16px;height:16px;fill:#fff" viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2l-6.1 3.4 1.4-6.8L2.2 9.1l6.9-.8L12 2z"/></svg> Bewertung abgeben</button>
-      </div>
-      <div id="reviews-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem"></div>
-    </div>
-  </div>
-
-  <footer>
-    <div class="ft-inner">
-      <div>
-        <div class="ft-logo"><svg width="30" height="30"><use href="#hex-icon"/></svg><span class="ft-logo-text">PRINTOX</span></div>
-        <p id="ft-desc">3D-Druck-Service aus der Schweiz.</p>
-        <div style="margin-top:1.1rem;max-width:280px">
-          <p style="color:rgba(255,255,255,.55);font-size:.8rem;font-weight:600;margin:0 0 .5rem">Newsletter abonnieren</p>
-          <div style="display:flex;gap:.4rem">
-            <input type="email" id="nl-email" placeholder="Deine E-Mail" style="flex:1;min-width:0;padding:.55rem .7rem;border-radius:6px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#fff;font-size:.82rem;font-family:Inter,sans-serif">
-            <button onclick="subscribeNewsletter()" style="padding:.55rem .9rem;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap">Anmelden</button>
+        <div class="stats-band" style="margin-top:2rem">
+          <div class="stats-band-in">
+            <div class="sb-item"><div class="sb-num" data-count="0.1" data-dec="1">0</div><div class="sb-lbl">mm Präzision</div></div>
+            <div class="sb-item"><div class="sb-num" data-count="256">0</div><div class="sb-lbl">mm Bauraum pro Achse</div></div>
+            <div class="sb-item"><div class="sb-num" data-count="24">0</div><div class="sb-lbl">h bis zum Angebot</div></div>
+            <div class="sb-item"><div class="sb-num" data-count="100">0</div><div class="sb-lbl">% Swiss Made</div></div>
           </div>
-          <p id="nl-msg" style="font-size:.75rem;margin:.45rem 0 0;display:none"></p>
         </div>
       </div>
-      <div class="ft-col"><h4>Navigation</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('about')">Über uns</a><a onclick="showPage('contact')">Kontakt</a><a onclick="showPage('privacy')">Datenschutz</a><a onclick="showPage('agb')">AGB</a><a onclick="showPage('impressum')">Impressum</a></div>
-      <div class="ft-col"><h4>Kontakt</h4><p id="ft-email">info@printox.ch</p><p style="color:rgba(255,255,255,.4);font-size:.8rem">Aargau, Schweiz</p></div>
-    </div>
-    <div class="ft-bot">
-      <span id="ft-copy">© 2026 Printox · Schweiz</span>
-      <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
-        <span style="color:rgba(255,255,255,.25);font-size:.75rem;margin-right:.25rem">Zahlung:</span>
-        <span style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:3px 8px;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.55)">TWINT</span>
-        <span style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:3px 8px;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.55)">VISA</span>
-        <span style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:3px 8px;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.55)">MC</span>
-        <span style="margin-left:.25rem;display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.45);font-size:.75rem;font-weight:600"><svg style="width:13px;height:13px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg>Swiss Made</span>
+    </section>
+
+    <!-- STATION 3: SHOP -->
+    <section class="jsec" id="jsec-2">
+      <div class="jpanel">
+        <div class="sec-label">Station 02 · Shop</div>
+        <div class="ex-sec-head" style="margin-top:0"><h2>Beliebte Produkte</h2><a onclick="showPage('shop')">Alle ansehen →</a></div>
+        <div id="home-news" style="display:none;margin-bottom:1.5rem"></div>
+        <div class="ex-prod-grid" id="home-products"></div>
+        <div style="text-align:center;margin-top:1.5rem">
+          <button class="btn-fill" onclick="showPage('shop')">Zum Shop</button>
+          <button class="btn-fill" style="background:rgba(255,255,255,.1);box-shadow:none;margin-left:.5rem" onclick="showPage('upload')">Eigenes Modell drucken</button>
+        </div>
       </div>
-    </div>
-  </footer>
+    </section>
+
+    <!-- STATION 4: QUALITÄT -->
+    <section class="jsec" id="jsec-3">
+      <div class="jpanel">
+        <div class="sec-label">Station 03 · Qualität</div>
+        <div class="sec-title">Qualität aus der Schweiz</div>
+        <div class="sec-sub">3D-Druck für Privat und Gewerbe</div>
+        <div class="feat-grid">
+          <div class="feat-card reveal"><span class="feat-icon"><svg viewBox="0 0 24 24"><path d="M1 3h13v13H1z" fill="none"/><path d="M14 8h4l3 4v4h-7"/><circle cx="6" cy="18.5" r="2"/><circle cx="17" cy="18.5" r="2"/><path d="M1 3h13v13H1z"/></svg></span><h3>Schnelle Lieferung</h3><p>Innerhalb von 7–9 Werktagen geliefert.</p></div>
+          <div class="feat-card reveal"><span class="feat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span><h3>Hochpräzision</h3><p>Druckauflösung bis zu 0.1 mm für exakte Ergebnisse.</p></div>
+          <div class="feat-card reveal"><span class="feat-icon"><svg viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 12l10 5 10-5"/><path d="M2 17l10 5 10-5"/></svg></span><h3>Alle Materialien</h3><p>PLA, PETG, ABS, TPU und weitere auf Anfrage.</p></div>
+          <div class="feat-card reveal"><span class="feat-icon"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.3-.7L3 21l1.8-5.7a8.4 8.4 0 1 1 16.2-3.8z"/></svg></span><h3>Persönlicher Support</h3><p>Beratung direkt per E-Mail.</p></div>
+        </div>
+        <p style="color:rgba(234,240,250,.6);font-size:.95rem;line-height:1.75;margin:1.75rem auto 0;max-width:680px;text-align:center">Printox steht für erstklassigen 3D-Druck aus der Schweiz. Jeder Auftrag wird mit grösster Sorgfalt umgesetzt – professionell, zuverlässig und exakt nach Ihren Vorstellungen. Ihr Ergebnis ist unser Massstab.</p>
+        <div class="marquee" aria-hidden="true" style="margin-top:1.75rem">
+          <div class="marquee-track">
+            <span>PLA</span><em>⬡</em><span>PETG</span><em>⬡</em><span>ABS</span><em>⬡</em><span>TPU</span><em>⬡</em><span>ASA</span><em>⬡</em><span>Nylon</span><em>⬡</em><span>Prototypen</span><em>⬡</em><span>Kleinserien</span><em>⬡</em><span>Ersatzteile</span><em>⬡</em>
+            <span>PLA</span><em>⬡</em><span>PETG</span><em>⬡</em><span>ABS</span><em>⬡</em><span>TPU</span><em>⬡</em><span>ASA</span><em>⬡</em><span>Nylon</span><em>⬡</em><span>Prototypen</span><em>⬡</em><span>Kleinserien</span><em>⬡</em><span>Ersatzteile</span><em>⬡</em>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATION 5: KUNDENSTIMMEN -->
+    <section class="jsec" id="jsec-4">
+      <div class="jpanel">
+        <div class="sec-label">Station 04 · Kundenstimmen</div>
+        <div class="sec-title">Das sagen unsere Kunden</div>
+        <div id="avg-rating-display" style="color:rgba(234,240,250,.6);font-size:.95rem;margin-bottom:1.25rem"></div>
+        <button onclick="openReviewModal()" class="btn-fill" style="display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1.75rem"><svg style="width:16px;height:16px;fill:#fff" viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2l-6.1 3.4 1.4-6.8L2.2 9.1l6.9-.8L12 2z"/></svg> Bewertung abgeben</button>
+        <div id="reviews-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem"></div>
+      </div>
+    </section>
+
+    <!-- STATION 6: KONTAKT / ZIEL -->
+    <section class="jsec" id="jsec-5">
+      <div class="jpanel jpanel-end">
+        <div class="sec-label">Station 05 · Ziel erreicht</div>
+        <div class="sec-title" style="font-size:clamp(1.8rem,3.4vw,2.6rem)">Bereit für deinen Druck?</div>
+        <p style="color:rgba(234,240,250,.65);font-size:1.02rem;line-height:1.7;max-width:520px;margin:0 auto 1.75rem">Lade jetzt dein Modell hoch und erhalte innerhalb von 24 Stunden dein persönliches Angebot – unverbindlich und kostenlos.</p>
+        <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.25rem">
+          <button class="btn-fill" onclick="showPage('upload')">Jetzt Modell hochladen</button>
+          <button class="btn-fill" style="background:rgba(255,255,255,.1);box-shadow:none" onclick="showPage('contact')">Kontakt aufnehmen</button>
+        </div>
+        <div class="jfoot">
+          <div class="jfoot-col">
+            <div class="ft-logo" style="margin-bottom:.5rem"><svg width="26" height="26"><use href="#hex-icon"/></svg><span class="ft-logo-text" style="font-size:.95rem">PRINTOX</span></div>
+            <p id="ft-desc" style="color:rgba(234,240,250,.5);font-size:.85rem;margin:0 0 .9rem">3D-Druck-Service aus der Schweiz.</p>
+            <p style="color:rgba(255,255,255,.55);font-size:.78rem;font-weight:600;margin:0 0 .45rem">Newsletter abonnieren</p>
+            <div style="display:flex;gap:.4rem;max-width:280px">
+              <input type="email" id="nl-email" placeholder="Deine E-Mail" style="flex:1;min-width:0;padding:.55rem .7rem;border-radius:6px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#fff;font-size:.82rem;font-family:Inter,sans-serif">
+              <button onclick="subscribeNewsletter()" style="padding:.55rem .9rem;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap">Anmelden</button>
+            </div>
+            <p id="nl-msg" style="font-size:.75rem;margin:.45rem 0 0;display:none"></p>
+          </div>
+          <div class="jfoot-col">
+            <h4>Navigation</h4>
+            <a onclick="showPage('shop')">Shop</a><a onclick="showPage('upload')">Upload</a><a onclick="showPage('about')">Über uns</a><a onclick="showPage('contact')">Kontakt</a><a onclick="showPage('privacy')">Datenschutz</a><a onclick="showPage('agb')">AGB</a><a onclick="showPage('impressum')">Impressum</a>
+          </div>
+          <div class="jfoot-col">
+            <h4>Kontakt</h4>
+            <p id="ft-email" style="color:rgba(234,240,250,.6);font-size:.85rem;margin:0 0 .25rem">info@printox.ch</p>
+            <p style="color:rgba(234,240,250,.4);font-size:.8rem;margin:0 0 .9rem">Aargau, Schweiz</p>
+            <div style="display:flex;align-items:center;gap:.45rem;flex-wrap:wrap">
+              <span class="jbadge">TWINT</span><span class="jbadge">VISA</span><span class="jbadge">MC</span>
+              <span style="display:inline-flex;align-items:center;gap:5px;color:rgba(255,255,255,.45);font-size:.72rem;font-weight:600"><svg style="width:12px;height:12px" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#da291c"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg>Swiss Made</span>
+            </div>
+          </div>
+        </div>
+        <div id="ft-copy" style="margin-top:1.75rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.08);color:rgba(234,240,250,.35);font-size:.78rem">© 2026 Printox · Schweiz</div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Fortschritt / Stationen-Navigation -->
+  <div id="jnav" role="navigation" aria-label="Stationen">
+    <button class="jdot active" onclick="jumpJourney(0)"><i>01</i><em>Start</em></button>
+    <span class="jline"></span>
+    <button class="jdot" onclick="jumpJourney(1)"><i>02</i><em>Ablauf</em></button>
+    <span class="jline"></span>
+    <button class="jdot" onclick="jumpJourney(2)"><i>03</i><em>Shop</em></button>
+    <span class="jline"></span>
+    <button class="jdot" onclick="jumpJourney(3)"><i>04</i><em>Qualität</em></button>
+    <span class="jline"></span>
+    <button class="jdot" onclick="jumpJourney(4)"><i>05</i><em>Stimmen</em></button>
+    <span class="jline"></span>
+    <button class="jdot" onclick="jumpJourney(5)"><i>06</i><em>Kontakt</em></button>
+  </div>
+  <div id="jhint"><svg class="svgic" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 12h16"/><path d="m14 6 6 6-6 6"/></svg> Scrollen, um durch die Welt zu reisen</div>
+</div>
 </div>
 
 <!-- SHOP -->
@@ -1886,6 +1855,9 @@ function showPage(p) {
   const navKey = p === 'shop-locked' ? 'shop' : p;
   const nb = document.getElementById('nav-' + navKey); if (nb) nb.classList.add('active');
   window.scrollTo(0,0);
+  // 3D-Journey: Scroll-Sperre nur auf der Home-Weltseite
+  const flat = document.body.classList.contains('journey-flat');
+  document.body.classList.toggle('journey-lock', p === 'home' && !flat);
   if (p === 'shop') renderShop();
   if (p === 'cart') renderCart();
   if (p === 'admin') renderAdmin();
@@ -4833,130 +4805,349 @@ loadNews();
   document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
 })();
 
-// ═══ ECHTES 3D (WebGL/Three.js): Logo wird Schicht für Schicht gedruckt ═══
+// ═══ 3D-JOURNEY: horizontale Weltreise durch die Printox-Welt (Three.js) ═══
+// Fallback zuerst: funktioniert auch ohne WebGL (Stationen stapeln vertikal)
+window.jumpJourney = function(i) {
+  var el = document.getElementById('jsec-' + i);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+};
 (function() {
-  const canvas = document.getElementById('hero3d');
-  if (!canvas || typeof THREE === 'undefined') return;
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-  } catch(e) { return; } // Kein WebGL → CSS-Prisma bleibt als Fallback
+  const journey = document.getElementById('journey');
+  const track = document.getElementById('jtrack');
+  const canvas = document.getElementById('world3d');
+  if (!journey || !track || !canvas) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const coarse = window.matchMedia('(pointer: coarse)').matches;
+  const N = 6;        // Stationen
+  const GAP = 11;     // Weltabstand zwischen Stationen (3D-Einheiten)
+
+  let renderer = null;
+  if (!reduce && typeof THREE !== 'undefined') {
+    try { renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: !coarse }); } catch (e) { renderer = null; }
+  }
+  if (!renderer) { document.body.classList.add('journey-flat'); return; }
+
+  document.body.classList.add('journey-lock');
   const cssPrism = document.querySelector('.px3d');
   if (cssPrism) cssPrism.style.display = 'none';
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, coarse ? 1.5 : 2));
 
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const hero = canvas.parentElement;
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-
+  // ── Szene ──
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x0d1626, 9, 17);
-  const camera = new THREE.PerspectiveCamera(38, 2, 0.1, 40);
-  camera.position.set(0, 0.55, 9);
+  scene.fog = new THREE.Fog(0x0b1526, 8, 21);
+  const camera = new THREE.PerspectiveCamera(42, 2, 0.1, 60);
+  camera.position.set(0, 1.0, 9.2);
 
-  scene.add(new THREE.AmbientLight(0x8899bb, 0.6));
-  const sun = new THREE.DirectionalLight(0xffffff, 1.15);
-  sun.position.set(5, 8, 6);
+  scene.add(new THREE.AmbientLight(0x8fa3c8, 0.55));
+  const sun = new THREE.DirectionalLight(0xffffff, 1.1);
+  sun.position.set(6, 10, 7);
   scene.add(sun);
-  const blue = new THREE.PointLight(0x2563eb, 14, 22);
-  blue.position.set(-4, -2, 5);
-  scene.add(blue);
+  const keyLight = new THREE.PointLight(0x2563eb, 16, 26);
+  keyLight.position.set(0, -1, 6);
+  scene.add(keyLight);
 
-  // Hexagon-Prisma aus 18 "Druck-Schichten"
-  const group = new THREE.Group();
-  const SLICES = 18, R = 1.45, H = 0.19, GAP = 0.015;
-  const total = SLICES * (H + GAP);
-  const slices = [];
-  for (let i = 0; i < SLICES; i++) {
-    const geo = new THREE.CylinderGeometry(R, R, H, 6, 1, false);
-    const light = i < 3; // unterste Schichten heller – wie die Streifen im Logo
-    const mat = new THREE.MeshStandardMaterial({
-      color: light ? 0x93a7c4 : 0x223a5e,
-      metalness: 0.45, roughness: 0.35,
-      flatShading: true, transparent: true, opacity: 0,
-      emissive: 0x3b82f6, emissiveIntensity: 0
-    });
-    const m = new THREE.Mesh(geo, mat);
-    m.userData.targetY = -total / 2 + i * (H + GAP) + H / 2;
-    m.position.y = m.userData.targetY + 4.2;
-    m.rotation.y = 0.9;
-    group.add(m);
-    slices.push(m);
-  }
-  group.rotation.x = 0.14;
-  scene.add(group);
+  // Boden-Raster (die "Bauplatte" der Welt)
+  const grid = new THREE.GridHelper(160, 80, 0x2a4a7a, 0x18294a);
+  grid.position.y = -2.3;
+  grid.material.transparent = true;
+  grid.material.opacity = 0.30;
+  scene.add(grid);
 
-  // Schwebende Partikel
+  // Partikel über die ganze Welt verteilt
+  const pCount = coarse ? 90 : 260;
   const pGeo = new THREE.BufferGeometry();
-  const pCount = 120, pos = new Float32Array(pCount * 3);
+  const pPos = new Float32Array(pCount * 3);
   for (let i = 0; i < pCount; i++) {
-    pos[i*3]   = (Math.random() - 0.5) * 13;
-    pos[i*3+1] = (Math.random() - 0.5) * 7;
-    pos[i*3+2] = (Math.random() - 0.5) * 5 - 1;
+    pPos[i*3]   = -5 + Math.random() * (GAP * (N - 1) + 10);
+    pPos[i*3+1] = (Math.random() - 0.5) * 7;
+    pPos[i*3+2] = (Math.random() - 0.5) * 7 - 1;
   }
-  pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  const pts = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x5b8cff, size: 0.035, transparent: true, opacity: 0.55 }));
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  const pts = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x5b8cff, size: 0.04, transparent: true, opacity: 0.5 }));
   scene.add(pts);
 
-  let mx = 0, my = 0, tmx = 0, tmy = 0;
-  window.addEventListener('pointermove', function(e) {
-    tmx = (e.clientX / window.innerWidth - 0.5) * 2;
-    tmy = (e.clientY / window.innerHeight - 0.5) * 2;
-  }, { passive: true });
-
-  function layout() {
-    const w = hero.clientWidth, h = hero.clientHeight;
-    if (!w || !h) return;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    group.position.x = w > 820 ? 2.35 : 0;
-    group.scale.setScalar(w > 820 ? 1.15 : 0.85);
-    pts.material.opacity = w > 820 ? 0.55 : 0.3;
+  const NAVY = 0x223a5e, LIGHTBLUE = 0x93a7c4, GLOW = 0x3b82f6;
+  function stdMat(color, opts) {
+    return new THREE.MeshStandardMaterial(Object.assign({
+      color: color, metalness: 0.45, roughness: 0.35, flatShading: true,
+      emissive: GLOW, emissiveIntensity: 0
+    }, opts || {}));
   }
-  layout();
-  window.addEventListener('resize', layout, { passive: true });
+  const pieces = []; // {group, update(act,t)}
 
-  const t0 = performance.now();
-  function ease(t) { return 1 - Math.pow(1 - t, 3); }
-
-  let frameNo = 0, lastW = 0;
-  function tick(now) {
-    requestAnimationFrame(tick);
-    const home = document.getElementById('page-home');
-    if (home && !home.classList.contains('active')) return; // andere Seite offen → Rechenzeit sparen
-    // Grösse alle 30 Frames prüfen (falls Init vor dem ersten Layout lief)
-    if (frameNo++ % 30 === 0) {
-      const w = hero.clientWidth;
-      if (w && w !== lastW) { lastW = w; layout(); }
-    }
-    const t = now - t0;
-    // Druck-Intro: Schicht für Schicht von unten nach oben
+  // ── Station 0: Logo wird Schicht für Schicht gedruckt ──
+  const g0 = new THREE.Group();
+  const SLICES = coarse ? 12 : 18, R = 1.45, SH = coarse ? 0.28 : 0.19, SGAP = 0.015;
+  const totalH = SLICES * (SH + SGAP);
+  const slices = [];
+  for (let i = 0; i < SLICES; i++) {
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(R, R, SH, 6, 1), stdMat(i < 3 ? LIGHTBLUE : NAVY, { transparent: true, opacity: 0 }));
+    m.userData.ty = -totalH / 2 + i * (SH + SGAP) + SH / 2;
+    m.position.y = m.userData.ty + 4.2;
+    g0.add(m); slices.push(m);
+  }
+  g0.position.set(2.4, 0.2, 0);
+  g0.rotation.x = 0.13;
+  scene.add(g0);
+  const tStart = performance.now();
+  pieces.push({ group: g0, update: function(act, t) {
+    const tt = t - tStart;
     slices.forEach(function(s, i) {
-      const start = 250 + i * 105;
-      const p = Math.max(0, Math.min(1, (t - start) / 480));
-      const e = ease(p);
-      s.position.y = s.userData.targetY + (1 - e) * 4.2;
-      s.rotation.y = (1 - e) * 0.9;
+      const p = Math.max(0, Math.min(1, (tt - (300 + i * 100)) / 460));
+      const e = 1 - Math.pow(1 - p, 3);
+      s.position.y = s.userData.ty + (1 - e) * 4.2;
       s.material.opacity = e;
       if (p > 0 && p < 1) s.material.emissiveIntensity = 0.9;
       else s.material.emissiveIntensity *= 0.94;
     });
+    g0.rotation.y = t * 0.00014 + act * 0.2;
+  }});
+
+  // ── Station 1: Ablauf – vier aufsteigende Podeste ──
+  const g1 = new THREE.Group();
+  for (let i = 0; i < 4; i++) {
+    const h = 0.45 + i * 0.5;
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(0.52, 0.52, h, 6, 1), stdMat(NAVY));
+    m.position.set(-2.1 + i * 1.4, -1.6 + h / 2, 0);
+    m.userData.baseY = m.position.y;
+    g1.add(m);
+  }
+  g1.position.set(GAP + 2.2, 0, -0.5);
+  scene.add(g1);
+  pieces.push({ group: g1, update: function(act, t) {
+    g1.children.forEach(function(m, i) {
+      m.position.y = m.userData.baseY + Math.sin(t * 0.0011 + i * 1.2) * 0.07 * act;
+      m.material.emissiveIntensity = act * (0.25 + 0.2 * Math.sin(t * 0.002 + i));
+    });
+    g1.rotation.y = Math.sin(t * 0.0003) * 0.1;
+  }});
+
+  // ── Station 2: Shop – Showcase-Objekt auf Sockel mit Orbit-Würfeln ──
+  const g2 = new THREE.Group();
+  const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(1.15, 1.35, 0.35, 6, 1), stdMat(0x18294a));
+  pedestal.position.y = -1.75;
+  g2.add(pedestal);
+  const show = new THREE.Mesh(new THREE.CylinderGeometry(0.95, 0.95, 1.9, 6, 1), stdMat(NAVY, { metalness: 0.6, roughness: 0.25 }));
+  show.position.y = -0.4;
+  g2.add(show);
+  const orbits = [];
+  for (let i = 0; i < 3; i++) {
+    const c = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.28, 0.28), stdMat(LIGHTBLUE));
+    g2.add(c); orbits.push(c);
+  }
+  g2.position.set(GAP * 2 + 2.3, 0.3, -0.3);
+  scene.add(g2);
+  pieces.push({ group: g2, update: function(act, t) {
+    show.rotation.y = t * 0.0005 + act * 0.5;
+    show.material.emissiveIntensity = act * 0.35;
+    orbits.forEach(function(c, i) {
+      const a = t * 0.0009 + i * (Math.PI * 2 / 3);
+      c.position.set(Math.cos(a) * 1.9, -0.3 + Math.sin(t * 0.0013 + i) * 0.35, Math.sin(a) * 1.9);
+      c.rotation.x = t * 0.001; c.rotation.y = t * 0.0014;
+      c.material.emissiveIntensity = act * 0.4;
+    });
+  }});
+
+  // ── Station 3: Qualität – vier schwebende Kristalle ──
+  const g3 = new THREE.Group();
+  for (let i = 0; i < 4; i++) {
+    const m = new THREE.Mesh(new THREE.IcosahedronGeometry(0.48, 0), stdMat(i % 2 ? LIGHTBLUE : NAVY, { metalness: 0.55, roughness: 0.3 }));
+    m.position.set((i % 2) * 1.5 - 0.75, (i < 2 ? 0.9 : -0.7), (i % 2) * -0.6);
+    m.userData.baseY = m.position.y;
+    g3.add(m);
+  }
+  g3.position.set(GAP * 3 + 2.3, 0.2, -0.4);
+  scene.add(g3);
+  pieces.push({ group: g3, update: function(act, t) {
+    g3.children.forEach(function(m, i) {
+      m.position.y = m.userData.baseY + Math.sin(t * 0.0009 + i * 1.7) * 0.18 * (0.4 + act);
+      m.rotation.x = t * 0.0004 + i; m.rotation.y = t * 0.0006 + i * 2;
+      m.material.emissiveIntensity = act * 0.4;
+    });
+  }});
+
+  // ── Station 4: Kundenstimmen – leuchtender Sternenbogen ──
+  const g4 = new THREE.Group();
+  const starMats = [];
+  for (let i = 0; i < 5; i++) {
+    const mat = new THREE.MeshStandardMaterial({ color: 0xf5b73d, metalness: 0.3, roughness: 0.4, emissive: 0xf59e0b, emissiveIntensity: 0.25, flatShading: true });
+    const s = new THREE.Mesh(new THREE.OctahedronGeometry(0.3, 0), mat);
+    const a = (-0.5 + i * 0.25) * Math.PI;
+    s.position.set(Math.cos(a) * 2.1, 0.4 + Math.sin(a) * 1.1, 0);
+    s.userData.baseY = s.position.y;
+    g4.add(s); starMats.push(mat);
+  }
+  g4.position.set(GAP * 4 + 2.3, 0.2, -0.4);
+  scene.add(g4);
+  pieces.push({ group: g4, update: function(act, t) {
+    g4.children.forEach(function(s, i) {
+      s.position.y = s.userData.baseY + Math.sin(t * 0.0012 + i) * 0.12 * (0.3 + act);
+      s.rotation.y = t * 0.001 + i;
+      s.material.emissiveIntensity = 0.2 + act * (0.5 + 0.3 * Math.sin(t * 0.003 + i * 2));
+    });
+    g4.rotation.z = Math.sin(t * 0.0004) * 0.05;
+  }});
+
+  // ── Station 5: Ziel – Leuchtfeuer ──
+  const g5 = new THREE.Group();
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(1.15, 0.06, 8, 48), new THREE.MeshStandardMaterial({ color: 0x3b82f6, emissive: 0x3b82f6, emissiveIntensity: 0.8, metalness: 0.2, roughness: 0.4 }));
+  ring.rotation.x = Math.PI / 2;
+  ring.position.y = -1.6;
+  g5.add(ring);
+  const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.95, 5.2, 24, 1, true), new THREE.MeshBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.10, side: THREE.DoubleSide, depthWrite: false }));
+  beam.position.y = 0.9;
+  g5.add(beam);
+  const core = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 1.1, 6, 1), stdMat(LIGHTBLUE, { emissiveIntensity: 0.3 }));
+  core.position.y = -0.9;
+  g5.add(core);
+  const beaconLight = new THREE.PointLight(0x3b82f6, 10, 14);
+  beaconLight.position.y = 0;
+  g5.add(beaconLight);
+  g5.position.set(GAP * 5 + 2.2, 0, -0.3);
+  scene.add(g5);
+  pieces.push({ group: g5, update: function(act, t) {
+    ring.rotation.z = t * 0.0008;
+    ring.material.emissiveIntensity = 0.5 + act * (0.6 + 0.35 * Math.sin(t * 0.0025));
+    beam.material.opacity = 0.05 + act * 0.12;
+    core.rotation.y = t * 0.0006;
+    beaconLight.intensity = 4 + act * 10;
+  }});
+
+  // ── Eingabe: Mausrad, Touch, Tastatur → horizontale Fahrt ──
+  let targetX = 0, curX = 0, lastInput = 0, hintHidden = false;
+  const bar = document.getElementById('scroll-progress');
+  const dots = Array.prototype.slice.call(document.querySelectorAll('#jnav .jdot'));
+  const hint = document.getElementById('jhint');
+  function W() { return journey.clientWidth || 1; }
+  function maxX() { return (N - 1) * W(); }
+  function clampT() { targetX = Math.max(0, Math.min(maxX(), targetX)); }
+  function markInput() {
+    lastInput = performance.now();
+    if (!hintHidden && hint) { hintHidden = true; hint.style.opacity = '0'; }
+  }
+  function homeActive() {
+    const h = document.getElementById('page-home');
+    return h && h.classList.contains('active');
+  }
+
+  // Mausrad: vertikales Scrollen wird zur Reise; Panels mit eigenem Scroll haben Vorrang
+  journey.addEventListener('wheel', function(e) {
+    if (!homeActive()) return;
+    const panel = e.target.closest && e.target.closest('.jpanel');
+    if (panel && panel.scrollHeight > panel.clientHeight + 4) {
+      const down = e.deltaY > 0;
+      const canScroll = down
+        ? panel.scrollTop + panel.clientHeight < panel.scrollHeight - 2
+        : panel.scrollTop > 2;
+      if (canScroll && Math.abs(e.deltaY) > Math.abs(e.deltaX)) return; // Panel scrollt selbst
+    }
+    e.preventDefault();
+    targetX += (e.deltaY + e.deltaX) * 1.15;
+    clampT(); markInput();
+  }, { passive: false });
+
+  // Touch: horizontales Wischen
+  let tx0 = 0, ty0 = 0, horiz = null;
+  journey.addEventListener('touchstart', function(e) {
+    const t = e.touches[0]; tx0 = t.clientX; ty0 = t.clientY; horiz = null;
+  }, { passive: true });
+  journey.addEventListener('touchmove', function(e) {
+    if (!homeActive()) return;
+    const t = e.touches[0];
+    const dx = t.clientX - tx0, dy = t.clientY - ty0;
+    if (horiz === null && (Math.abs(dx) > 9 || Math.abs(dy) > 9)) horiz = Math.abs(dx) > Math.abs(dy);
+    if (horiz) {
+      e.preventDefault();
+      targetX -= dx * 1.5;
+      clampT(); markInput();
+      tx0 = t.clientX; ty0 = t.clientY;
+    }
+  }, { passive: false });
+
+  // Tastatur: Pfeiltasten springen zwischen Stationen
+  window.addEventListener('keydown', function(e) {
+    if (!homeActive()) return;
+    const tag = (document.activeElement && document.activeElement.tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    const idx = Math.round(targetX / W());
+    if (e.key === 'ArrowRight') { targetX = Math.min(N - 1, idx + 1) * W(); markInput(); }
+    if (e.key === 'ArrowLeft')  { targetX = Math.max(0, idx - 1) * W(); markInput(); }
+  });
+
+  window.jumpJourney = function(i) {
+    targetX = Math.max(0, Math.min(N - 1, i)) * W();
+    markInput();
+  };
+
+  // Maus-Parallax
+  let mx = 0, my = 0, tmx = 0, tmy = 0;
+  if (!coarse) {
+    window.addEventListener('pointermove', function(e) {
+      tmx = (e.clientX / window.innerWidth - 0.5) * 2;
+      tmy = (e.clientY / window.innerHeight - 0.5) * 2;
+    }, { passive: true });
+  }
+
+  // Layout & Resize (Stations-Index beibehalten)
+  let lastW = 0;
+  function layout() {
+    const w = journey.clientWidth, h = journey.clientHeight;
+    if (!w || !h) return;
+    if (lastW) {
+      const idx = Math.round(curX / lastW);
+      curX = targetX = Math.min(N - 1, idx) * w;
+    }
+    lastW = w;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  layout();
+  window.addEventListener('resize', layout, { passive: true });
+
+  // ── Render-Schleife ──
+  let frameNo = 0;
+  function tick(now) {
+    requestAnimationFrame(tick);
+    if (!homeActive()) return;
+    if (frameNo++ % 30 === 0) { if (journey.clientWidth !== lastW) layout(); }
+
+    // Sanftes Einrasten an der nächsten Station nach kurzer Ruhe
+    if (now - lastInput > 750) {
+      const snap = Math.round(targetX / W()) * W();
+      targetX += (snap - targetX) * 0.06;
+    }
+    curX += (targetX - curX) * 0.075;
+
+    // UI-Ebene fährt mit
+    track.style.transform = 'translate3d(' + (-curX).toFixed(1) + 'px,0,0)';
+
+    // Fortschritt + Stationspunkte
+    const prog = maxX() > 0 ? curX / maxX() : 0;
+    if (bar) bar.style.width = (prog * 100).toFixed(2) + '%';
+    const active = Math.round(prog * (N - 1));
+    dots.forEach(function(d, i) { d.classList.toggle('active', i === active); });
+
+    // Kamera reist durch die Welt
     mx += (tmx - mx) * 0.05;
     my += (tmy - my) * 0.05;
-    const sy = window.scrollY || 0;
-    group.rotation.y = 0.55 + t * 0.00012 + sy * 0.0016 + mx * 0.3;
-    group.rotation.x = 0.14 + sy * 0.00035 + my * 0.16;
-    group.position.y = Math.sin(t * 0.0006) * 0.09;
-    pts.rotation.y = t * 0.00003;
+    const camX = prog * GAP * (N - 1);
+    camera.position.x = camX + mx * 0.5;
+    camera.position.y = 1.0 - my * 0.35 + Math.sin(now * 0.0005) * 0.06;
+    camera.lookAt(camX + mx * 1.6, 0.15 - my * 0.6, -0.5);
+    keyLight.position.x = camX;
+
+    // Objekte aktivieren sich, wenn die Kamera naht
+    pieces.forEach(function(p) {
+      const d = Math.abs(p.group.position.x - camX);
+      const act = Math.max(0, 1 - d / 6.5);
+      p.update(act, now);
+    });
+    pts.rotation.y = Math.sin(now * 0.00005) * 0.03;
+
     renderer.render(scene, camera);
   }
-  if (reduce) {
-    slices.forEach(function(s) { s.position.y = s.userData.targetY; s.rotation.y = 0; s.material.opacity = 1; });
-    group.rotation.y = 0.55;
-    renderer.render(scene, camera);
-  } else {
-    requestAnimationFrame(tick);
-  }
+  requestAnimationFrame(tick);
 })();
 
 // Scroll-Engine: Fortschrittsbalken, 3D-Parallax, Hero-Scrubbing
@@ -4973,7 +5164,8 @@ loadNews();
     const doc = document.documentElement;
     const max = doc.scrollHeight - window.innerHeight;
     const y = window.scrollY || doc.scrollTop || 0;
-    if (bar) bar.style.width = (max > 0 ? (y / max * 100) : 0) + '%';
+    // Auf der Home-Weltseite steuert die Journey-Engine den Balken
+    if (bar && !document.body.classList.contains('journey-lock')) bar.style.width = (max > 0 ? (y / max * 100) : 0) + '%';
     if (reduce) return;
     if (px3d) px3d.style.setProperty('--plxy', (y * 0.3).toFixed(1) + 'px');
     if (hero && heroIn) {
